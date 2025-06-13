@@ -8,6 +8,8 @@ from rest_framework import permissions
 from rest_framework import routers
 from classroom.views import ClassroomModelViewSet
 
+import schema.views
+
 schema_view = get_schema_view(
    openapi.Info(
       title="Database Playground API",
@@ -24,6 +26,7 @@ schema_view = get_schema_view(
 
 router = routers.SimpleRouter()
 router.register(r'class', ClassroomModelViewSet)
+router.register(r'schema', schema.views.DBSchemaModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,7 +43,8 @@ urlpatterns = [
         schema_view.with_ui('redoc', cache_timeout=0),
         name='schema-redoc'
     ),
-    path('test/', include("test.urls"))
+    path('test/', include("test.urls")),
+
 ]
 urlpatterns += router.urls
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
