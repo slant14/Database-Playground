@@ -2,10 +2,14 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
 from rest_framework import permissions
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from classroom.views import ClassroomModelViewSet
 
 import schema.views
@@ -25,7 +29,7 @@ schema_view = get_schema_view(
 
 
 router = routers.SimpleRouter()
-router.register(r'class', ClassroomModelViewSet)
+router.register(r'classroom', ClassroomModelViewSet)
 router.register(r'schema', schema.views.DBSchemaModelViewSet)
 
 urlpatterns = [
@@ -44,6 +48,9 @@ urlpatterns = [
         name='schema-redoc'
     ),
     path('test/', include("test.urls")),
+
+    path("session/token/", TokenObtainPairView.as_view()),
+    path("session/token/refresh/", TokenRefreshView.as_view())
 
 ]
 urlpatterns += router.urls
