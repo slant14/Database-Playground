@@ -29,8 +29,8 @@ schema_view = get_schema_view(
 
 
 router = routers.SimpleRouter()
-router.register(r'classroom', ClassroomModelViewSet)
 router.register(r'schema', schema.views.DBSchemaModelViewSet)
+router.register(r'classroom', ClassroomModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

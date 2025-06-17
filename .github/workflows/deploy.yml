@@ -1,0 +1,38 @@
+name: Deploy via SSH with Docker Compose
+
+on:
+  push:
+    branches:
+      main
+
+jobs:
+  deploy:
+    if: github.repository == 'slant14/Database-Playground'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+        shell: bash
+
+      - name: Add server to known_hosts
+        run: |
+          ssh-keyscan -p ${{ secrets.DEPLOY_PORT }} ${{ secrets.DEPLOY_IP }} >> ~/.ssh/known_hosts
+        shell: bash
+
+      - name: Deploy to server via SSH
+        run: |
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_IP }} << 'EOF'
+            set -e
+            cd ~/Database-Playground
+            git pull origin main
+            docker compose build
+            docker compose up -d
+          EOF
+        shell: bash
