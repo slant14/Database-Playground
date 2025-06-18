@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'classroom',
     'test',
 
-    'schema'
+    'session'
 ]
 
 MIDDLEWARE = [
