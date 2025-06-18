@@ -10,8 +10,6 @@ from rest_framework import routers
 from classroom.views import ClassroomModelViewSet
 from session.views import SessionView
 
-import schema.views
-
 schema_view = get_schema_view(
    openapi.Info(
       title="Database Playground API",
@@ -27,7 +25,6 @@ schema_view = get_schema_view(
 
 
 router = routers.SimpleRouter()
-router.register(r'schema', schema.views.DBSchemaModelViewSet)
 router.register(r'classroom', ClassroomModelViewSet)
 
 urlpatterns = [

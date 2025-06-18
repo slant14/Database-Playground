@@ -21,6 +21,6 @@ class SessionView(APIView):
             session, _ = Session.objects.get_or_create(id=session_id)
 
         response = Response(self.serializer_class(session).data)
-        response.set_cookie("session_id", str(session.id))
+        response.set_cookie("session_id", session.id.hex)
 
         return response
