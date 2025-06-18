@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'account',
     'classroom',
     'test',
-    'schema',
-    'templates'
+    'templates',
+    'session',
 ]
 
 MIDDLEWARE = [
