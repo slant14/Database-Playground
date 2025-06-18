@@ -50,3 +50,11 @@ class SQLEngine(ABC):
         :raises DBNotExists:
         :raises QueryError:
         """
+
+    
+    @abstractmethod
+    def get_dump(self, db_name: str) -> str:
+        """ Returns the SQL dump of a database
+
+        :raises DBNotExists:
+        """
