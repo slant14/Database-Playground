@@ -1,4 +1,4 @@
-from dataclassses imprort dataclass
+from dataclasses import dataclass
 
 
 @dataclass
@@ -21,13 +21,6 @@ class DBInfo:
                 ))
         return db
 
-    
-    def to_json(self) -> dict:
-        return {
-            "name": self.name,
-            "tables": [t.to_json() for t in self.tables]
-        }
-
     def __repr__(self) -> str:
         tables_str = ""
         for table in self.tables:
@@ -41,12 +34,6 @@ class DBInfo:
 class TableInfo:
     name: str
     columns: list["ColumnInfo"]
-
-    def to_json(self) -> dict:
-        return {
-            "name": self.name,
-            "columns": [c.to_json() for c in self.columns]
-        }
 
     def __repr__(self) -> str:
         columns_str = ""
@@ -62,12 +49,6 @@ class ColumnInfo:
     name: str
     type: str
 
-    def to_json(self) -> dict:
-        return {
-            "name": self.name,
-            "type": self.type
-        }
-
     def __repr__(self) -> str:
         return f"{self.name} - {self.type}"
 
@@ -78,11 +59,3 @@ class QueryResult:
     rowcount: int
     data: list[tuple] | None
     execution_time: float
-
-    def to_json(self) -> dict:
-        return {
-            "query": self.query,
-            "rowcount": self.rowcount,
-            "data": self.data,
-            "exectuion_time": self.execution_time
-        }
