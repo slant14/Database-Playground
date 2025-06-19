@@ -1,6 +1,7 @@
 import { TopBar } from "./TopBar";
 import { TopBarElement } from "./TopBarElement";
 import { Button } from "./Button";
+import { saveSvg } from "../../assets/save.svg";
 
 export function PlaygroundBar(){
     return <TopBar style={{backgroundColor: "#6968FF", color: "white"}} contentStyle={{flexBasis: 521 + "px"}}>
@@ -14,7 +15,7 @@ export function PlaygroundBar(){
                             backgroundColor: "white"
                         }
                     }>
-                    <img src="/save.svg"></img>
+                    <img src={saveSvg}></img>
                 </Button>
             </a>
         </TopBarElement>
