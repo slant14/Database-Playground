@@ -44,7 +44,7 @@ urlpatterns = [
     ),
     path('test/', include("test.urls")),
     path('template/', include("templates.urls")),
-    path('session/', include('session.urls')),
+    path('session/', include('session.urls'))
 ]
 urlpatterns += router.urls
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
