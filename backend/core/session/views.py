@@ -1,17 +1,17 @@
+import uuid
+
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-
-from .models import Session, SessionInfo
-from .serializers import SessionSerializer, SessionInfoSerializer
+from rest_framework.parsers import JSONParser
 
 from engines import postgres_engine
 from engines.shortcuts import db_exists
 
+from .models import Session, SessionInfo
+from .serializers import SessionSerializer, SessionInfoSerializer
 from .docs import get_db_schema_info_doc, patch_session_info_doc
-
-import uuid
-from rest_framework.parsers import JSONParser
+from .shortcuts import resolve_session_id
 
 
 class SessionView(APIView):
@@ -35,38 +35,29 @@ class SessionView(APIView):
 
         return response
 
+
 class SessionInfoView(APIView):
 
     @get_db_schema_info_doc
     def get(self, request: Request):
-        query_session_id = request.query_params.get("session_id")
-        cookie_session_id = request.COOKIES.get("session_id")
+        session_id, err_response = resolve_session_id(request)
+        if err_response:
+            return err_response
 
-        if not query_session_id:
-            return Response({"detail": "Missing query session_id."}, status=400)
-        if not cookie_session_id:
-            return Response({"detail": "Missing cookie session_id."}, status=401)
-        if query_session_id != cookie_session_id:
-            return Response({"detail": "Session ID mismatch."}, status=401)
-
-        session = Session.objects.get(id=query_session_id)
-        return Response(SessionInfoSerializer(SessionInfo.objects.get(session=session)).data)
+        session = Session.objects.get(id=session_id)
+        return Response(
+            SessionInfoSerializer(
+                SessionInfo.objects.get(session=session)).data)
 
 
     @patch_session_info_doc
     def patch(self, request: Request):
-        query_session_id = request.query_params.get("session_id")
-        cookie_session_id = request.COOKIES.get("session_id")
-
-        if not query_session_id:
-            return Response({"detail": "Missing query session_id."}, status=400)
-        if not cookie_session_id:
-            return Response({"detail": "Missing cookie session_id."}, status=401)
-        if query_session_id != cookie_session_id:
-            return Response({"detail": "Session ID mismatch."}, status=401)
+        session_id, err_response = resolve_session_id(request)
+        if err_response:
+            return err_response    
 
         try:
-            session = Session.objects.get(id=query_session_id)
+            session = Session.objects.get(id=session_id)
             session_info = SessionInfo.objects.get(session=session)
         except Session.DoesNotExist:
             return Response({"detail": "Session not found."}, status=404)
@@ -81,5 +72,3 @@ class SessionInfoView(APIView):
             return Response(serializer.data)
 
         return Response(serializer.errors, status=400)
-
-
