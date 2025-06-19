@@ -1,7 +1,8 @@
 import { TopBar } from "./TopBar";
 import { TopBarElement } from "./TopBarElement";
-import { Button } from "./Button";
-import { saveSvg } from "../../assets/save.svg";
+import { Button } from "./ui/Button";
+import { NavLink } from "react-router";
+import saveSvg from "../assets/save.svg";
 
 export function PlaygroundBar() {
   return (
@@ -10,7 +11,7 @@ export function PlaygroundBar() {
       contentStyle={{ flexBasis: 521 + "px" }}
     >
       <TopBarElement>
-        <a href="/">
+        <NavLink to="/" end>
           <Button
             style={{
               width: 52 + "px",
@@ -19,12 +20,12 @@ export function PlaygroundBar() {
               backgroundColor: "white",
             }}
           >
-            <img src={saveSvg}></img>
+            <img src={saveSvg} />
           </Button>
-        </a>
+        </NavLink>
       </TopBarElement>
       <TopBarElement>
-        <a href="/playground">
+        <NavLink to="/template" end>
           <Button
             style={{
               width: 459 + "px",
@@ -36,8 +37,9 @@ export function PlaygroundBar() {
           >
             PostgreSQL | Template #1
           </Button>
-        </a>
+        </NavLink>
       </TopBarElement>
     </TopBar>
   );
 }
+

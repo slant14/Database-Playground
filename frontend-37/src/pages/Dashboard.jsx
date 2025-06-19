@@ -1,7 +1,7 @@
 import dashboardImg from "../assets/dashboardImg.png";
 import humansImg from "../assets/humans.jpg";
 import styles from "./Dashboard.module.css";
-import { MainBar } from "../components/ui/MainBar";
+import { MainBar } from "../components/MainBar";
 
 export default function Dashboard() {
   return (

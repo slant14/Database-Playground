@@ -1,0 +1,12 @@
+.tab {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 1px 10px;
+  border: 1px solid #c1c1c1;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #e9e9ff;
+  cursor: default;
+}

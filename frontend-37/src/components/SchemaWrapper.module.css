@@ -1,0 +1,22 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: 24px;
+  border: 1px solid #c1c1c1;
+  border-radius: 16px;
+  resize: both;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+.schema {
+  flex-grow: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
