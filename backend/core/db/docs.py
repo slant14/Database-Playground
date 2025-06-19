@@ -14,6 +14,10 @@ get_db_schema_doc = swagger_auto_schema(
     manual_parameters=[session_id_query_param],
 )
 
+put_db_schema_doc = swagger_auto_schema(
+    manual_parameters=[session_id_query_param],
+)
+
 post_db_query_doc = swagger_auto_schema(
     manual_parameters=[session_id_query_param],
     request_body=openapi.Schema(
