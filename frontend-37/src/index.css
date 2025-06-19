@@ -1,9 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap');
-
-* {
-  font-family: 'Onest', sans-serif;
-}
+@import url("https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&display=swap");
 
 body {
+  font-family: "Onest", sans-serif;
   margin: 0;
+}
+
+.mono {
+  font-family: "Azeret Mono", monospace;
 }
