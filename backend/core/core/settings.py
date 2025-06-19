@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'test',
     'templates',
     'session',
+    'db',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
+    'http://localhost:5173', # TODO : add http://localhost:3000
 ]
 
 ROOT_URLCONF = 'core.urls'
