@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
 from session.models import Session
+from engines import postgres_engine
 
 from .docs import post_template_schema
-
 from .models import Template
 from .serializers import TemplateSerializer, MinTemplateSerializer
 
@@ -35,7 +35,7 @@ class TemplateListCreateView(mixins.ListModelMixin,
         session = Session.objects.get(id=query_session_id)
 
         data = JSONParser().parse(request)
-        data['dump'] = ""                      # TODO: fill with real dump when SQLEngine get_dump is created
+        data['dump'] = postgres_engine.get_dump(session.get_unauth_dbname())
         
         serializer = TemplateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
