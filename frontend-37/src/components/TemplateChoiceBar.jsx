@@ -1,15 +1,16 @@
-import { TopBar } from "./TopBar";
-import { TopBarElement } from "./TopBarElement";
+import { TopBar } from "./ui/TopBar";
+import { TopBarElement } from "./ui/TopBarElement";
 import { Button } from "./ui/Button";
+import { NavLink } from "react-router";
 
-export function TemplateChoiceBar() {
+export function TemplateChoiceBar({ onTemplateChoose }) {
   return (
     <TopBar
       style={{ backgroundColor: "#6968FF", color: "white" }}
       contentStyle={{ flexBasis: 404 + "px" }}
     >
       <TopBarElement>
-        <a href="/">
+        <NavLink to="/" end>
           <Button
             style={{
               width: 177 + "px",
@@ -21,10 +22,10 @@ export function TemplateChoiceBar() {
           >
             Back
           </Button>
-        </a>
+        </NavLink>
       </TopBarElement>
       <TopBarElement>
-        <a href="/playground">
+        <NavLink to="/playground" onClick={onTemplateChoose} end>
           <Button
             style={{
               width: 177 + "px",
@@ -36,7 +37,7 @@ export function TemplateChoiceBar() {
           >
             Start
           </Button>
-        </a>
+        </NavLink>
       </TopBarElement>
     </TopBar>
   );

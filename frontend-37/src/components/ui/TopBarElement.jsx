@@ -7,4 +7,3 @@ export function TopBarElement({ children, ...props }) {
     </div>
   );
 }
-

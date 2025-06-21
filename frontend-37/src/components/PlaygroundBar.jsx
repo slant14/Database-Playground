@@ -1,7 +1,9 @@
-import { TopBar } from "./TopBar";
-import { TopBarElement } from "./TopBarElement";
+import { TopBar } from "./ui/TopBar";
+import { TopBarElement } from "./ui/TopBarElement";
 import { Button } from "./ui/Button";
 import { NavLink } from "react-router";
+
+import image from "../assets/save.svg";
 
 export function PlaygroundBar() {
   return (
@@ -19,7 +21,7 @@ export function PlaygroundBar() {
               backgroundColor: "white",
             }}
           >
-            <img src="/save.svg"></img>
+            <img src={image}></img>
           </Button>
         </NavLink>
       </TopBarElement>
@@ -41,4 +43,3 @@ export function PlaygroundBar() {
     </TopBar>
   );
 }
-
