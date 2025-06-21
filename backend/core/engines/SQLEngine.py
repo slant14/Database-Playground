@@ -7,17 +7,21 @@ class SQLEngine(ABC):
 
     def __init__(
         self,
-        root_db: str,
-        host: str,
-        port: int,
         user: str,
         password: str,
+        root_db: str | None = None,
+        host: str = "127.0.0.1",
+        port: int = 5432,
     ):
+        if not root_db:
+            root_db = user
+
+        self._user = user
+        self._password = password
         self._root_db = root_db
         self._host = host
         self._port = port
-        self._user = user
-        self._password = password
+
 
     @abstractmethod
     def get_db(self, db_name: str) -> DBInfo:
@@ -49,4 +53,12 @@ class SQLEngine(ABC):
 
         :raises DBNotExists:
         :raises QueryError:
+        """
+
+    
+    @abstractmethod
+    def get_dump(self, db_name: str) -> str:
+        """ Returns the SQL dump of a database
+
+        :raises DBNotExists:
         """

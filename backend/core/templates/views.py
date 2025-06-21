@@ -1,7 +1,14 @@
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.parsers import JSONParser
 
+from engines import postgres_engine
+from session.models import Session
+from session.shortcuts import resolve_session_id
+
+from .docs import post_template_schema
 from .models import Template
 from .serializers import TemplateSerializer, MinTemplateSerializer
 
@@ -10,23 +17,27 @@ class TemplateListCreateView(mixins.ListModelMixin,
                              generics.GenericAPIView):
     queryset = Template.objects.all()
     serializer_class = MinTemplateSerializer
-    
+
     def get(self, request: Request):
         return self.list(request)
 
-    # def post(self, request: Request): # TODO : finish this after session app created
-    #     query_session_id = request.query_params.get("session_id")
-    #     cookie_session_id = request.COOKIES.get("session_id")
+    @post_template_schema
+    def post(self, request: Request):
+        session_id, err_response = resolve_session_id(request)
+        if err_response:
+            return err_response
 
-    #     if not query_session_id:
-    #         return Response(status=400) # TODO : add message
-    #     if not cookie_session_id:
-    #         return Response(status=401) # TODO : add message
-    #     if query_session_id != cookie_session_id:
-    #         return Response(status=401) # TODO : add message
+        session = Session.objects.get(id=session_id)
+        db_name = session.get_unauth_dbname()
+
+        data = JSONParser().parse(request)
+        data['dump'] = postgres_engine.get_dump(db_name)
         
-    #     session = Session.objects.get(id=query_session_id)
-
+        serializer = TemplateSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return Response(serializer.data)
 
 
 class TemplateRetreiveView(mixins.RetrieveModelMixin,

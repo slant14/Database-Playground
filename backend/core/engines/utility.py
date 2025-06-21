@@ -1,6 +1,6 @@
 import psycopg2
 
-from core.engines.exceptions import DBExists, DBNotExists, QueryError
+from .exceptions import DBExists, DBNotExists, QueryError
 
 
 def postgres_wrap_exceptions(func):

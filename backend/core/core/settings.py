@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     # 'engines',
     'classroom',
     'test',
-    'schema',
     'templates',
+    'session',
+    'db',
 ]
 
 MIDDLEWARE = [
@@ -63,11 +64,12 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://89.169.182.245:3000",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:5173',
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+#     "http://89.169.182.245:3000",
+# ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
@@ -172,3 +174,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom user config
 AUTH_USER_MODEL = 'account.User'
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_API_URL': 'https://dbpg.ru/api',
+    # Other Swagger settings...
+}
