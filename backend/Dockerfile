@@ -15,11 +15,17 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY ./core/requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+COPY ./core/requirements.txt /app/
+
+RUN pip install --upgrade pip 
+RUN pip install -r requirements.txt
 
 COPY ./core /app
 
 EXPOSE 8000
 
-CMD ["python", "core/manage.py", "runserver", "0.0.0.0:8000"]
+ENV SECRET_KEY test
+ENV DEBUG true
+
+RUN ["python3", "manage.py", "migrate"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

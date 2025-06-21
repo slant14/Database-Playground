@@ -3,19 +3,15 @@ version: '3.9'
 services:
 
   backend:
-    build:
-      context: ./backend
+    build: ./backend/
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./backend:/app
+      - ./backend/core:/app
     ports:
       - "8000:8000"
-    # depends_on:
-    #   - frontend
     environment:
-      - DEBUG=true
-      - ALLOWED_HOSTS=*
-      - SECRET_KEY=replace-this-in-prod
-      - DATABASE_URL=sqlite:///db.sqlite3
+      - SECRET_KEY=test
+      - DEBUG=True
 
   frontend-37:
     build: ./frontend-37
