@@ -5,11 +5,10 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY core/requirements.txt .
+COPY ./core/requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-COPY . /app
-ENV PYTHONPATH=/app
+COPY ./core /app
 
 EXPOSE 8000
 

@@ -1,6 +1,7 @@
 version: '3.9'
 
 services:
+
   backend:
     build:
       context: ./backend
@@ -8,23 +9,20 @@ services:
       - ./backend:/app
     ports:
       - "8000:8000"
-    depends_on:
-      - frontend
+    # depends_on:
+    #   - frontend
     environment:
-      - DEBUG=True
+      - DEBUG=true
       - ALLOWED_HOSTS=*
       - SECRET_KEY=replace-this-in-prod
       - DATABASE_URL=sqlite:///db.sqlite3
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      target: build
-      args:
-        REACT_APP_API_URL: http://localhost:8000
+  frontend-37:
+    build: ./frontend-37
     ports:
-      - "3000:3000"
+      - "5173:5173"
+    volumes:
+      - ./frontend-37:/app
 
   postgres:
     image: postgres
@@ -36,22 +34,32 @@ services:
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
 
-  mysql:
-    image: mysql:8.0
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    volumes:
-      - ./mysql_data:/var/lib/mysql
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #     target: build
+  #     args:
+  #       REACT_APP_API_URL: http://localhost:8000
+  #   ports:
+  #     - "3000:3000"
 
-  mongodb:
-    image: mongo
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-    volumes:
-      - ./mongo_data:/data/db
+  # mysql:
+  #   image: mysql:8.0
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     MYSQL_USER: ${MYSQL_USER}
+  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  #   volumes:
+  #     - ./mysql_data:/var/lib/mysql
+
+  # mongodb:
+  #   image: mongo
+  #   ports:
+  #     - "27017:27017"
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+  #   volumes:
+  #     - ./mongo_data:/data/db

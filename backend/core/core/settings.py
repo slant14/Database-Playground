@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')], default='*')
+# ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')], default='*')
 
 # Application definition
 
@@ -42,9 +42,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'account',
-    'class',
-    'corsheaders',
-    'engines',
+    # 'engines',
     'classroom',
     'test',
     'schema',
