@@ -2,8 +2,7 @@ import { TopBar } from "./ui/TopBar";
 import { TopBarElement } from "./ui/TopBarElement";
 import { Button } from "./ui/Button";
 import { NavLink } from "react-router";
-
-import image from "../assets/save.svg";
+import saveSvg from "../assets/save.svg";
 
 export function PlaygroundBar() {
   return (
@@ -21,7 +20,7 @@ export function PlaygroundBar() {
               backgroundColor: "white",
             }}
           >
-            <img src={image}></img>
+            <img src={saveSvg} alt="Save button"></img>
           </Button>
         </NavLink>
       </TopBarElement>

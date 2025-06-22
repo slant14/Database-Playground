@@ -1,4 +1,4 @@
-from dataclassses imprort dataclass
+from dataclasses import dataclass
 
 
 @dataclass
@@ -31,7 +31,7 @@ class DBInfo:
     def __repr__(self) -> str:
         tables_str = ""
         for table in self.tables:
-            tables_str += f"\n  {str(table).replace("\n", "\n  ")}"
+            tables_str += f"\n  {str(table).replace('\n', '\n  ')}"
         return (
             f"Database {self.name}:  {tables_str}"
         )
