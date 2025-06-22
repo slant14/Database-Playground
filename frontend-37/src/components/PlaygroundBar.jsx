@@ -1,5 +1,5 @@
-import { TopBar } from "./TopBar";
-import { TopBarElement } from "./TopBarElement";
+import { TopBar } from "./ui/TopBar";
+import { TopBarElement } from "./ui/TopBarElement";
 import { Button } from "./ui/Button";
 import { NavLink } from "react-router";
 import saveSvg from "../assets/save.svg";
@@ -42,4 +42,3 @@ export function PlaygroundBar() {
     </TopBar>
   );
 }
-

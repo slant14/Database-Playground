@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { PlaygroundBar } from "../components/PlaygroundBar";
+import QueryInput from "../components/QueryInput";
 import SchemaWrapper from "../components/SchemaWrapper";
-import RunButton from "../components/RunButton";
 import ResultsTableWrapper from "../components/ResultsTableWrapper";
 
 export default function Playground() {
+  const [ query, setQuery ] = useState("");
+
   const schemas = [
     {
       name: "students",
@@ -181,9 +184,11 @@ export default function Playground() {
     <div>
       <PlaygroundBar />
       <div className="mono">
-        <SchemaWrapper schemas={schemas} />
+        <div style={{display: "flex", justifyContent: "space-evenly", margin: "10px 0px 10px 0px"}}>
+          <QueryInput onQueryChange={setQuery} onRunClicked={() => console.log("salam bro")} />
+          <SchemaWrapper schemas={schemas} />
+        </div>
       </div>
-      <RunButton />
       <ResultsTableWrapper jason={jason} />
     </div>
   );

@@ -1,6 +1,6 @@
-import { TopBar } from "./TopBar";
+import { TopBar } from "./ui/TopBar";
 import { Button } from "./ui/Button";
-import { TopBarElement } from "./TopBarElement";
+import { TopBarElement } from "./ui/TopBarElement";
 import { NavLink } from "react-router";
 
 export function MainBar() {
@@ -32,4 +32,3 @@ export function MainBar() {
     </TopBar>
   );
 }
-
