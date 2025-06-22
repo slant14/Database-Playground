@@ -1,14 +1,15 @@
 import { useRef, useState } from "react";
 import styles from "./QueryInput.module.css";
+import RunButton from "./RunButton";
 
-export default function QueryInput({ onQueryChange }) {
+export default function QueryInput({ onQueryChange, onRunClicked }) {
   let textareaRef = useRef(null);
   let numbersColumnRef = useRef(null);
-  let wrapperRef = useRef(null);
+  let containerRef = useRef(null);
 
   let [numberColumnValues, changeNumberColumnValues] = useState(["1"]);
 
-  let wrapperResizeObserver = new ResizeObserver(adjustSizes);
+  let containerResizeObserver = new ResizeObserver(adjustSizes);
   let observerObserving = false;
 
   function getNumberRows() {
@@ -20,8 +21,8 @@ export default function QueryInput({ onQueryChange }) {
   }
 
   return (
-    <>
-      <div className={styles["query-input-wrapper"]} ref={wrapperRef}>
+    <div className={styles["query-input-container"]} ref={containerRef}>
+      <div className={styles["query-input-wrapper"]}>
         <div
           className={styles["query-input-rowcounter"]}
           ref={numbersColumnRef}
@@ -39,9 +40,9 @@ export default function QueryInput({ onQueryChange }) {
             onQueryChange(e.target.value);
             adjustSizes();
 
-            if (wrapperRef.current != null && !observerObserving) {
+            if (containerRef.current != null && !observerObserving) {
               observerObserving = true;
-              wrapperResizeObserver.observe(wrapperRef.current);
+              containerResizeObserver.observe(containerRef.current);
             }
           }}
           onScroll={() => {
@@ -54,6 +55,7 @@ export default function QueryInput({ onQueryChange }) {
           ref={textareaRef}
         ></textarea>
       </div>
-    </>
+        <RunButton handleClick={onRunClicked}/>
+    </div>
   );
 }

@@ -11,6 +11,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+
+    z-index: 2;
 }
 
 .runButton:hover {

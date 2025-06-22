@@ -1,18 +1,33 @@
-.query-input-wrapper {
-    display: flex;
-    flex-direction: row;
+.query-input-container {
+    display: block;
     font-size: 24px;
     border: 1px solid #c1c1c1;
     border-radius: 16px;
     resize: both;
-    overflow-y: hidden;
-    gap: 25px;
+    overflow: hidden;
 
     width: 700px;
     margin-right: 20px;
     height: 502px;
 
+    position: relative;
+}
+
+.query-input-wrapper {
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    resize: none;
+    overflow: hidden;
+    gap: 25px;
+
+    width: 100%;
+    height: 100%;
+
     justify-content: flex-start;
+
+    margin: 0;
+    padding: 0;
 }
 
 .query-input-rowcounter {
@@ -22,7 +37,6 @@
     flex-basis: 42px;
     color: #D4D4D4;
     margin-top: 10px;
-    z-index: 0;
 
     max-height: 100%;
     height: 100%;
@@ -56,7 +70,7 @@
     flex-shrink: 10;
     resize: none;
 
-    overflow-y: auto;
+    overflow: auto;
     text-wrap-mode:nowrap;
 
     flex-basis: 613px;

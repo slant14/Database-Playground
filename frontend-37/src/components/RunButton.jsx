@@ -1,11 +1,7 @@
 import styles from "./RunButton.module.css";
 import triangleJpg from "../assets/triangle.jpg";
 
-function handleClick() {
-    console.log("salam bro")
-}
-
-export default function RunButton() {
+export default function RunButton({ handleClick }) {
     return (
         <>
             <button className={styles.runButton} onClick={handleClick}>
