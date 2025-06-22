@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import { PlaygroundBar } from "../components/PlaygroundBar";
 import QueryInput from "../components/QueryInput";
 import SchemaWrapper from "../components/SchemaWrapper";
@@ -9,7 +8,7 @@ export default function Playground() {
   const [query, setQuery] = useState("");
   const [schemas, setSchemas] = useState([]);
   const [results, setResults] = useState({ results: [] });
-  const session_id = Cookies.get("session_id");
+  const session_id = localStorage.getItem("session_id");
 
   useEffect(() => {
     const run = async () => {

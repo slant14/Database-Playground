@@ -4,20 +4,19 @@ import styles from "./Dashboard.module.css";
 import { MainBar } from "../components/MainBar";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import Cookies from "js-cookie";
 
 export default function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
     const run = async () => {
-	    console.log("HELLO");
+      console.log("HELLO");
       const res = await fetch("https://api.dbpg.ru/session", {
         credentials: "include",
       });
-     const a = await res.json();
-      console.log(a);
-      Cookies.set("session_id", a.session_id);
+      const { session_id } = await res.json();
+      console.log(session_id);
+      localStorage.setItem("session_id", session_id);
     };
 
     run();
@@ -25,7 +24,7 @@ export default function Dashboard() {
 
   const onClick = async () => {
     const res = await fetch(
-      `https://api.dbpg.ru/session/info/?session_id=${Cookies.get("session_id")}`,
+      `https://api.dbpg.ru/session/info/?session_id=${localStorage.getItem("session_id")}`,
       {
         credentials: "include",
       },

@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { TemplateChoiceBar } from "../components/TemplateChoiceBar";
 import { TemplateList } from "../components/TemplateList";
 import { useNavigate } from "react-router";
-import Cookies from "js-cookie";
 
 export default function TemplateChoice() {
   const [choice, setChoice] = useState(-1);
   const [templates, setTemplates] = useState([]);
-  const session_id = Cookies.get("session_id");
+  const session_id = localStorage.getItem("session_id");
   const navigate = useNavigate();
 
   useEffect(() => {
