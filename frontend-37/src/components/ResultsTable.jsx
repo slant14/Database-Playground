@@ -43,7 +43,7 @@ export default function ResultsTable({ results }) {
     return (
       <div className={styles.beautiful}>
         <p>Execution time: {results.execution_time}</p>
-        <p>{results.rowcount} rows affected.</p>
+        <p>{Math.max(0, results.rowcount)} rows affected.</p>
       </div>
     );
   } else {
@@ -56,4 +56,3 @@ export default function ResultsTable({ results }) {
     );
   }
 }
-
