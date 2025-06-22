@@ -4,7 +4,8 @@ import Tab from "./Tab";
 import styles from "./SchemaWrapper.module.css";
 
 export default function SchemaWrapper({ schemas }) {
-  console.log(schemas);
+  console.log(schemas.length);
+  if (schemas.length == 0) return <div>DAUN</div>;
   const [activeSchema, setActiveSchema] = useState(schemas[0]);
   return (
     <div

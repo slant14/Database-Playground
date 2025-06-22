@@ -12,7 +12,7 @@ export default function TemplateChoice() {
 
   useEffect(() => {
     const run = async () => {
-      const res = await fetch("https://api.dbpg.ru/template", {
+      const res = await fetch("https://api.dbpg.ru/template/", {
         credentials: "include",
       });
       const json = await res.json();
@@ -20,10 +20,10 @@ export default function TemplateChoice() {
     };
 
     run();
-  });
+  }, []);
 
   const onChoice = async (choice) => {
-    await fetch(`https://api.dbpg.ru/session/info?session_id=${session_id}`, {
+    await fetch(`https://api.dbpg.ru/session/info/?session_id=${session_id}`, {
       method: "PATCH",
       body: JSON.stringify({
         template: choice,
@@ -31,7 +31,7 @@ export default function TemplateChoice() {
       credentials: "include",
     });
 
-    await fetch(`https://api.dbpg.ru/db?session_id=${session_id}`, {
+    await fetch(`https://api.dbpg.ru/db/?session_id=${session_id}`, {
       method: "PUT",
       credentials: "include",
     });
@@ -55,4 +55,3 @@ export default function TemplateChoice() {
     </div>
   );
 }
-

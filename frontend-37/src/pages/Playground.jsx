@@ -14,31 +14,32 @@ export default function Playground() {
   useEffect(() => {
     const run = async () => {
       const res = await fetch(
-        `https://api.dbpg.ru/db/schema?session_id=${session_id}`,
+        `https://api.dbpg.ru/db/schema/?session_id=${session_id}`,
         {
           credentials: "include",
         },
       );
       const json = await res.json();
+      console.log(json);
       setSchemas(json);
     };
     run();
-  });
+  }, []);
 
   const sendQuery = async () => {
     const res = await fetch(
-      `https://api.dbpg.ru/db/query?schema_id=${session_id}`,
+      `https://api.dbpg.ru/db/query/?session_id=${session_id}`,
       {
         method: "POST",
-        body: JSON.stringify({
-          data: query,
-        }),
+        body: query,
         credentials: "include",
       },
     );
 
     const json = await res.json();
+    console.log(json);
     setResults(json);
+    setSchemas(json.schema);
   };
 
   return (
@@ -54,10 +55,11 @@ export default function Playground() {
             }}
           >
             <QueryInput onQueryChange={setQuery} onRunClicked={sendQuery} />
-            <SchemaWrapper schemas={schemas} />
+            <SchemaWrapper schemas={schemas.tables} />
           </div>
         </div>
       )}
+
       <ResultsTableWrapper jason={results} />
     </div>
   );

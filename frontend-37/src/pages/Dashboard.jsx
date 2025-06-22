@@ -15,17 +15,17 @@ export default function Dashboard() {
       const res = await fetch("https://api.dbpg.ru/session", {
         credentials: "include",
       });
-      const json = await res.json();
-      console.log(res);
-      console.log(json);
+     const a = await res.json();
+      console.log(a);
+      Cookies.set("session_id", a.session_id);
     };
 
     run();
-  });
+  }, []);
 
   const onClick = async () => {
     const res = await fetch(
-      `https://api.dbpg.ru/session/info?session_id=${Cookies.get("session_id")}`,
+      `https://api.dbpg.ru/session/info/?session_id=${Cookies.get("session_id")}`,
       {
         credentials: "include",
       },
