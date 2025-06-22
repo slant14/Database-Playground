@@ -9,8 +9,10 @@ function getTableData(item, headers) {
 }
 
 function Table({ results }) {
+  // if (results.length == 0) return;
+  console.log(results)
   let headers = [];
-  for (let i in results[0]) {
+  for (let i of results[0]) {
     headers.push(i);
   }
   return (
@@ -27,7 +29,7 @@ function Table({ results }) {
           {results.map((item) => (
             <tr key={results.indexOf(item)}>
               {getTableData(item, headers).map((data) => (
-                <td key={data}>{data}</td>
+                <td key={data}>{(data)}</td>
               ))}
             </tr>
           ))}

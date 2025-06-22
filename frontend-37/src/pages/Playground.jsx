@@ -36,9 +36,8 @@ export default function Playground() {
     );
 
     const json = await res.json();
-    console.log(json);
     setResults(json);
-    setSchemas(json.schema);
+    if (json.schema) setSchemas(json.schema);
   };
 
   return (

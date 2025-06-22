@@ -55,6 +55,8 @@ li {
 
   background-color: #6968ff;
   color: white;
+
+  cursor: pointer;
 }
 
 .template-list-item:nth-child(even) {

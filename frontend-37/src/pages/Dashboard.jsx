@@ -10,13 +10,17 @@ export default function Dashboard() {
 
   useEffect(() => {
     const run = async () => {
-      console.log("HELLO");
-      const res = await fetch("https://api.dbpg.ru/session", {
-        credentials: "include",
-      });
-      const { session_id } = await res.json();
-      console.log(session_id);
-      localStorage.setItem("session_id", session_id);
+      console.log(localStorage.getItem("session_id"), "!!!!");
+      if (!localStorage.getItem("session_id")) {
+        const res = await fetch("https://api.dbpg.ru/session", {
+          credentials: "include",
+        });
+        const { session_id } = await res.json();
+        localStorage.setItem("session_id", session_id);
+        console.log(session_id);
+      } else {
+        console.log(localStorage.getItem("session_id"));
+      }
     };
 
     run();
