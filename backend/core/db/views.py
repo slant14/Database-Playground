@@ -73,6 +73,9 @@ class QueryView(APIView):
         db_name = session.get_unauth_dbname()
 
         query = request.data
+        query = query.strip()
+        query = query.replace('\\n', '')
+        print("\n\nDATA:", query, "\n\n")
         if not isinstance(query, str):
             return Response({"detail": "Not a plain string query"}, status=400)
         

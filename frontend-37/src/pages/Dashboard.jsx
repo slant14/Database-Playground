@@ -11,13 +11,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     const run = async () => {
-      // const res = await fetch("http://localhost:8000/session", {
+	    console.log("HELLO");
       const res = await fetch("https://api.dbpg.ru/session", {
         credentials: "include",
       });
+      const json = await res.json();
       console.log(res);
-      // const a = await res.json();
-      // console.log(a);
+      console.log(json);
     };
 
     run();

@@ -84,5 +84,5 @@ class QueryResult:
             "query": self.query,
             "rowcount": self.rowcount,
             "data": self.data,
-            "exectuion_time": self.execution_time
+            "execution_time": self.execution_time
         }

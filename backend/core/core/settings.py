@@ -14,7 +14,7 @@ from pathlib import Path
 from decouple import config 
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project like this: BASE_DIR / d'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -63,6 +63,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
 
 # CORS_ALLOWED_ORIGINS = [
 #     'http://localhost:5173',
