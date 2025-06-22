@@ -1,5 +1,7 @@
 import { PlaygroundBar } from "../components/PlaygroundBar";
 import SchemaWrapper from "../components/SchemaWrapper";
+import RunButton from "../components/RunButton";
+import ResultsTableWrapper from "../components/ResultsTableWrapper";
 
 export default function Playground() {
   const schemas = [
@@ -133,12 +135,56 @@ export default function Playground() {
     },
   ];
 
+  let jason = {
+    "results": [
+      {
+         "query": "SELECT name, age FROM users;",
+         "rowcount": 6,
+         "data": [
+          { category: "Fruits", price: "$1", stocked: true, name: "Apple" },
+          { category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit" },
+          { category: "Fruits", price: "$2", stocked: false, name: "Passionfruit" },
+          { category: "Vegetables", price: "$2", stocked: true, name: "Spinach" },
+          { category: "Vegetables", price: "$4", stocked: false, name: "Pumpkin" },
+          { category: "Vegetables", price: "$1", stocked: true, name: "Peas" }
+         ],
+         "execution_time": 0.4
+      },
+      {
+        "query": "Insert (tomato, cucumber) into database",
+        "rowcount": 6,
+        "data": null,
+        "execution_time": 0.0042
+     },
+     {
+      "query": "Delete onion where stocked = false",
+      "rowcount": 3,
+      "data": [
+       { category: "Vegetables", price: "$2", stocked: false, name: "Onion" },
+       { category: "Vegetables", price: "$4", stocked: false, name: "Onion" },
+       { category: "Vegetables", price: "$1", stocked: false, name: "Onion" }
+      ],
+      "execution_time": 0.12
+   }
+    ],
+    "schema": {
+       "name": "db_name",
+       "tables": [
+           {
+              "name": "table_name",
+           }
+        ]
+    }
+  }
+  
   return (
     <div>
       <PlaygroundBar />
       <div className="mono">
         <SchemaWrapper schemas={schemas} />
       </div>
+      <RunButton />
+      <ResultsTableWrapper jason={jason} />
     </div>
   );
 }
