@@ -1,62 +1,59 @@
 import styles from "./ResultsTable.module.css";
 
 function getTableData(item, headers) {
-    let tableData = Array();
-    for (let i of headers) {
-        tableData.push(item[i]);
-    }
-    return tableData;
+  let tableData = Array();
+  for (let i of headers) {
+    tableData.push(item[i]);
+  }
+  return tableData;
 }
 
 function Table({ results }) {
-    let headers = [];
-    for (let i in results[0]) {
-        headers.push(i);
-    }
-    return (
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        {headers.map((item) => (
-                            <th key={item}>
-                                {item}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {results.map((item) => (
-                        <tr key={results.indexOf(item)}>
-                            {getTableData(item, headers).map((data) => (
-                                <td key={data}>
-                                    {data}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    )
+  let headers = [];
+  for (let i in results[0]) {
+    headers.push(i);
+  }
+  return (
+    <div>
+      <table>
+        <thead>
+          <tr>
+            {headers.map((item) => (
+              <th key={item}>{item}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {results.map((item) => (
+            <tr key={results.indexOf(item)}>
+              {getTableData(item, headers).map((data) => (
+                <td key={data}>{data}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default function ResultsTable({ results }) {
-    if (results.data === null) {
-        return (
-            <div className={styles.beautiful}>
-                <p>Execution time: {results.execution_time}</p>
-                <p>{results.rowcount} rows affected.</p>
-            </div>
-        )
-    }
-    else {
+  console.log("TIMUR DAUN", results);
+  if (results.data === null) {
+    return (
+      <div className={styles.beautiful}>
+        <p>Execution time: {results.execution_time}</p>
+        <p>{results.rowcount} rows affected.</p>
+      </div>
+    );
+  } else {
     let data = results.data;
     return (
-        <div className={styles.beautiful}>
-            Execution time: {results.execution_time}
-            <Table results={data}/>
-        </div>
-    )
+      <div className={styles.beautiful}>
+        Execution time: {results.execution_time}
+        <Table results={data} />
+      </div>
+    );
+  }
 }
-}
+

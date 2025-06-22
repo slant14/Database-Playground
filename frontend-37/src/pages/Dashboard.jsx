@@ -16,16 +16,17 @@ export default function Dashboard() {
         credentials: "include",
       });
       console.log(res);
-      // const a = await res.json();
-      // console.log(a);
+      const a = await res.json();
+      console.log(a);
+      Cookies.set("session_id", a.session_id);
     };
 
     run();
-  });
+  }, []);
 
   const onClick = async () => {
     const res = await fetch(
-      `https://api.dbpg.ru/session/info?session_id=${Cookies.get("session_id")}`,
+      `https://api.dbpg.ru/session/info/?session_id=${Cookies.get("session_id")}`,
       {
         credentials: "include",
       },
