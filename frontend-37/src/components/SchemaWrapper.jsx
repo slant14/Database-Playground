@@ -4,6 +4,7 @@ import Tab from "./Tab";
 import styles from "./SchemaWrapper.module.css";
 
 export default function SchemaWrapper({ schemas }) {
+  console.log(schemas);
   const [activeSchema, setActiveSchema] = useState(schemas[0]);
   return (
     <div
