@@ -11,7 +11,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     const run = async () => {
-      // const res = await fetch("http://localhost:8000/session", {
       const res = await fetch("https://api.dbpg.ru/session", {
         credentials: "include",
       });
