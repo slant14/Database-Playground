@@ -1,4 +1,5 @@
 import pytest
+import time
 
 from core.engines.PostgresEngine import PostgresEngine
 from core.engines.exceptions import DBNotExists, DBExists, QueryError
@@ -68,3 +69,23 @@ def test_3(engine: PostgresEngine):
 
         with pytest.raises(QueryError):
             engine.send_query("test_2_db", "create table 'magnolia';")
+
+
+def test_get_dump(engine: PostgresEngine):
+    DB1 = "test_2_db"
+    with tmp_db(engine, DB1, dump_1):
+        first_dump = engine.get_dump(DB1)
+        first_schema = engine.get_db(DB1)
+
+    DB2 = "another_test_db"
+
+    second_schema = None
+    engine.create_db(DB2, first_dump)
+    try:
+        second_dump = engine.get_dump(DB2)
+        second_schema = engine.get_db(DB2)
+    except: pass # noqa
+    engine.drop_db(DB2)
+
+    assert second_schema is not None
+    assert first_schema.tables == second_schema.tables

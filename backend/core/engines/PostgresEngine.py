@@ -1,4 +1,5 @@
 import time
+import subprocess
 from contextlib import contextmanager
 
 import psycopg2
@@ -88,10 +89,17 @@ class PostgresEngine(SQLEngine):
     def _split_queries(self, big_query: str) -> list[str]:
         queries = []
 
+        big_query = '\n'.join(
+            line for line in big_query.split('\n') if 
+            not any((line.startswith('--'), line.startswith('/*')))
+        )
+
         for query in big_query.split(';'):
             query = query.strip()
-            if query:
-                queries.append(query)
+            if not query:
+                continue
+
+            queries.append(query)
 
         return queries
     
@@ -138,3 +146,25 @@ class PostgresEngine(SQLEngine):
         finally:
             if conn:
                 conn.close()
+
+
+    def get_dump(self, db_name: str) -> str:
+        # check if db exists
+        self.get_db(db_name)
+        result = subprocess.run(
+            [
+                "pg_dump",
+                "--no-comments",
+                "--inserts",
+                "--dbname",
+                (
+                    f"postgresql://{self._user}:{self._password}"
+                    f"@{self._host}:{self._port}/{db_name}"
+                )
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True
+        )
+        return result.stdout

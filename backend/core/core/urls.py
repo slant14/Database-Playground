@@ -9,8 +9,6 @@ from rest_framework import routers
 
 from classroom.views import ClassroomModelViewSet
 
-import schema.views
-
 schema_view = get_schema_view(
    openapi.Info(
       title="Database Playground API",
@@ -26,7 +24,6 @@ schema_view = get_schema_view(
 
 
 router = routers.SimpleRouter()
-router.register(r'schema', schema.views.DBSchemaModelViewSet)
 router.register(r'classroom', ClassroomModelViewSet)
 from engines.views import chroma_query, chroma_state
 
@@ -47,6 +44,8 @@ urlpatterns = [
     ),
     path('test/', include("test.urls")),
     path('template/', include("templates.urls")),
+    path('session/', include('session.urls')),
+    path('db/', include('db.urls')),
     path('api/chroma_query/', chroma_query),
     path('api/chroma_state/', chroma_state),
 ]
