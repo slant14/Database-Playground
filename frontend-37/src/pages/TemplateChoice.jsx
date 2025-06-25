@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TemplateChoiceBar } from "../components/TemplateChoiceBar";
 import { TemplateList } from "../components/TemplateList";
 import { useNavigate } from "react-router";
+import { API_URL } from "../const";
 
 export default function TemplateChoice() {
   const [choice, setChoice] = useState(-1);
@@ -11,7 +12,7 @@ export default function TemplateChoice() {
 
   useEffect(() => {
     const run = async () => {
-      const res = await fetch("https://api.dbpg.ru/template/", {
+      const res = await fetch(API_URL+"/template/", {
         credentials: "include",
       });
       const json = await res.json();
@@ -22,7 +23,7 @@ export default function TemplateChoice() {
   }, []);
 
   const onChoice = async (choice) => {
-    await fetch(`https://api.dbpg.ru/session/info/?session_id=${session_id}`, {
+    await fetch(`${API_URL}/session/info/?session_id=${session_id}`, {
       method: "PATCH",
       body: JSON.stringify({
         template: choice,
@@ -30,7 +31,7 @@ export default function TemplateChoice() {
       credentials: "include",
     });
 
-    await fetch(`https://api.dbpg.ru/db/?session_id=${session_id}`, {
+    await fetch(`${API_URL}/db/?session_id=${session_id}`, {
       method: "PUT",
       credentials: "include",
     });

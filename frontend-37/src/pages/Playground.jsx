@@ -3,6 +3,7 @@ import { PlaygroundBar } from "../components/PlaygroundBar";
 import QueryInput from "../components/QueryInput";
 import SchemaWrapper from "../components/SchemaWrapper";
 import ResultsTableWrapper from "../components/ResultsTableWrapper";
+import { API_URL } from "../const";
 
 export default function Playground() {
   const [query, setQuery] = useState("");
@@ -13,7 +14,7 @@ export default function Playground() {
   useEffect(() => {
     const run = async () => {
       const res = await fetch(
-        `https://api.dbpg.ru/db/schema/?session_id=${session_id}`,
+        `${API_URL}/db/schema/?session_id=${session_id}`,
         {
           credentials: "include",
         },
@@ -27,7 +28,7 @@ export default function Playground() {
 
   const sendQuery = async () => {
     const res = await fetch(
-      `https://api.dbpg.ru/db/query/?session_id=${session_id}`,
+      `${API_URL}/db/query/?session_id=${session_id}`,
       {
         method: "POST",
         body: query,
