@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Typography } from "antd";
+import "./Account.css";
 
 const { Title, Paragraph, Text, Link } = Typography;
 
@@ -62,13 +63,6 @@ class Account extends React.Component {
       </div>
     );
   }
-
-  checkLogin = () => {
-    return this.state.isLogin;
-  }
-  login = () => {
-    this.setState({ isLogin: true });
-  };
 }
 
 export default Account;

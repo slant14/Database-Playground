@@ -25,7 +25,7 @@ schema_view = get_schema_view(
 
 router = routers.SimpleRouter()
 router.register(r'classroom', ClassroomModelViewSet)
-from engines.views import chroma_query
+from engines.views import chroma_query, chroma_state
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,6 +47,7 @@ urlpatterns = [
     path('session/', include('session.urls')),
     path('db/', include('db.urls')),
     path('api/chroma_query/', chroma_query),
+    path('api/chroma_state/', chroma_state),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -1,6 +1,6 @@
 import React from "react"
 import { Modal, Input, Button } from "antd";
-
+import "./Header.css"
 
 class MyModal extends React.Component {
   constructor(props) {
@@ -40,16 +40,11 @@ class MyModal extends React.Component {
             </Button>
             <Button type="primary" onClick={() => {
               this.myForm.reset()
-              if (this.state.login === "" || this.state.password === "" ) {
+              if (this.state.login === "" || this.state.password === "") {
                 alert("Please fill in all fields")
               } else {
-                this.userAdd = {
-                  login: this.state.login,
-                  password: this.state.password,
-                  needMemorizing: this.state.needMemorizing,
-                }
-                this.props.setUser(this.userAdd)
-                this.props.onOk()
+                this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing)
+                this.props.onCancel()
               }
             }} className="my-orange-button-solid">
               Sign In
@@ -61,6 +56,8 @@ class MyModal extends React.Component {
       </Modal>
     )
   }
+
+  
 }
 
 export default MyModal

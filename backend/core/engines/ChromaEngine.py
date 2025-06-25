@@ -3,6 +3,7 @@ import chromadb
 from chromadb.utils import embedding_functions
 from typing import List, Dict, Union, Any
 import os
+import re
 
 class ChromaEngine:
     def __init__(self, user_id: int, persist_dir: str = "playground/chroma_persist"):
@@ -125,7 +126,7 @@ class QueryParser:
         if len(parts) < 2:
             raise ValueError("Invalid SEARCH format")
         
-        k = 5
+        k = 2
         filters = {}
         
         text, params = QueryParser._extract_params(parts[1])
@@ -186,15 +187,17 @@ class QueryParser:
 
     @staticmethod
     def _extract_params(text: str) -> tuple:
+        param_pattern = re.compile(r'(\w+)\s*[:=]\s*([^\s]+)')
         params = {}
-        if "[" in text and "]" in text:
-            text_part, options = text.split("[", 1)
-            options = options.rstrip("]")
-            params = QueryParser._parse_key_value(options)
+        matches = list(param_pattern.finditer(text))
+        if matches:
+            first_param_start = matches[0].start()
+            text_part = text[:first_param_start].strip()
+            for m in matches:
+                params[m.group(1)] = m.group(2)
         else:
-            text_part = text
-        
-        return text_part.strip(), params
+            text_part = text.strip()
+        return text_part, params
 
     @staticmethod
     def _parse_filters(filters_str: str) -> dict:

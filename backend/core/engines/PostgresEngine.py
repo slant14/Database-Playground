@@ -7,7 +7,7 @@ from psycopg2.sql import SQL, Identifier
 from psycopg2.extensions import cursor
 
 from .SQLEngine import SQLEngine
-from .models import DBInfo, QueryResult
+from .dbmodels import DBInfo, QueryResult
 from .utility import postgres_wrap_exceptions as wrap_exceptions
 
 

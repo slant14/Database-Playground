@@ -1,13 +1,11 @@
 import React from "react";
-import Header from "./components/header";
-import Footer from "./components/footer";
-import Account from "./components/Account";
-import Code from "./components/Code";
-import Home from "./components/Home";
-import ClassRooms from "./components/Classrooms";
+import Footer from "./components/LayOut/footer";
+import Header from "./components/LayOut/Header/Header";
+import Account from "./components/Account/Account";
+import Code from "./components/Code/Code";
+import Home from "./components/Home/Home";
+import ClassRooms from "./components/Classrooms/Classrooms";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
-import { getHello } from "./api";
-const BASE_URL = process.env.REACT_APP_API_URL || "";
 
 class App extends React.Component {
   constructor(props) {
@@ -15,27 +13,21 @@ class App extends React.Component {
     this.state = {
       page: "home",
       user: {
-        login: "",
-        password: "",
-        needMemorizing: false,
+        login: this.getCookie("login"),
+        password: this.getCookie("password"),
+        needMemorizing: this.getCookie("needMemorizing") === "true" ? true : false,
       },
-      isLogin: false,
-      backendMessage: "",
+      isLogin: this.getCookie("login") ? true : false,
     };
     this.setPage = this.setPage.bind(this);
-    this.setUser = this.setUser.bind(this);
-    this.login = this.login.bind(this);
     this.logOut = this.logOut.bind(this);
-    this.texting = this.texting.bind(this);
+    this.updateLoginState = this.updateLoginState.bind(this);
     this.pageRef = {};
-  }
-
-  setUser = (user) => {
-    this.setState({ user: user });
+    this.handleHomeButtonClick = this.handleHomeButtonClick.bind(this)
   }
 
   setPage = (page) => {
-    this.setState({ page });
+    this.setState({ page: page });
   };
 
   getPageRef = (page) => {
@@ -51,11 +43,7 @@ class App extends React.Component {
       case "home":
         return (
           <div>
-            <Home />
-            <div>Backend says: {() => {
-              this.texting();
-              return this.state.backendMessage;
-            }}</div>
+            <Home handleButtonClick={this.handleHomeButtonClick} />
           </div>
         );
       case "classrooms":
@@ -66,7 +54,7 @@ class App extends React.Component {
       case "code":
         return (
           <div>
-            <Code output={''} />
+            <Code getCookie={this.getCookie}/>
           </div>);
       case "acc":
         return (
@@ -81,46 +69,109 @@ class App extends React.Component {
   render() {
     const page = this.state.page;
     const nodeRef = this.getPageRef(page);
-
     return (
       <div className="app-container">
-        <Header setPage={this.setPage} current={this.state.page} setUser={this.setUser} setLogin={this.login} checkLogin={this.checkLogin()} />
-        <div style={{ flex: 1, position: "relative" }}>
-          <SwitchTransition>
-            <CSSTransition
-              key={page}
-              timeout={300}
-              classNames="page-fade"
-              unmountOnExit
-              nodeRef={nodeRef}
-            >
-              <div ref={nodeRef} style={{ position: "absolute", width: "100%" }}>
-                {this.renderContent()}
-              </div>
-            </CSSTransition>
-          </SwitchTransition>
+        <div class="main-content">
+          {this.state.page !== "home" && (
+            <Header
+              setPage={this.setPage}
+              current={this.state.page}
+              updateLogIn={this.updateLoginState}
+              logIn={this.logIn}
+              setCookie={this.setCookie}
+              checkLogin={this.state.isLogin}
+            />
+          )}
+          <div>
+            <SwitchTransition>
+              <CSSTransition
+                key={page}
+                timeout={300}
+                classNames="page-fade"
+                unmountOnExit
+                nodeRef={nodeRef}
+              >
+                <div ref={nodeRef} style={{ position: "absolute", width: "100%" }}>
+                  {this.renderContent()}
+                </div>
+              </CSSTransition>
+            </SwitchTransition>
+          </div>
         </div>
         <Footer />
       </div>
     );
   }
 
-  checkLogin = () => {
-    return this.state.isLogin;
-  }
-  login = () => {
-    this.setState({ isLogin: true });
+  handleHomeButtonClick = (page) => {
+    this.setPage(page);
   };
 
-  logOut = () => {
-    this.setState({ isLogin: false, user: { login: "", password: "", needMemorizing: false }, page: "home" });
+  logIn = (login, password, needMemorizing) => {
+    this.setCookie("login", login, 7);
+    this.setCookie("password", password, 7);
+    this.setCookie("needMemorizing", needMemorizing, 7);
+    this.setPage("home");
+    let user = {
+      login: login,
+      password: password,
+      needMemorizing: needMemorizing,
+    }
+    this.setState({isLogin: true, user: user});
+    
   }
 
-  texting = () => {
-    getHello()
-    .then(data => this.setState({ backendMessage: data.message }))
-    .catch(err => console.error("Failed to fetch backend message", err));
+
+  logOut = () => {
+    this.deleteCookie("login");
+    this.deleteCookie("password");
+    this.deleteCookie("needMemorizing");
+    this.updateLoginState();
+    this.setPage("home");
   }
+
+  setCookie = (name, value, options = {}) => {
+    let newEntryBody = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+
+    const optionsAsString = Object.entries(options)
+      .map(([key, val]) => `${key}=${val}`)
+      .join("; ");
+
+    if (optionsAsString) {
+      newEntryBody += `; ${optionsAsString}`;
+    }
+
+    document.cookie = newEntryBody;
+  };
+
+  deleteCookie = (name) => {
+    this.setCookie(name, "", { 'max-age': -1 });
+    this.updateLoginState();
+  }
+
+
+  updateLoginState = () => {
+    const login = this.getCookie("login");
+    const password = this.getCookie("password");
+    this.setState({
+    isLogin: !!login && !!password,
+  });
+  };
+
+
+  getCookie = (name) => {
+    for (const entryString of document.cookie.split(";")) {
+      const [entryName, entryValue] = entryString.split("=");
+      if (decodeURIComponent(entryName) === name) {
+        return entryValue
+      }
+    }
+    return undefined;
+  }
+
+  getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 }
 
 export default App;

@@ -68,3 +68,21 @@ def chroma_query(request):
     
     except Exception as e:
         return Response({"error": str(e)}, status=400)
+
+@csrf_exempt
+@api_view(['GET'])  
+def chroma_state(request):
+    try:
+        data = json.loads(request.body)
+        user_id = data.get("user_id")
+    except Exception:
+        user_id = None
+    if not user_id:
+        return Response({"error": "Missing user_id"}, status=400)
+    
+    engine = ChromaEngine(user_id)
+    try:
+        state = engine.get_db_state()
+        return Response({"state": state})
+    except Exception as e:
+        return Response({"error": str(e)}, status=400)

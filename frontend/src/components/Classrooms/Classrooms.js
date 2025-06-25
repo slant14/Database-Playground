@@ -1,12 +1,13 @@
 import React from "react";
-import { Button, Typography } from "antd";
+import { Typography } from "antd";
+import './Classrooms.css';
 
 const { Title, Paragraph, Text, Link } = Typography;
 
 class ClassRooms extends React.Component {
   render() {
     return (
-      <div className="home">
+      <div className="classrooms">
         <Title style={{
           color: "#fff",
           fontSize: 45,

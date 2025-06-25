@@ -24,7 +24,8 @@ class DBInfo:
     def __repr__(self) -> str:
         tables_str = ""
         for table in self.tables:
-            tables_str += f"\n  {str(table).replace("\n", "\n  ")}"
+            table_str = str(table).replace('\n', '\n  ')
+            tables_str += f"\n  {table_str}"
         return (
             f"Database {self.name}:  {tables_str}"
         )

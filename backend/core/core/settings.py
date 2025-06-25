@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'account',
-    'class',
-    'corsheaders',
     'engines',
     'classroom',
     'test',
