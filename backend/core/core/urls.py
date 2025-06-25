@@ -18,6 +18,7 @@ schema_view = get_schema_view(
       contact=openapi.Contact(email="contact@snippets.local"),
       license=openapi.License(name="BSD License"),
    ),
+   url='https://api.dbpg.ru',
    public=True,
    permission_classes=(permissions.AllowAny,),
 )
@@ -25,7 +26,7 @@ schema_view = get_schema_view(
 
 router = routers.SimpleRouter()
 router.register(r'classroom', ClassroomModelViewSet)
-from engines.views import chroma_query, chroma_state
+# from engines.views import chroma_query
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,10 +45,9 @@ urlpatterns = [
     ),
     path('test/', include("test.urls")),
     path('template/', include("templates.urls")),
+    # path('api/chroma_query/', chroma_query),
     path('session/', include('session.urls')),
     path('db/', include('db.urls')),
-    path('api/chroma_query/', chroma_query),
-    path('api/chroma_state/', chroma_state),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

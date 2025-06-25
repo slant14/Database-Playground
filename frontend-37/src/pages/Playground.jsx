@@ -1,144 +1,64 @@
+import { useEffect, useState } from "react";
 import { PlaygroundBar } from "../components/PlaygroundBar";
+import QueryInput from "../components/QueryInput";
 import SchemaWrapper from "../components/SchemaWrapper";
+import ResultsTableWrapper from "../components/ResultsTableWrapper";
 
 export default function Playground() {
-  const schemas = [
-    {
-      name: "students",
-      columns: [
-        {
-          name: "id",
-          type: "SERIAL",
-          attrs: "PRIMARY KEY",
-        },
-        {
-          name: "name",
-          type: "VARCHAR(30)",
-          attrs: "NOT NULL",
-        },
-        {
-          name: "age",
-          type: "INTEGER",
-          attrs: "DEFAULT 18",
-        },
-        {
-          name: "email",
-          type: "TEXT",
-        },
-      ],
-    },
-    {
-      name: "grades",
-      columns: [
-        {
-          name: "id",
-          type: "SERIAL",
-          attrs: "PRIMARY KEY",
-        },
-        {
-          name: "grade",
-          type: "INTEGER",
-          attrs: "NOT NULL",
-        },
-        {
-          name: "studentId",
-          type: "INTEGER",
-          attrs: "FOREIGN KEY students",
-        },
-      ],
-    },
+  const [query, setQuery] = useState("");
+  const [schemas, setSchemas] = useState([]);
+  const [results, setResults] = useState({ results: [] });
+  const session_id = localStorage.getItem("session_id");
 
-    {
-      name: "teachers",
-      columns: [
+  useEffect(() => {
+    const run = async () => {
+      const res = await fetch(
+        `https://api.dbpg.ru/db/schema/?session_id=${session_id}`,
         {
-          name: "id",
-          type: "SERIAL",
-          attrs: "PRIMARY KEY",
+          credentials: "include",
         },
-        {
-          name: "name",
-          type: "VARCHAR(50)",
-          attrs: "NOT NULL",
-        },
-        {
-          name: "class",
-          type: "TEXT",
-        },
-      ],
-    },
-    {
-      name: "students2",
-      columns: [
-        {
-          name: "id",
-          type: "SERIAL",
-          attrs: "PRIMARY KEY",
-        },
-        {
-          name: "name",
-          type: "VARCHAR(30)",
-          attrs: "NOT NULL",
-        },
-        {
-          name: "age",
-          type: "INTEGER",
-          attrs: "DEFAULT 18",
-        },
-        {
-          name: "email",
-          type: "TEXT",
-        },
-      ],
-    },
-    {
-      name: "grades2",
-      columns: [
-        {
-          name: "id",
-          type: "SERIAL",
-          attrs: "PRIMARY KEY",
-        },
-        {
-          name: "grade",
-          type: "INTEGER",
-          attrs: "NOT NULL",
-        },
-        {
-          name: "studentId",
-          type: "INTEGER",
-          attrs: "FOREIGN KEY students",
-        },
-      ],
-    },
+      );
+      const json = await res.json();
+      console.log(json);
+      setSchemas(json);
+    };
+    run();
+  }, []);
 
-    {
-      name: "teachers2",
-      columns: [
-        {
-          name: "id",
-          type: "SERIAL",
-          attrs: "PRIMARY KEY",
-        },
-        {
-          name: "name",
-          type: "VARCHAR(50)",
-          attrs: "NOT NULL",
-        },
-        {
-          name: "class",
-          type: "TEXT",
-        },
-      ],
-    },
-  ];
+  const sendQuery = async () => {
+    const res = await fetch(
+      `https://api.dbpg.ru/db/query/?session_id=${session_id}`,
+      {
+        method: "POST",
+        body: query,
+        credentials: "include",
+      },
+    );
+
+    const json = await res.json();
+    setResults(json);
+    if (json.schema) setSchemas(json.schema);
+  };
 
   return (
     <div>
       <PlaygroundBar />
-      <div className="mono">
-        <SchemaWrapper schemas={schemas} />
-      </div>
+      {schemas.length != 0 && (
+        <div className="mono">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              margin: "10px 0px 10px 0px",
+            }}
+          >
+            <QueryInput onQueryChange={setQuery} onRunClicked={sendQuery} />
+            <SchemaWrapper schemas={schemas.tables} />
+          </div>
+        </div>
+      )}
+
+      <ResultsTableWrapper jason={results} />
     </div>
   );
 }

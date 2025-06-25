@@ -14,7 +14,7 @@ from pathlib import Path
 from decouple import config 
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project like this: BASE_DIR / d'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')], default='*')
+# ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')], default='*')
 
 # Application definition
 
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'account',
-    'engines',
+    # 'engines',
     'classroom',
     'test',
     'templates',
@@ -64,12 +64,14 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://89.169.182.245:3000",
-]
+CORS_ALLOW_CREDENTIALS = True
+
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:5173',
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+#     "http://89.169.182.245:3000",
+# ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
@@ -174,3 +176,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom user config
 AUTH_USER_MODEL = 'account.User'
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_API_URL': 'https://dbpg.ru/api',
+    # Other Swagger settings...
+}

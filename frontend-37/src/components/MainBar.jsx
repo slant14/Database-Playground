@@ -1,9 +1,9 @@
-import { TopBar } from "./TopBar";
+import { TopBar } from "./ui/TopBar";
 import { Button } from "./ui/Button";
-import { TopBarElement } from "./TopBarElement";
+import { TopBarElement } from "./ui/TopBarElement";
 import { NavLink } from "react-router";
 
-export function MainBar() {
+export function MainBar({ onClick }) {
   return (
     <TopBar>
       <TopBarElement>
@@ -17,19 +17,17 @@ export function MainBar() {
         </NavLink>
       </TopBarElement>
       <TopBarElement>
-        <NavLink to="/playground" end>
-          <Button
-            style={{
-              width: 223.93 + "px",
-              height: 51.15 + "px",
-              borderRadius: 11 + "px",
-            }}
-          >
-            Playground
-          </Button>
-        </NavLink>
+        <Button
+          style={{
+            width: 223.93 + "px",
+            height: 51.15 + "px",
+            borderRadius: 11 + "px",
+          }}
+          onClick={onClick}
+        >
+          Playground
+        </Button>
       </TopBarElement>
     </TopBar>
   );
 }
-

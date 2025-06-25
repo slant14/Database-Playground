@@ -19,7 +19,10 @@ class SessionView(APIView):
     queryset = Session.objects.all()
 
     def get(self, request: Request):
+        print("yo")
         session_id = request.COOKIES.get("session_id")
+        print("SEXION ID", session_id)
+        print("nigga")
 
         if not session_id:
             session = Session.objects.create()
@@ -31,7 +34,15 @@ class SessionView(APIView):
             postgres_engine.create_db(db_name, "")
 
         response = Response(self.serializer_class(session).data)
-        response.set_cookie("session_id", session.id.hex)
+        # response.set_cookie("session_id", session.id.hex)
+        # response.set_cookie(
+        #     key='session_id',
+        #     value=session.id.hex,
+        #     httponly=True,
+        #     secure=True,
+        #     samesite='None',         # чтобы работало между доменами
+        #     domain='.dbpg.ru'      # чтобы фронт dbpg.ru видел куку
+        # )
 
         return response
 

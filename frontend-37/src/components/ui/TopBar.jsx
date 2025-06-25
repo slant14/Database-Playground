@@ -17,4 +17,3 @@ export function TopBar({ children, contentStyle, ...props }) {
     </div>
   );
 }
-
