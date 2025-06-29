@@ -12,7 +12,7 @@ function Table({ results }) {
   // if (results.length == 0) return;
   console.log(results)
   let headers = [];
-  for (let i of results[0]) {
+  for (let i in results[0]) {
     headers.push(i);
   }
   return (

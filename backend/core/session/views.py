@@ -19,7 +19,7 @@ class SessionView(APIView):
     queryset = Session.objects.all()
 
     def get(self, request: Request):
-        session_id = request.COOKIES.get("session_id")
+        session_id, _ = resolve_session_id(request)
 
         if not session_id:
             session = Session.objects.create()
