@@ -2,9 +2,7 @@ name: Deploy via SSH with Docker Compose
 
 on:
   push:
-    branches:
-      main
-      pre-chroma
+    branches: [main, pre-chroma]
 
 jobs:
   frontend:
