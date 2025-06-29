@@ -53,7 +53,7 @@ jobs:
         run: flake8 .
         
       - name: Run tests
-        run: PYTHONPATH=. pytest
+        run: cd .. && ./scripts/run_tests.sh
 
   deploy:
     if: github.repository == 'slant14/Database-Playground'
