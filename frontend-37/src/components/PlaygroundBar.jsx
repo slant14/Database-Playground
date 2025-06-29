@@ -7,7 +7,7 @@ import saveSvg from "../assets/save.svg";
 export function PlaygroundBar() {
   return (
     <TopBar
-      style={{ backgroundColor: "#6968FF", color: "white" }}
+      style={{ backgroundColor: "#6968FF", color: "white", borderRadius: `${22}px ${22}px ${0}px ${0}px` }}
       contentStyle={{ flexBasis: 521 + "px" }}
     >
       <TopBarElement>
