@@ -77,9 +77,15 @@
     text-decoration: none;
 }
 
-.title:hover {
-    color: #51CB63;
-    text-decoration: underline;
+a.title {
+    color: #51CB63 !important;
+    text-decoration: none;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+a.title:hover {
+    color: #fff !important;
 }
 
 .description {
@@ -90,11 +96,15 @@
     width: 100%;
     display: block;
     word-break: break-word;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
 }
 
 .text-container {
+    text-align: left;
     vertical-align: center;
     margin-top: 0px;
+    padding-left: 30px;
 }
 
 .button-row {

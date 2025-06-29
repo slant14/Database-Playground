@@ -5,6 +5,7 @@ import Account from "./components/Account/Account";
 import Code from "./components/Code/Code";
 import Home from "./components/Home/Home";
 import ClassRooms from "./components/Classrooms/Classrooms";
+import ExactClassroom from "./components/ExactClassroom/ExactClassroom";
 import Template from "./components/Template/Template";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 
@@ -23,6 +24,7 @@ class App extends React.Component {
       isLogin: this.getCookie("login") ? true : false,
       isModalOpen: false,
       activeButton: 'home',
+      selectedClassroom: null,
     };
     this.setPage = this.setPage.bind(this);
     this.logOut = this.logOut.bind(this);
@@ -66,8 +68,14 @@ class App extends React.Component {
       case "classrooms":
         return (
           <div>
-            <ClassRooms />
+            <ClassRooms selectClassroom={this.selectClassroom}/>
           </div>);
+      case "exactClassroom":
+        return (
+          <div>
+            <ExactClassroom classroom={this.state.selectedClassroom}/>
+          </div>
+        )
       case "code":
         return (
           <div>
@@ -222,6 +230,10 @@ class App extends React.Component {
   getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }
+
+  selectClassroom = (classroom) => {
+    this.setState({ selectedClassroom: classroom, page: "exactClassroom" });
+  };
 }
 
 export default App;
