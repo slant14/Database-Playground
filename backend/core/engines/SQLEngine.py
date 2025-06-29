@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .dbmodels import DBInfo, QueryResult
+from .models import DBInfo, QueryResult
 
 
 class SQLEngine(ABC):

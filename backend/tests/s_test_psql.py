@@ -1,5 +1,4 @@
 import pytest
-import time
 
 from core.engines.PostgresEngine import PostgresEngine
 from core.engines.exceptions import DBNotExists, DBExists, QueryError
