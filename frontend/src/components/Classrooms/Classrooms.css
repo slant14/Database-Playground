@@ -1,8 +1,91 @@
 .classrooms {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    min-height: 60vh;
+    flex-direction: column;
     text-align: center;
+}
+
+.courses {
+    margin-left: 100px;
+    margin-right: 100px;
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 40px; 
+    justify-items: center;
+}
+
+.plain-title {
+    color: #ffffff;
+    font-size: 25px;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 500;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    margin-left: 20px;
+    text-align: left;
+
+
+}
+
+.card {
+    background-color: #161b22;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #a2aab3;
+    width: 500px;
+    height: 320px;
+    border-radius: 16px;
+    margin: 10px;
+}
+
+.plain-description {
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 300;
+    justify-items: center;
+    text-align: left;
+    margin-left: 40px;
+}
+
+.plain-description ul li {
+    margin-bottom: 14px;
+}
+
+.plain-description ul li:nth-child(2) {
+    margin-bottom: 4px; /* or any small value you prefer */
+}
+
+.view { 
+    background: #161b22 !important;
+    color: #51CB63 !important;
+    border-color: #51CB63 !important;
+    border: 1.5px solid;
+    border-radius: 7px !important;
+    font-size: 18px !important;    
+    padding: 14px 40px !important; 
+    height: 48px !important;  
+    font-family: 'Noto Sans', sans-serif;
+
+    min-width: 100px;
+    max-width: 120px;
+    width: auto;
+    align-self: flex-end;
+    margin-left: 200px;
+}
+
+.view:hover {
+    background: #51CB63 !important;
+    color: #ffffff !important;
+    border-color: #51CB63 !important;
+    border: 1.5px solid;
+    border-radius: 7px !important;
+}
+
+.Created-Button {
+    display: flex;
+    align-items: center;
+    gap: 5px; 
 }

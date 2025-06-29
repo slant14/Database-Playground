@@ -55,7 +55,7 @@ class Home extends React.Component {
           <div className="iconText">
             <SiSqlite className="icon" size={130} />
             <div className="text-container">
-              <a className="title" href='https://sqlite.org/' target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>SQLite</a>
+              <a className="title" href='https://sqlite.org/' target="_blank" rel="noopener noreferrer">SQLite</a>
               <Text className="description">
                 SQLite is an in-process library that implements a self-contained,
                 serverless, zero-configuration, transactional SQL database engine.
@@ -66,7 +66,7 @@ class Home extends React.Component {
           <div className="iconText">
             <SiMongodb className="icon" size={130} />
             <div className="text-container">
-              <a className="title" href='https://www.mongodb.com/' target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>MongoBD</a>
+              <a className="title" href='https://www.mongodb.com/' target="_blank" rel="noopener noreferrer">MongoBD</a>
               <Text className="description">
                 MongoDB is a popular, open-source NoSQL database that stores
                 data in flexible, JSON-like documents
@@ -79,7 +79,7 @@ class Home extends React.Component {
           <div className="iconText">
             <BiLogoPostgresql className="icon" size={130} />
             <div className="text-container">
-              <a className="title" href='https://www.postgresql.org/' target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>PostgreSQL</a>
+              <a className="title" href='https://www.postgresql.org/' target="_blank" rel="noopener noreferrer">PostgreSQL</a>
               <Text className="description">
                 PostgreSQL is a powerful, open source object-relational database
                 system with a strong reputation for reliability, feature robustness, and performance.
@@ -90,7 +90,7 @@ class Home extends React.Component {
           <div className="iconText">
             <FaDatabase className="icon" size={130} />
             <div className="text-container">
-              <a className="title" href='https://www.trychroma.com/' target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>Chroma</a>
+              <a className="title" href='https://www.trychroma.com/' target="_blank" rel="noopener noreferrer">Chroma</a>
               <Text className="description">
                 Chroma or ChromaDB is an open-source vector database tailored
                 to applications with large language models
