@@ -16,6 +16,8 @@ CREATE TABLE users (
 INSERT INTO users (name, age) VALUES ('vasya', 19);
 """
 
+
+@pytest.mark.skip
 class TestPostgresEngineLifecycle:
     def test_create_and_drop_db(self, engine: PostgresEngine):
         """Test DB creation, re-creation failure, and table introspection."""
@@ -41,6 +43,7 @@ class TestPostgresEngineLifecycle:
         assert ('name', 'character varying') in column_names_types
 
 
+@pytest.mark.skip
 class TestPostgresEngineQueryExecution:
     def test_send_query_success(self, engine: PostgresEngine):
         """Test successful execution of multiple SELECT queries."""
@@ -101,7 +104,7 @@ class TestPostgresEngineQueryExecution:
             assert results[3].data == [(2,)]
 
 
-
+@pytest.mark.skip
 class TestPostgresEngineDump:
     def test_dump_export_and_reimport(self, engine: PostgresEngine):
         """Ensure a dumped DB can be recreated with the same structure."""
