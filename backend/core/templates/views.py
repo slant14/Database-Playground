@@ -31,16 +31,16 @@ class TemplateListCreateView(mixins.ListModelMixin,
 
         data = JSONParser().parse(request)
         data['dump'] = postgres_engine.get_dump(db_name)
-        
+
         serializer = TemplateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        
+
         return Response(serializer.data)
 
 
 class TemplateRetreiveView(mixins.RetrieveModelMixin,
-                   generics.GenericAPIView):
+                           generics.GenericAPIView):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
 
