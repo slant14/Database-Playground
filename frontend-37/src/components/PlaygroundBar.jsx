@@ -33,6 +33,8 @@ export function PlaygroundBar() {
               borderRadius: 11 + "px",
               color: "black",
               backgroundColor: "white",
+              fontFamily: `"Onest", sans-serif`,
+              fontSize: 24 + "px"
             }}
           >
             PostgreSQL | Template #1

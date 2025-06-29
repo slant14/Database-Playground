@@ -18,6 +18,8 @@ export function TemplateChoiceBar({ onTemplateChoose }) {
               borderRadius: 11 + "px",
               color: "black",
               backgroundColor: "white",
+              fontFamily: `"Onest", sans-serif`,
+              fontSize: 24 + "px"
             }}
           >
             Back
@@ -33,6 +35,8 @@ export function TemplateChoiceBar({ onTemplateChoose }) {
               borderRadius: 11 + "px",
               color: "black",
               backgroundColor: "white",
+              fontFamily: `"Onest", sans-serif`,
+              fontSize: 24 + "px"
             }}
           >
             Start
