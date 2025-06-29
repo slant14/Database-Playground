@@ -7,6 +7,9 @@ on:
 jobs:
   frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       - uses: actions/checkout@v3
       
@@ -14,9 +17,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      
-      - name: go to frontend dir
-        run: cd frontend-37
       
       - name: Install frontend deps
         run: npm ci
@@ -29,6 +29,9 @@ jobs:
 
   backend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend/core 
     steps:
       - uses: actions/checkout@v3
       
