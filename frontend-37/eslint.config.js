@@ -1,13 +1,47 @@
 import globals from "globals";
-import pluginReact from "eslint-plugin-react";
-import json from "@eslint/json";
-import css from "@eslint/css";
-import { defineConfig } from "eslint/config";
+import js from "@eslint/js";
+import reactPlugin from "eslint-plugin-react";
 
+export default [
+  // Базовые правила ESLint
+  js.configs.recommended,
 
-export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs,jsx}"], languageOptions: { globals: globals.browser } },
-  pluginReact.configs.flat.recommended,
-  { files: ["**/*.json"], plugins: { json }, language: "json/json" },
-  { files: ["**/*.css"], plugins: { css }, language: "css/css" },
-]);
+  // Настройки для React
+  {
+    files: ["**/*.{js,jsx}"],
+    plugins: {
+      react: reactPlugin, // Правильный формат плагинов в Flat Config
+    },
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        React: "readonly", // Глобальный React не требуется импортировать
+      },
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true, // Включаем поддержку JSX
+        },
+      },
+    },
+    rules: {
+      "no-unused-vars": "off",
+      // React-специфичные правила
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-uses-react": "error",
+      "react/prop-types": "off", // Отключаем проверку prop-types
+
+      // Дополнительные правила по желанию
+      "react/jsx-key": "error", // Проверка key в массивах
+    },
+    settings: {
+      react: {
+        version: "detect", // Автоматически определяет версию React
+      },
+    },
+  },
+
+  // Игнорируемые файлы (замена .eslintignore)
+  {
+    ignores: ["**/node_modules/**", "**/dist/**", "**/*.config.js"],
+  },
+];

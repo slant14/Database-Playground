@@ -1,16 +1,16 @@
 import uuid
 
-from rest_framework.views import APIView
+from rest_framework.parsers import JSONParser
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.parsers import JSONParser
+from rest_framework.views import APIView
 
 from engines import postgres_engine
 from engines.shortcuts import db_exists
 
-from .models import Session, SessionInfo
-from .serializers import SessionSerializer, SessionInfoSerializer
 from .docs import get_db_schema_info_doc, patch_session_info_doc
+from .models import Session, SessionInfo
+from .serializers import SessionInfoSerializer, SessionSerializer
 from .shortcuts import resolve_session_id
 
 
@@ -54,15 +54,14 @@ class SessionInfoView(APIView):
 
         session = Session.objects.get(id=session_id)
         return Response(
-            SessionInfoSerializer(
-                SessionInfo.objects.get(session=session)).data)
-
+            SessionInfoSerializer(SessionInfo.objects.get(session=session)).data
+        )
 
     @patch_session_info_doc
     def patch(self, request: Request):
         session_id, err_response = resolve_session_id(request)
         if err_response:
-            return err_response    
+            return err_response
 
         try:
             session = Session.objects.get(id=session_id)

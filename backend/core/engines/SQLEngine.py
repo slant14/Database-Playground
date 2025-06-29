@@ -22,18 +22,17 @@ class SQLEngine(ABC):
         self._host = host
         self._port = port
 
-
     @abstractmethod
     def get_db(self, db_name: str) -> DBInfo:
-        """ Returns `DBInfo` if exists
+        """Returns `DBInfo` if exists
 
         :raises DBNotExists:
         """
-    
+
     @abstractmethod
     def create_db(self, db_name: str, sql_dump: str):
-        """ Creates database and executes `sql_dump` 
-        to create tables and populate with data 
+        """Creates database and executes `sql_dump`
+        to create tables and populate with data
 
         :raises DBExists:
         :raises QueryError:
@@ -41,24 +40,23 @@ class SQLEngine(ABC):
 
     @abstractmethod
     def drop_db(self, db_name: str):
-        """ Drops database by name
+        """Drops database by name
 
         :raises DBNotExists:
         """
 
     @abstractmethod
     def send_query(self, db_name: str, full_query: str) -> list[QueryResult]:
-        """ Sends query to database,
+        """Sends query to database,
         returns the output of subqueries as a list
 
         :raises DBNotExists:
         :raises QueryError:
         """
 
-    
     @abstractmethod
     def get_dump(self, db_name: str) -> str:
-        """ Returns the SQL dump of a database
+        """Returns the SQL dump of a database
 
         :raises DBNotExists:
         """

@@ -18,5 +18,5 @@ def resolve_session_id(request: Request) -> tuple[str, None] | tuple[None, Respo
 
     # except ExceptionWithResponse as e:
     #     return None, e.response
-        
+
     return query_session_id, None

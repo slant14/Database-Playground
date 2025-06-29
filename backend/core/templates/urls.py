@@ -1,7 +1,6 @@
 from django.urls import path
 
-from .views import TemplateRetreiveView, TemplateListCreateView
-
+from .views import TemplateListCreateView, TemplateRetreiveView
 
 urlpatterns = [
     path('<int:pk>/', TemplateRetreiveView.as_view()),

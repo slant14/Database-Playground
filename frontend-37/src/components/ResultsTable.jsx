@@ -10,7 +10,7 @@ function getTableData(item, headers) {
 
 function Table({ results }) {
   // if (results.length == 0) return;
-  console.log(results)
+  console.log(results);
   let headers = [];
   for (let i in results[0]) {
     headers.push(i);
@@ -29,7 +29,7 @@ function Table({ results }) {
           {results.map((item) => (
             <tr key={results.indexOf(item)}>
               {getTableData(item, headers).map((data) => (
-                <td key={data}>{(data)}</td>
+                <td key={data}>{data}</td>
               ))}
             </tr>
           ))}
@@ -40,7 +40,7 @@ function Table({ results }) {
 }
 
 export default function ResultsTable({ results }) {
-  console.log("TIMUR DAUN", results);
+  console.log("TIMUR DAUN", results); // ну реально
   if (results.data === null) {
     return (
       <div className={styles.beautiful}>

@@ -1,8 +1,7 @@
-from rest_framework import mixins
-from rest_framework import generics
+from rest_framework import generics, mixins
+from rest_framework.parsers import JSONParser
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.parsers import JSONParser
 
 from engines import postgres_engine
 from session.models import Session
@@ -10,7 +9,7 @@ from session.shortcuts import resolve_session_id
 
 from .docs import post_template_schema
 from .models import Template
-from .serializers import TemplateSerializer, MinTemplateSerializer
+from .serializers import MinTemplateSerializer, TemplateSerializer
 
 
 class TemplateListCreateView(mixins.ListModelMixin,

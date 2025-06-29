@@ -15,20 +15,15 @@ class DBInfo:
                     t.columns.append(ColumnInfo(c[1], c[2]))
                     break
             else:
-                db.tables.append(TableInfo(
-                    name=c[0], 
-                    columns=[ColumnInfo(c[1], c[2])]
-                ))
+                db.tables.append(TableInfo(name=c[0], columns=[ColumnInfo(c[1], c[2])]))
         return db
 
     def __repr__(self) -> str:
         tables_str = ""
         for table in self.tables:
-            table_str = str(table).replace('\n', '\n  ')
+            table_str = str(table).replace("\n", "\n  ")
             tables_str += f"\n  {table_str}"
-        return (
-            f"Database {self.name}:  {tables_str}"
-        )
+        return f"Database {self.name}:  {tables_str}"
 
 
 @dataclass
@@ -40,9 +35,7 @@ class TableInfo:
         columns_str = ""
         for column in self.columns:
             columns_str += f"\n  {column}"
-        return (
-            f"Table {self.name}:{columns_str}"
-        )
+        return f"Table {self.name}:{columns_str}"
 
 
 @dataclass

@@ -17,6 +17,7 @@ export default function SchemaWrapper({ schemas }) {
           schemas.map((schema) => (
             <Tab
               schema={schema}
+              key={schema.name}
               selected={schema == activeSchema}
               onClick={() => setActiveSchema(schema)}
             />

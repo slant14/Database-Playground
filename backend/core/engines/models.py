@@ -15,26 +15,17 @@ class DBInfo:
                     t.columns.append(ColumnInfo(c[1], c[2]))
                     break
             else:
-                db.tables.append(TableInfo(
-                    name=c[0], 
-                    columns=[ColumnInfo(c[1], c[2])]
-                ))
+                db.tables.append(TableInfo(name=c[0], columns=[ColumnInfo(c[1], c[2])]))
         return db
 
-    
     def to_json(self) -> dict:
-        return {
-            "name": self.name,
-            "tables": [t.to_json() for t in self.tables]
-        }
+        return {"name": self.name, "tables": [t.to_json() for t in self.tables]}
 
     def __repr__(self) -> str:
         tables_str = ""
         for table in self.tables:
             tables_str += f"\n  {str(table).replace('\n', '\n  ')}"
-        return (
-            f"Database {self.name}:  {tables_str}"
-        )
+        return f"Database {self.name}:  {tables_str}"
 
 
 @dataclass
@@ -43,18 +34,13 @@ class TableInfo:
     columns: list["ColumnInfo"]
 
     def to_json(self) -> dict:
-        return {
-            "name": self.name,
-            "columns": [c.to_json() for c in self.columns]
-        }
+        return {"name": self.name, "columns": [c.to_json() for c in self.columns]}
 
     def __repr__(self) -> str:
         columns_str = ""
         for column in self.columns:
             columns_str += f"\n  {column}"
-        return (
-            f"Table {self.name}:{columns_str}"
-        )
+        return f"Table {self.name}:{columns_str}"
 
 
 @dataclass
@@ -63,10 +49,7 @@ class ColumnInfo:
     type: str
 
     def to_json(self) -> dict:
-        return {
-            "name": self.name,
-            "type": self.type
-        }
+        return {"name": self.name, "type": self.type}
 
     def __repr__(self) -> str:
         return f"{self.name} - {self.type}"
@@ -84,5 +67,5 @@ class QueryResult:
             "query": self.query,
             "rowcount": self.rowcount,
             "data": self.data,
-            "execution_time": self.execution_time
+            "execution_time": self.execution_time,
         }
