@@ -54,7 +54,7 @@ class ChromaClient:
             "code": code
         }
         response = requests.post(f"{self.base_url}/query_parser", json=data)
-        return response.json()
+        return response
     
     def health_check(self) -> Dict:
         response = requests.get(f"{self.base_url}/health")

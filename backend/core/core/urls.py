@@ -52,7 +52,6 @@ urlpatterns = [
     path('test/', include("test.urls")),
     path('template/', include("templates.urls")),
     path('db/', include("db.urls")),
-    path('api/chroma/', ChromaQueryParser.as_view()),
     path('app/', include('core.api_urls')),
 ]
 

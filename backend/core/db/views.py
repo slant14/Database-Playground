@@ -25,6 +25,7 @@ class ChromaQueryParser(APIView):
     def post(self, request):
         data = json.loads(request.body)
         action = data.get('action')
+        print(f"Chroma action: {action}")
         
         if action == 'state':
             return self.chroma_state(request)
@@ -46,18 +47,19 @@ class ChromaQueryParser(APIView):
         
         try:
             start_time = time.time()
-            
             chroma_client = ChromaClient()
-            result = chroma_client.query_parser(user_id, query_text)
+            response = chroma_client.query_parser(user_id, query_text)
+            response.raise_for_status()
+            result = response.json()
             
             db_state_response = chroma_client.get_db_state(user_id)
             db_state = db_state_response.get("state", [])
-            
+            print(result)
             execution_time = time.time() - start_time
             
             return Response({
                 "command": result.get("command", "UNKNOWN"),
-                "result": result,
+                "result": result.get("result", {}),
                 "db_state": db_state,
                 "execution_time": f"{execution_time:.4f} seconds",
                 "documents_count": len(db_state)
@@ -67,6 +69,7 @@ class ChromaQueryParser(APIView):
             return Response({"error": str(e)}, status=400)
 
     def chroma_state(self, request):
+        print("Chroma state request received")
         try:
             data = json.loads(request.body)
             user_id = data.get("user_id")
@@ -79,7 +82,7 @@ class ChromaQueryParser(APIView):
             chroma_client = ChromaClient()
             state_response = chroma_client.get_db_state(user_id)
             state = state_response.get("state", [])
-            return Response({"state": state})
+            return Response(state_response)
         except Exception as e:
             return Response({"error": "User not found"})
         

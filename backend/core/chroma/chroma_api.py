@@ -86,7 +86,7 @@ async def get_db_state(request: dict):
         
         engine = ChromaEngine(user_id)
         state = engine.get_db_state()
-        return {"status": "success", "state": state}
+        return {"state": state}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -106,7 +106,7 @@ async def query_parser(request: QueryParseRequest):
                 metadata=parsed.get("metadata"),
                 doc_id=doc_id
             )
-            result = {"status": "added", "doc_id": doc_id}
+            result = {"command": "ADD", "doc_id": doc_id, "status": "added"}
         
         elif command == "SEARCH":
             results = engine.search(
@@ -114,20 +114,29 @@ async def query_parser(request: QueryParseRequest):
                 k=parsed.get("k", 2),
                 filters=parsed.get("filters")
             )
-            result = {"status": "found", "results": results}
+            result = {"command": "SEARCH", "result": {"search_results": results}}
         
         elif command == "GET":
             doc = engine.get_by_id(parsed["doc_id"])
             if doc is None:
-                result = {"status": "not_found"}
+                raise HTTPException(status_code=404, detail="Document not found")
             else:
-                result = {"status": "found", "document": doc}
+                result = {"command": "GET", "result": {"status": "found", "document": doc}}
         
         elif command == "DELETE":
+            doc = engine.get_by_id(parsed["doc_id"])
+            if doc is None:
+                raise HTTPException(status_code=404, detail="Document not found")
             engine.delete(parsed["doc_id"])
-            result = {"status": "deleted"}
+            result = {"command": "DELETE", "status": "deleted"}
+        
+        else:
+            raise HTTPException(status_code=400, detail="Unknown command")
         
         return result
+    
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
