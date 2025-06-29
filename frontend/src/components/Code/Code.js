@@ -219,6 +219,13 @@ class Code extends React.Component {
         })
         .catch(error => {
           console.error('Error:', error);
+          this.setState({
+            postgresResponse: { 
+              error: true, 
+              message: "Error occurred while executing command",
+              details: error.message || "Unknown error"
+            }
+          });
           this.setLoading(false);
         });
       return;
