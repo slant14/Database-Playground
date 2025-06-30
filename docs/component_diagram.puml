@@ -1,0 +1,20 @@
+@startuml components
+
+[Django REST] -down-( EM 
+[Django REST] -down-( EP
+
+[Postgres Engine] -down-( LP
+[Postgres Engine] -up- EP
+[Psycopg2] -up- LP
+[Psycopg2] -down-( DP
+[PostgreSQL] -up- DP
+
+[Mongo Engine] -up- EM
+[Mongo Engine] -down-( PM
+[Mongo Engine] -down-( LM
+[MQL Parser] -up- PM
+[PyMongo] -up- LM
+[PyMongo] -down-( DM
+[MongoDB] -up- DM
+
+@enduml
