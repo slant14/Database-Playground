@@ -14,14 +14,18 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     const lastPage = this.getCookie("lastPage");
+    const login = this.getCookie("login");
+    const password = this.getCookie("password");
+    const needMemorizing = this.getCookie("needMemorizing") === "true";
+    
     this.state = {
       page: lastPage || "home",
       user: {
-        login: this.getCookie("login"),
-        password: this.getCookie("password"),
-        needMemorizing: this.getCookie("needMemorizing") === "true" ? true : false,
+        login: login || "",
+        password: password || "",
+        needMemorizing: needMemorizing,
       },
-      isLogin: this.getCookie("login") ? true : false,
+      isLogin: !!(login && password),
       isModalOpen: false,
       activeButton: 'home',
       selectedClassroom: null,
@@ -179,22 +183,16 @@ class App extends React.Component {
     this.setPage("home");
   }
 
-  setCookie = (name, value, options = {}) => {
-    let newEntryBody = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
-
-    const optionsAsString = Object.entries(options)
-      .map(([key, val]) => `${key}=${val}`)
-      .join("; ");
-
-    if (optionsAsString) {
-      newEntryBody += `; ${optionsAsString}`;
-    }
-
-    document.cookie = newEntryBody;
+  setCookie = (name, value, days = 7) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expiresString = expires.toUTCString();
+    
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${expiresString}; path=/`;
   };
 
   deleteCookie = (name) => {
-    this.setCookie(name, "", { 'max-age': -1 });
+    document.cookie = `${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
     this.updateLoginState();
   }
 
@@ -211,8 +209,8 @@ class App extends React.Component {
   getCookie = (name) => {
     for (const entryString of document.cookie.split(";")) {
       const [entryName, entryValue] = entryString.split("=");
-      if (decodeURIComponent(entryName) === name) {
-        return entryValue
+      if (decodeURIComponent(entryName.trim()) === name) {
+        return decodeURIComponent(entryValue || "");
       }
     }
     return undefined;
