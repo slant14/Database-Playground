@@ -19,6 +19,13 @@ class DBInfo:
                     TableInfo(name=c[0], columns=[ColumnInfo(c[1], c[2])])
                 )
         return db
+    
+    @staticmethod
+    def from_collection_names(db_name: str, collections: list[str]) -> "DBInfo":
+        db = DBInfo(db_name, tables=[])
+        for c in collections:
+            db.tables.append(TableInfo(c, []))
+        return db
 
     def to_json(self) -> dict:
         return {

@@ -3,6 +3,7 @@ Django==5.2.1
 django-cors-headers==4.7.0
 django-filter==25.1
 djangorestframework==3.16.0
+dnspython==2.7.0
 drf-yasg==1.21.10
 inflection==0.5.1
 iniconfig==2.1.0
@@ -12,15 +13,10 @@ pillow==11.2.1
 pluggy==1.6.0
 psycopg2-binary==2.9.10
 Pygments==2.19.1
+pymongo==4.13.2
 pytest==8.4.0
 python-decouple==3.8
 pytz==2025.2
 PyYAML==6.0.2
 sqlparse==0.5.3
 uritemplate==4.2.0
-# chromadb==0.4.24
-# sentence-transformers==2.7.0
-# torch==2.3.0
-# tqdm==4.66.4
-# numpy==1.26.4
-# pandas==2.2.2
