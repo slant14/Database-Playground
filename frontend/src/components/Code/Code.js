@@ -43,7 +43,7 @@ class Code extends React.Component {
           />
         </main>
         <aside className="code-aside">
-          <OutputInputs response={this.state.response} db_state={this.state.db_state} chosenDB={this.state.chosenDb} postgresTableInfo={this.state.postgresTableInfo} postgresResponse={this.state.postgresResponse} userid={(this.props.getCookie("login") + this.props.getCookie("password")).hashCode()}/>
+          <OutputInputs response={this.state.response} db_state={this.state.db_state} chosenDB={this.state.chosenDb} postgresTableInfo={this.state.postgresTableInfo} postgresResponse={this.state.postgresResponse} userid={this.getUserId()}/>
         </aside>
         {this.state.chosenDb === "Chroma" || this.state.chosenDb === "PostgreSQL" ? <FloatButton icon={<FaRegLightbulb />} type="basic" className='lamp' onClick={this.open} tooltip="Command Tips" /> : null}
         {this.state.chosenDb === "Chroma" ? <HintModal title={<Typography.Text className='modal-title'>Types of command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>Chroma</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
@@ -54,6 +54,28 @@ class Code extends React.Component {
 
   setLoading = (loading) => {
     this.setState({ isLoading: loading });
+  }
+
+  getUserId = () => {
+    try {
+      const loginCookie = this.props.getCookie("login") || "";
+      const passwordCookie = this.props.getCookie("password") || "";
+      const combinedString = loginCookie + passwordCookie;
+      return combinedString.hashCode ? combinedString.hashCode() : this.generateHashCode(combinedString);
+    } catch (error) {
+      console.error('Error generating user ID:', error);
+      return "0"; // fallback ID
+    }
+  }
+
+  generateHashCode = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const chr = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0;
+    }
+    return hash.toString();
   }
 
   open = () => {
@@ -71,8 +93,8 @@ class Code extends React.Component {
       return;
     }
     this.setLoading(true);
-    let string = (this.props.getCookie("login") + this.props.getCookie("password"));
-    getChromaInitialState(string.hashCode())
+    const userId = this.getUserId();
+    getChromaInitialState(userId)
       .then(data => {
         this.setState({ db_state: data });
         this.setLoading(false);
@@ -89,18 +111,18 @@ class Code extends React.Component {
       return;
     }
     this.setLoading(true);
-    let string = (this.props.getCookie("login") + this.props.getCookie("password"));
-    getPostgresTable(string.hashCode())
+    const userId = this.getUserId();
+    getPostgresTable(userId)
       .then(data => {
         console.log('PostgreSQL table data:', data);
         this.setState({ postgresTableInfo: data.tables});
         this.setLoading(false);
       })
       .catch(error => {
-        createPostgresTable(string.hashCode())
+        createPostgresTable(userId)
           .then(data => {
             console.log('PostgreSQL table created:', data);
-            getPostgresTable(string.hashCode())
+            getPostgresTable(userId)
               .then(data => {
                 console.log('PostgreSQL table data after creation:', data);
                 this.setState({ postgresTableInfo: data.tables });
@@ -136,7 +158,7 @@ class Code extends React.Component {
     }
   }
 
-  async executeCommandsSequentially(commands, hashCode, error) {
+  async executeCommandsSequentially(commands, userId, error) {
     this.setLoading(true);
     let allResults = [];
 
@@ -146,7 +168,7 @@ class Code extends React.Component {
 
       try {
         console.log(`Executing command ${i + 1}:`, command);
-        const data = await getChromaResponse(command, hashCode);
+        const data = await getChromaResponse(command, userId);
 
         if (data === "Error") {
           allResults.push({
@@ -206,8 +228,8 @@ class Code extends React.Component {
     }
     if (chosenDb === "PostgreSQL") {
       this.setLoading(true);
-      let string = (this.props.getCookie("login") + this.props.getCookie("password"));
-      queryPostgres(text, string.hashCode())
+      const userId = this.getUserId();
+      queryPostgres(text, userId)
         .then(data => {
           console.log('Code.js - QueryPostgres result:', data);
           if (data === "Error") {
@@ -246,10 +268,10 @@ class Code extends React.Component {
       const error = {
         message: "Please try once again, there is an error in your code",
       }
-      let string = (this.props.getCookie("login") + this.props.getCookie("password"));
-      console.log("SDASDASDASDAD", string)
+      const userId = this.getUserId();
+      console.log("SDASDASDASDAD", userId)
       if (!text.includes('\n')) {
-        getChromaResponse(text, string.hashCode())
+        getChromaResponse(text, userId)
           .then(data => {
             if (data === "Error") {
               this.setState({
@@ -280,7 +302,7 @@ class Code extends React.Component {
       }
       else {
         let commands = text.split('\n');
-        this.executeCommandsSequentially(commands, string.hashCode(), error);
+        this.executeCommandsSequentially(commands, userId, error);
       }
 
     }
