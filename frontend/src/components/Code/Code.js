@@ -7,6 +7,7 @@ import OutputInputs from './output';
 import { Button, FloatButton, Typography } from 'antd';
 import { FaRegLightbulb } from "react-icons/fa";
 import HintModal from './hintModal';
+import HintModalPS from './hintModalPS';
 import './Code.css';
 
 class Code extends React.Component {
@@ -42,10 +43,11 @@ class Code extends React.Component {
           />
         </main>
         <aside className="code-aside">
-          <OutputInputs response={this.state.response} db_state={this.state.db_state} chosenDB={this.state.chosenDb} postgresTableInfo={this.state.postgresTableInfo} postgresResponse={this.state.postgresResponse}/>
+          <OutputInputs response={this.state.response} db_state={this.state.db_state} chosenDB={this.state.chosenDb} postgresTableInfo={this.state.postgresTableInfo} postgresResponse={this.state.postgresResponse} userid={(this.props.getCookie("login") + this.props.getCookie("password")).hashCode()}/>
         </aside>
-        <FloatButton icon={<FaRegLightbulb />} type="basic" className='lamp' onClick={this.open} tooltip="Command Tips" />
-        <HintModal title={<Typography.Text className='modal-title'>Types of command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>Chroma</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} />
+        {this.state.chosenDb === "Chroma" || this.state.chosenDb === "PostgreSQL" ? <FloatButton icon={<FaRegLightbulb />} type="basic" className='lamp' onClick={this.open} tooltip="Command Tips" /> : null}
+        {this.state.chosenDb === "Chroma" ? <HintModal title={<Typography.Text className='modal-title'>Types of command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>Chroma</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
+        {this.state.chosenDb === "PostgreSQL" ? <HintModalPS title={<Typography.Text className='modal-title'>Types of command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>PostgreSQL</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
       </div>
     );
   }
@@ -207,11 +209,12 @@ class Code extends React.Component {
       let string = (this.props.getCookie("login") + this.props.getCookie("password"));
       queryPostgres(text, string.hashCode())
         .then(data => {
+          console.log('Code.js - QueryPostgres result:', data);
           if (data === "Error") {
             this.setState({postgresResponse: { message: "Error occurred while executing command" } });
           } else {
             this.setState({postgresResponse: data}, () => {
-              console.log(this.state.postgresResponse);
+              console.log('Code.js - PostgresResponse state:', this.state.postgresResponse);
             });
           }
           this.postgresTableHandle();
@@ -244,6 +247,7 @@ class Code extends React.Component {
         message: "Please try once again, there is an error in your code",
       }
       let string = (this.props.getCookie("login") + this.props.getCookie("password"));
+      console.log("SDASDASDASDAD", string)
       if (!text.includes('\n')) {
         getChromaResponse(text, string.hashCode())
           .then(data => {

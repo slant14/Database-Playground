@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Table } from 'antd';
 import PostgresModal from './postgresModal';
 
-
 class PostgresState extends React.Component {
     constructor(props) {
         super(props);
@@ -12,18 +11,19 @@ class PostgresState extends React.Component {
     }
     render() {
         const { response, db_state, postgresTableInfo } = this.props;
-        
-
+        const userId = this.props.userid;
         return (
             <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                     <p className="code-general-text" style={{ margin: 0 }}>Current table state:</p>
                     <Button className={this.props.isPostgresModalOpen ? "my-table-button-solid" : "my-table-button-outline"} style={{ marginTop: '2px', marginLeft: '10px' }} onClick={this.props.open}>View Table</Button>
                     <PostgresModal
-                        title="PostgreSQL Table State"
+                        title="PostgreSQL Table Data"
                         open={this.props.isPostgresModalOpen}
                         onCancel={this.props.close}
-                        width={800} />
+                        selectedTable={this.state.chosenTable !== null ? postgresTableInfo[this.state.chosenTable] : null}
+                        userId={userId}
+                        width={1200} />
                 </div>
                 <div style={{ marginTop: '10px' }}>
                     <p className="code-general-text" style={{ margin: 0 }}>Choose table:</p>
@@ -88,5 +88,7 @@ class PostgresState extends React.Component {
         );
     }
 }
+
+
 
 export default PostgresState;

@@ -31,7 +31,7 @@ class OutputDBState extends React.Component {
             case "Chroma":
                 return <ChromaState response={response} db_state={db_state} />;
             case "PostgreSQL":
-                return <PostgresState response={response} db_state={db_state} open={this.open} close={this.close} isPostgresModalOpen={this.state.isPostgresModalOpen} postgresTableInfo={this.props.postgresTableInfo}/>;
+                return <PostgresState response={response} db_state={db_state} open={this.open} close={this.close} isPostgresModalOpen={this.state.isPostgresModalOpen} postgresTableInfo={this.props.postgresTableInfo} userid={this.props.userid}/>;
             default:
                 return null;
         }
