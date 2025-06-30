@@ -28,3 +28,8 @@ def test_create_db(engine: MongoEngine):  # noqa F811
 
         db = engine.get_db(TMP_DB)
         assert db.tables[0].name == "collection"
+
+
+def test_get_dump(engine: MongoEngine):  # noqa F811
+    with tmp_db(engine, TMP_DB, ""):
+        print(engine.get_dump(TMP_DB))

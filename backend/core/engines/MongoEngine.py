@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 
 from pymongo import MongoClient
 from pymongo.database import Database
+from bson import json_util
 
 from .models import DBInfo, QueryResult
 from .DBEngine import DBEngine
@@ -16,7 +17,12 @@ DEFAULT_DUMP = '''
 {
   "db": {
     "collection": [
-      { "hello": "world" }
+      {
+        "_id": {
+          "$oid": "686309dfac4152dfd0f29ba2"
+        },
+        "hello": "world"
+      }
     ]
   }
 }
@@ -62,7 +68,11 @@ class MongoEngine(DBEngine):
         raise NotImplementedError
 
     def get_dump(self, db_name: str) -> str:
-        raise NotImplementedError
+        with self._connect() as client:
+            if db_name not in client.list_database_names():
+                raise DBNotExists
+            db = client.get_database(db_name)
+            return self._get_dump(db)
 
     @contextmanager
     def _connect(self):
@@ -78,13 +88,18 @@ class MongoEngine(DBEngine):
             quote_plus(self._password),
             self._host
         )
-   
+
     def _apply_dump(self, db: Database, dump: str):
-        data: dict = json.loads(dump)
+        data: dict = json_util.loads(dump)
         db_dump: dict[str, list[dict]] = data["db"]
         for coll_name, coll_data in db_dump.items():
             collection = db.get_collection(coll_name)
             collection.insert_many(coll_data)
 
     def _get_dump(self, db: Database) -> str:
-        raise NotImplementedError
+        data = {"db": {}}
+        for coll_name in db.list_collection_names():
+            collection = db.get_collection(coll_name)
+            coll_data = collection.find().to_list()
+            data["db"][coll_name] = coll_data
+        return json_util.dumps(data, indent=2, ensure_ascii=False)
