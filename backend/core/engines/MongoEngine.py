@@ -1,10 +1,26 @@
+import json
 from contextlib import contextmanager
 from urllib.parse import quote_plus
+
 from pymongo import MongoClient
+from pymongo.database import Database
 
 from .models import DBInfo, QueryResult
 from .DBEngine import DBEngine
-from .exceptions import DBNotExists, DBExists, QueryError
+from .exceptions import DBNotExists, DBExists
+
+
+# needed because db cannot
+# be created without data in it
+DEFAULT_DUMP = '''
+{
+  "db": {
+    "collection": [
+      { "hello": "world" }
+    ]
+  }
+}
+'''
 
 
 class MongoEngine(DBEngine):
@@ -34,6 +50,7 @@ class MongoEngine(DBEngine):
                 raise DBExists
             db = client.get_database(db_name)
             db.create_collection("collection")
+            self._apply_dump(db, dump or DEFAULT_DUMP)
 
     def drop_db(self, db_name: str):
         with self._connect() as client:
@@ -61,3 +78,13 @@ class MongoEngine(DBEngine):
             quote_plus(self._password),
             self._host
         )
+   
+    def _apply_dump(self, db: Database, dump: str):
+        data: dict = json.loads(dump)
+        db_dump: dict[str, list[dict]] = data["db"]
+        for coll_name, coll_data in db_dump.items():
+            collection = db.get_collection(coll_name)
+            collection.insert_many(coll_data)
+
+    def _get_dump(self, db: Database) -> str:
+        raise NotImplementedError

@@ -12,7 +12,7 @@ from tests.utils import mongo_tmp_db as tmp_db
 TMP_DB = "tmp_test_db"
 
 
-def test_get_db(engine: MongoEngine):
+def test_get_db(engine: MongoEngine):  # noqa F811
     with pytest.raises(DBNotExists):
         engine.get_db("non_existing_db")
 
@@ -20,7 +20,7 @@ def test_get_db(engine: MongoEngine):
         engine.get_db(TMP_DB)
 
 
-def test_create_db(engine: MongoEngine):
+def test_create_db(engine: MongoEngine):  # noqa F811
     with tmp_db(engine, TMP_DB, ""):
 
         with pytest.raises(DBExists):
