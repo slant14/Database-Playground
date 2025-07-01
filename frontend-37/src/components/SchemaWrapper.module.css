@@ -2,9 +2,6 @@
   display: flex;
   flex-direction: column;
   font-size: 24px;
-  border: 1px solid #c1c1c1;
-  border-radius: 16px;
-  resize: both;
   overflow: hidden;
 }
 
@@ -12,11 +9,10 @@
   display: flex;
   overflow-x: auto;
   white-space: nowrap;
-  scrollbar-width: thin;
+  border-bottom: 1px solid #c1c1c1;
 }
 
 .schema {
   flex-grow: 1;
   overflow-y: auto;
-  scrollbar-width: thin;
 }

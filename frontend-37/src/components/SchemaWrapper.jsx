@@ -30,10 +30,7 @@ export default function SchemaWrapper({ schemas }) {
   }
 
   return (
-    <div
-      className={styles.wrapper}
-      style={{ width: 700, marginLeft: 20, height: 500 }}
-    >
+    <div className={styles.wrapper} style={{ width: "100%", height: "100%" }}>
       <div className={styles.tabs}>
         {schemas.map((schema) => (
           <Tab

@@ -1,14 +1,11 @@
 .query-input-container {
   display: block;
   font-size: 24px;
-  border: 1px solid #c1c1c1;
-  border-radius: 16px;
-  resize: both;
   overflow: hidden;
 
-  width: 700px;
+  width: 100%;
   margin-right: 20px;
-  height: 502px;
+  height: 100%;
 
   position: relative;
 }
@@ -89,4 +86,3 @@
   margin: 0;
   padding: 0;
 }
-

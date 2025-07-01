@@ -4,6 +4,7 @@ import QueryInput from "../components/QueryInput";
 import SchemaWrapper from "../components/SchemaWrapper";
 import ResultsTableWrapper from "../components/ResultsTableWrapper";
 import { API_URL } from "../const";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 export default function Playground() {
   const [query, setQuery] = useState("");
@@ -20,7 +21,6 @@ export default function Playground() {
         }
       );
       const json = await res.json();
-      console.log(json);
       setSchemas(json);
     };
     run();
@@ -34,31 +34,92 @@ export default function Playground() {
     });
 
     const json = await res.json();
-    console.log("yo", json);
     setResults(json);
-    console.log("че за хуйня?");
     if (json.schema) setSchemas(json.schema);
   };
 
   return (
-    <div>
-      <PlaygroundBar />
-      {schemas.length != 0 && (
-        <div className="mono">
-          <div
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+    >
+      <PlaygroundBar style={{ margin: 0 }} />
+
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          marginTop: "10px",
+          marginLeft: "15px",
+          marginRight: "15px",
+          overflow: "hidden",
+        }}
+      >
+        <PanelGroup
+          direction="vertical"
+          style={{
+            flex: 1,
+            display: "flex",
+          }}
+        >
+          <Panel style={{ overflow: "hidden", minHeight: 200 }}>
+            <PanelGroup
+              direction="horizontal"
+              style={{
+                display: "flex",
+              }}
+            >
+              <Panel
+                style={{
+                  overflow: "hidden",
+                  border: "1px solid #c1c1c1",
+                  borderBottomRightRadius: 10,
+                  minWidth: 300,
+                }}
+              >
+                {schemas.length !== 0 && (
+                  <QueryInput
+                    onQueryChange={setQuery}
+                    onRunClicked={sendQuery}
+                  />
+                )}
+              </Panel>
+
+              <PanelResizeHandle style={{ width: "10px" }} />
+
+              <Panel
+                style={{
+                  overflow: "hidden",
+                  border: "1px solid #c1c1c1",
+                  borderBottomLeftRadius: 10,
+                  minWidth: 300,
+                }}
+              >
+                {schemas.length !== 0 && (
+                  <SchemaWrapper schemas={schemas.tables} />
+                )}
+              </Panel>
+            </PanelGroup>
+          </Panel>
+
+          <PanelResizeHandle style={{ height: "10px" }} />
+
+          <Panel
             style={{
-              display: "flex",
-              justifyContent: "space-evenly",
-              margin: "10px 0px 10px 0px",
+              overflow: "hidden",
+              border: "1px solid #c1c1c1",
+              marginBottom: 10,
             }}
           >
-            <QueryInput onQueryChange={setQuery} onRunClicked={sendQuery} />
-            <SchemaWrapper schemas={schemas.tables} />
-          </div>
-        </div>
-      )}
-
-      <ResultsTableWrapper jason={results} />
+            <ResultsTableWrapper jason={results} />
+          </Panel>
+        </PanelGroup>
+      </div>
     </div>
   );
 }

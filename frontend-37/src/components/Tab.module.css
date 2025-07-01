@@ -1,12 +1,13 @@
 .tab {
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  padding: 1px 10px;
-  border: 1px solid #c1c1c1;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 10px;
   cursor: pointer;
+  background-color: #e9e9ff;
 }
 
 .selected {
-  background-color: #e9e9ff;
+  background-color: #6968ff;
   cursor: default;
+  color: white;
 }
