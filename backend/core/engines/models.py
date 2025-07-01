@@ -77,7 +77,7 @@ class ColumnInfo:
 class QueryResult:
     query: str
     rowcount: int
-    data: list[tuple] | None
+    data: list | dict | str | None
     execution_time: float
 
     def to_json(self) -> dict:

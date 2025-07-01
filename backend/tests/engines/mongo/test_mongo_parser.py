@@ -102,8 +102,6 @@ def test_parse_insert():
 
 def test_determine_query_type():
     assert parsing.determine_query_type(
-        "db.createCollection('Collection');") == MQT.CREATE_COLLECTION
-    assert parsing.determine_query_type(
         "db.my_collection.drop();") == MQT.DROP_COLLECTION
     assert parsing.determine_query_type(
         "db.my_collection.drop({some bullshit});") == MQT.DROP_COLLECTION
@@ -126,7 +124,6 @@ def test_extract_collection_name():
 
 def test_parse_mql():
     MQL_QUERY = """
-    db.createCollection('new_collection');
     db.new_collection.insertOne({
       key_1: "val_1",
       key_2: 54,
@@ -134,10 +131,9 @@ def test_parse_mql():
     })
     """
     queries = parsing.parse_mql(MQL_QUERY)
-    assert len(queries) == 2
-    assert queries[0].type == MQT.CREATE_COLLECTION
-    assert queries[1].type == MQT.INSERT_ONE
-    assert queries[1].input == {
+    assert len(queries) == 1
+    assert queries[0].type == MQT.INSERT_ONE
+    assert queries[0].input == {
         "key_1": "val_1",
         "key_2": 54,
         "key_3": 'ISODate("2023-07-03T09:00:00Z")'

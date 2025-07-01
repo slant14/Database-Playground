@@ -3,12 +3,13 @@ import barely_json
 from enum import Enum
 from dataclasses import dataclass
 
+from pymongo.database import Database as MongoDatabase
+
 
 @dataclass
 class MongoQuery:
 
     class Type(Enum):
-        CREATE_COLLECTION = 0
         GET_COLLECTION_NAMES = 1
         DROP_COLLECTION = 2
         INSERT_ONE = 3
@@ -16,17 +17,52 @@ class MongoQuery:
         FIND = 5
         FIND_ONE = 6
         AGGREGATE = 7
-        UPDATE = 8
+        UPDATE_ONE = 8  # TODO: implement
+        UPDATE_MANY = 9  # TODO: implement
 
     type: Type
-    collection: str | None
+    collection: str
     input: str | list | dict | None
+
+    def execute(self, db: MongoDatabase):
+        T = self.Type
+        match (self.type):
+            case T.GET_COLLECTION_NAMES:
+                return db.list_collection_names()
+
+            case T.DROP_COLLECTION:
+                return db.drop_collection(self.collection)
+
+            case T.INSERT_ONE:
+                coll = db.get_collection(self.collection)
+                return coll.insert_one(self.input)
+
+            case T.INSERT_MANY:
+                coll = db.get_collection(self.collection)
+                if not isinstance(self.input, list):
+                    # TODO: add custom exception
+                    raise Exception("self.input is not list")
+                return coll.insert_many(self.input)
+
+            case T.FIND:
+                coll = db.get_collection(self.collection)
+                return coll.find(self.input)
+            
+            case T.FIND_ONE:
+                coll = db.get_collection(self.collection)
+                return coll.find_one(self.input)
+            
+            case T.AGGREGATE:
+                coll = db.get_collection(self.collection)
+                if not isinstance(self.input, list):
+                    # TODO: add custom exception
+                    raise Exception("self.input is not list")
+                return coll.aggregate(self.input)
 
 
 MQT = MongoQuery.Type
 
 PATTERNS = (
-   (MQT.CREATE_COLLECTION, re.compile(r".*db\.createCollection(.*).*")),  # db.createCollection("any_name")
    (MQT.DROP_COLLECTION, re.compile(r".*db\..*\.drop().*")),              # db.<collection>.drop()
    (MQT.INSERT_ONE, re.compile(r".*db\..*\.insertOne(.*).*")),            # db.<collection>.insertOne(RJSON)
    (MQT.INSERT_MANY, re.compile(r".*db\..*\.insertMany(.*).*")),          # db.<collection>.insertMany(RJSON)
