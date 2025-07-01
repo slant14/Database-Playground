@@ -135,8 +135,8 @@ def test_parse_mql():
     """
     queries = parsing.parse_mql(MQL_QUERY)
     assert len(queries) == 2
-    assert queries[0].query == MQT.CREATE_COLLECTION
-    assert queries[1].query == MQT.INSERT_ONE
+    assert queries[0].type == MQT.CREATE_COLLECTION
+    assert queries[1].type == MQT.INSERT_ONE
     assert queries[1].input == {
         "key_1": "val_1",
         "key_2": 54,

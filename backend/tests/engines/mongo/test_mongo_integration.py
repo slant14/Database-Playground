@@ -33,3 +33,14 @@ def test_create_db(engine: MongoEngine):  # noqa F811
 def test_get_dump(engine: MongoEngine):  # noqa F811
     with tmp_db(engine, TMP_DB, ""):
         print(engine.get_dump(TMP_DB))
+
+
+def test_send_query(engine: MongoEngine):  #noqa F811
+    with tmp_db(engine, TMP_DB, ""):
+        engine.send_query(
+            TMP_DB, 
+            (
+                "db.integra.insertOne({target: 'Alucard', age: 3021});"
+                "db.integra.find()"
+            )
+        )

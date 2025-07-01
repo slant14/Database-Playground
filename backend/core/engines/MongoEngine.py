@@ -9,6 +9,7 @@ from bson import json_util
 from .models import DBInfo, QueryResult
 from .DBEngine import DBEngine
 from .exceptions import DBNotExists, DBExists
+from .mongo_parsing import parse_mql, MongoQuery
 
 
 # needed because db cannot
@@ -65,7 +66,23 @@ class MongoEngine(DBEngine):
             client.drop_database(db_name)
 
     def send_query(self, db_name: str, full_query: str) -> list[QueryResult]:
-        raise NotImplementedError
+        queries = parse_mql(full_query)
+        with self._connect() as client:
+            db = client.get_database(db_name)
+            for q in queries:
+                if q.type == MongoQuery.Type.INSERT_ONE:
+                    if not q.collection:
+                        raise Exception
+                    coll = db.get_collection(q.collection)
+                    result = coll.insert_one(q.input)
+                    print(result)
+                if q.type == MongoQuery.Type.FIND:
+                    if not q.collection:
+                        raise Exception
+                    coll = db.get_collection(q.collection)
+                    result = coll.find(q.input)
+                    for r in result:
+                        print(r)
 
     def get_dump(self, db_name: str) -> str:
         with self._connect() as client:

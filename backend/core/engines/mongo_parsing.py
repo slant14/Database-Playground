@@ -18,7 +18,7 @@ class MongoQuery:
         AGGREGATE = 7
         UPDATE = 8
 
-    query: Type
+    type: Type
     collection: str | None
     input: str | list | dict | None
 
@@ -70,7 +70,7 @@ def determine_query_type(query: str) -> MongoQuery.Type:
     for type, pattern in PATTERNS:
         if pattern.fullmatch(query):
             return type
-    raise Exception("Unknown Query: "+query) # TODO: set custom exception
+    raise Exception("Unknown Query: "+query)  # TODO: set custom exception
 
 
 def extract_collection_name(query: str) -> str:
