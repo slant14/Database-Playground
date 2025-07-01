@@ -8,6 +8,7 @@ from rest_framework import permissions, routers
 
 from classroom.views import ClassroomModelViewSet
 
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Database Playground API",
@@ -39,10 +40,8 @@ urlpatterns = [
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
-    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
-    path("test/", include("test.urls")),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),  # noqa: E501
     path("template/", include("templates.urls")),
-    # path('api/chroma_query/', chroma_query),
     path("session/", include("session.urls")),
     path("db/", include("db.urls")),
 ]

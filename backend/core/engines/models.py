@@ -15,11 +15,16 @@ class DBInfo:
                     t.columns.append(ColumnInfo(c[1], c[2]))
                     break
             else:
-                db.tables.append(TableInfo(name=c[0], columns=[ColumnInfo(c[1], c[2])]))
+                db.tables.append(
+                    TableInfo(name=c[0], columns=[ColumnInfo(c[1], c[2])])
+                )
         return db
 
     def to_json(self) -> dict:
-        return {"name": self.name, "tables": [t.to_json() for t in self.tables]}
+        return {
+            "name": self.name,
+            "tables": [t.to_json() for t in self.tables]
+        }
 
     def __repr__(self) -> str:
         tables_str = ""
@@ -34,7 +39,10 @@ class TableInfo:
     columns: list["ColumnInfo"]
 
     def to_json(self) -> dict:
-        return {"name": self.name, "columns": [c.to_json() for c in self.columns]}
+        return {
+            "name": self.name,
+            "columns": [c.to_json() for c in self.columns]
+        }
 
     def __repr__(self) -> str:
         columns_str = ""
