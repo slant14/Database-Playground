@@ -1,91 +1,92 @@
 .query-input-container {
-    display: block;
-    font-size: 24px;
-    border: 1px solid #c1c1c1;
-    border-radius: 16px;
-    resize: both;
-    overflow: hidden;
+  display: block;
+  font-size: 24px;
+  border: 1px solid #c1c1c1;
+  border-radius: 16px;
+  resize: both;
+  overflow: hidden;
 
-    width: 700px;
-    margin-right: 20px;
-    height: 502px;
+  width: 700px;
+  margin-right: 20px;
+  height: 502px;
 
-    position: relative;
+  position: relative;
 }
 
 .query-input-wrapper {
-    display: flex;
-    flex-direction: row;
-    font-size: 24px;
-    resize: none;
-    overflow: hidden;
-    gap: 25px;
+  display: flex;
+  flex-direction: row;
+  font-size: 24px;
+  resize: none;
+  overflow: hidden;
+  gap: 25px;
 
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 
-    justify-content: flex-start;
+  justify-content: flex-start;
 
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .query-input-rowcounter {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    flex-basis: 42px;
-    color: #D4D4D4;
-    margin-top: 10px;
+  flex-basis: 42px;
+  color: #d4d4d4;
+  margin-top: 10px;
 
-    max-height: 100%;
-    height: 100%;
+  max-height: 100%;
+  height: 100%;
 
-    flex-shrink: 1;
+  flex-shrink: 1;
 
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .query-input-rowcounter div {
-    text-align: right;
-    line-height: 25px;
+  text-align: right;
+  line-height: 25px;
 }
 
 .query-input-area {
-    all: unset;           /* Reset default styles */
-    display: block;
-    
-    /* Explicit inheritance (optional, but clearer) */
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-    color: inherit;
-    
-    /* Ensure it grows and scrolls correctly */
-    max-height: 100%;
-    height: 100%;
+  all: unset; /* Reset default styles */
+  display: block;
 
-    flex-grow: 10;
-    flex-shrink: 10;
-    resize: none;
+  /* Explicit inheritance (optional, but clearer) */
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
 
-    overflow: auto;
-    text-wrap-mode:nowrap;
+  /* Ensure it grows and scrolls correctly */
+  max-height: 100%;
+  height: 100%;
 
-    flex-basis: 613px;
-    margin-top: 10px;
-    line-height: 25px;
+  flex-grow: 10;
+  flex-shrink: 10;
+  resize: none;
 
-    z-index: 1;
+  overflow: auto;
+  text-wrap-mode: nowrap;
 
-    scrollbar-width: thin;
+  flex-basis: 613px;
+  margin-top: 10px;
+  line-height: 25px;
+
+  z-index: 1;
+
+  scrollbar-width: thin;
 }
 
 .width-test {
-    font-size: 24px;
-    display: none;
+  font-size: 24px;
+  display: none;
 
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
+

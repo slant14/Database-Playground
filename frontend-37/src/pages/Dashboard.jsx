@@ -4,7 +4,7 @@ import styles from "./Dashboard.module.css";
 import { MainBar } from "../components/MainBar";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { API_URL} from "../const";
+import { API_URL } from "../const";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function Dashboard() {
     const run = async () => {
       console.log(localStorage.getItem("session_id"), "!!!!");
       if (!localStorage.getItem("session_id")) {
-        const res = await fetch(API_URL+"/session", {
+        const res = await fetch(API_URL + "/session", {
           credentials: "include",
         });
         const { session_id } = await res.json();
@@ -32,7 +32,7 @@ export default function Dashboard() {
       `${API_URL}/session/info/?session_id=${localStorage.getItem("session_id")}`,
       {
         credentials: "include",
-      },
+      }
     );
     const json = await res.json();
     if (json.template) {

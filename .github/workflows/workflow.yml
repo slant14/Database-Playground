@@ -1,4 +1,4 @@
-name: Deploy via SSH with Docker Compose
+name: Lint, format and deploy
 
 on:
   push:
@@ -51,6 +51,26 @@ jobs:
         
       - name: Run flake8
         run: flake8 .
+
+      - name: Setup Docker
+        uses: docker/setup-action@v2
+      
+      - name: Start services
+        run: |
+          docker compose up -d
+          sleep 10
+      
+      - name: Install test dependencies
+        run: |
+          docker exec -i backend python -m pip install -r requirements-test.txt
+      
+      - name: Run tests
+        run: |
+          docker exec -i backend ./scripts/run_tests.sh
+      
+      - name: Stop services
+        if: always()
+        run: docker compose -f docker-compose.test.yml down
         
       - name: Run tests
         run: cd .. && ./scripts/run_tests.sh

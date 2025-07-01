@@ -55,7 +55,7 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
           ref={textareaRef}
         ></textarea>
       </div>
-        <RunButton handleClick={onRunClicked}/>
+      <RunButton handleClick={onRunClicked} />
     </div>
   );
 }

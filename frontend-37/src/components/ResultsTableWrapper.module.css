@@ -1,15 +1,16 @@
 .resTable {
-    width: 97%;
-    height: 361px;
-    border: 1px solid #C1C1C1;
-    border-radius: 16px;
-    padding: 10px;
-    gap: 10px;
-    margin-right: auto;
-    resize: both;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    overflow-x: auto;
-    overflow-y: auto;
+  width: 97%;
+  height: 361px;
+  border: 1px solid #c1c1c1;
+  border-radius: 16px;
+  padding: 10px;
+  gap: 10px;
+  margin-right: auto;
+  resize: both;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  overflow-y: auto;
 }
+

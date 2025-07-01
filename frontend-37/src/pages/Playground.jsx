@@ -17,7 +17,7 @@ export default function Playground() {
         `${API_URL}/db/schema/?session_id=${session_id}`,
         {
           credentials: "include",
-        },
+        }
       );
       const json = await res.json();
       console.log(json);
@@ -27,17 +27,16 @@ export default function Playground() {
   }, []);
 
   const sendQuery = async () => {
-    const res = await fetch(
-      `${API_URL}/db/query/?session_id=${session_id}`,
-      {
-        method: "POST",
-        body: query,
-        credentials: "include",
-      },
-    );
+    const res = await fetch(`${API_URL}/db/query/?session_id=${session_id}`, {
+      method: "POST",
+      body: query,
+      credentials: "include",
+    });
 
     const json = await res.json();
+    console.log("yo", json);
     setResults(json);
+    console.log("че за хуйня?");
     if (json.schema) setSchemas(json.schema);
   };
 

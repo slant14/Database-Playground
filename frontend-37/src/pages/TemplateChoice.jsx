@@ -12,7 +12,7 @@ export default function TemplateChoice() {
 
   useEffect(() => {
     const run = async () => {
-      const res = await fetch(API_URL+"/template/", {
+      const res = await fetch(API_URL + "/template/", {
         credentials: "include",
       });
       const json = await res.json();

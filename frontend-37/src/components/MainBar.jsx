@@ -23,7 +23,7 @@ export function MainBar({ onClick }) {
             height: 51.15 + "px",
             borderRadius: 11 + "px",
             fontFamily: `"Onest", sans-serif`,
-            fontSize: 24 + "px"
+            fontSize: 24 + "px",
           }}
           onClick={onClick}
         >

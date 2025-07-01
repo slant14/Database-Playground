@@ -19,7 +19,7 @@ export function TemplateChoiceBar({ onTemplateChoose }) {
               color: "black",
               backgroundColor: "white",
               fontFamily: `"Onest", sans-serif`,
-              fontSize: 24 + "px"
+              fontSize: 24 + "px",
             }}
           >
             Back
@@ -36,7 +36,7 @@ export function TemplateChoiceBar({ onTemplateChoose }) {
               color: "black",
               backgroundColor: "white",
               fontFamily: `"Onest", sans-serif`,
-              fontSize: 24 + "px"
+              fontSize: 24 + "px",
             }}
           >
             Start

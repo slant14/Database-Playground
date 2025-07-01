@@ -1,37 +1,38 @@
 .runButton {
-    width: 111px;
-    height: 53px;
-    border-radius: 10px;
-    border: 1px solid #C1C1C1;
-    background-color: white;
-    padding-top: 6px;
-    padding-right: 9px;
-    padding-bottom: 6px;
-    padding-left: 9px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 111px;
+  height: 53px;
+  border-radius: 10px;
+  border: 1px solid #c1c1c1;
+  background-color: white;
+  padding-top: 6px;
+  padding-right: 9px;
+  padding-bottom: 6px;
+  padding-left: 9px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 
-    z-index: 2;
+  z-index: 2;
 }
 
 .runButton:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .runButton img {
-    width: 36px;
-    height: 36px;
-    padding-left: 5px;
+  width: 36px;
+  height: 36px;
+  padding-left: 5px;
 }
 
 .runButton p {
-    font-size: 24px;
-    width: 52px;
-    height: 28px;
-    margin-bottom: 32px;
+  font-size: 24px;
+  width: 52px;
+  height: 28px;
+  margin-bottom: 32px;
 }
+
