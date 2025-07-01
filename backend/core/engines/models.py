@@ -19,9 +19,12 @@ class DBInfo:
                     TableInfo(name=c[0], columns=[ColumnInfo(c[1], c[2])])
                 )
         return db
-    
+
     @staticmethod
-    def from_collection_names(db_name: str, collections: list[str]) -> "DBInfo":
+    def from_collection_names(
+        db_name: str,
+        collections: list[str]
+    ) -> "DBInfo":
         db = DBInfo(db_name, tables=[])
         for c in collections:
             db.tables.append(TableInfo(c, []))
@@ -36,7 +39,7 @@ class DBInfo:
     def __repr__(self) -> str:
         tables_str = ""
         for table in self.tables:
-            tables_str += f"\n  {str(table).replace('\n', '\n  ')}"
+            tables_str += "\n  "+str(table).replace("\n", "\n  ")
         return f"Database {self.name}:  {tables_str}"
 
 
