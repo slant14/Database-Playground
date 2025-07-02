@@ -1,15 +1,15 @@
-import json
 from contextlib import contextmanager
 from urllib.parse import quote_plus
+from typing import Sequence
 
 from pymongo import MongoClient
 from pymongo.database import Database
 from bson import json_util
 
-from .models import DBInfo, SQLQueryResult
+from .models import DBInfo, QueryResult
 from .DBEngine import DBEngine
 from .exceptions import DBNotExists, DBExists
-from .mongo_parsing import parse_mql, MongoQuery
+from .mongo_parsing import parse_mql
 from .mongo_query_adapter import execute_queries
 
 
@@ -66,13 +66,12 @@ class MongoEngine(DBEngine):
                 raise DBNotExists
             client.drop_database(db_name)
 
-    def send_query(self, db_name: str, full_query: str) -> list[SQLQueryResult]:
+    def send_query(
+            self, db_name: str, full_query: str) -> Sequence[QueryResult]:
         mongo_queries = parse_mql(full_query)
         with self._connect() as client:
             db = client.get_database(db_name)
             return execute_queries(mongo_queries, db)
-
-
 
     def get_dump(self, db_name: str) -> str:
         with self._connect() as client:

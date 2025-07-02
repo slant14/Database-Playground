@@ -1,6 +1,7 @@
 import subprocess
 import time
 from contextlib import contextmanager
+from typing import Sequence
 
 import psycopg2
 from psycopg2.extensions import cursor
@@ -61,7 +62,8 @@ class PostgresEngine(DBEngine):
                 cur.execute(SQL(DROP_DATABASE).format(Identifier(db_name)))
 
     @wrap_exceptions
-    def send_query(self, db_name: str, full_query: str) -> list[SQLQueryResult]:
+    def send_query(
+            self, db_name: str, full_query: str) -> Sequence[SQLQueryResult]:
         results = []
         with self._connect(db_name) as conn:
             with conn.cursor() as cur:

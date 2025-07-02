@@ -1,3 +1,4 @@
+from typing import Sequence
 from pymongo.results import (
     InsertOneResult,
     InsertManyResult,
@@ -12,7 +13,7 @@ from .MongoEngine import Database as MongoDatabase
 def execute_queries(
         queries: list[MongoQuery],
         db: MongoDatabase
-) -> list[MongoQueryResult]:
+) -> Sequence[MongoQueryResult]:
     return [_wrap_result(q, _execute_query(q, db)) for q in queries]
 
 

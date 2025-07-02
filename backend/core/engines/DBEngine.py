@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Sequence
 
 from .models import DBInfo, QueryResult
 
@@ -41,7 +42,7 @@ class DBEngine(ABC):
         """
 
     @abstractmethod
-    def send_query(self, db_name: str, full_query: str) -> list[QueryResult]:
+    def send_query(self, db_name: str, full_query: str) -> Sequence[QueryResult]:
         """Sends query to database,
         returns the output of subqueries as a list
 

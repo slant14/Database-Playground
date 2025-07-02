@@ -127,5 +127,5 @@ class MongoQueryResult:
             "execution_time": self.execution_time,
         }
 
-    
+
 QueryResult: TypeAlias = SQLQueryResult | MongoQueryResult

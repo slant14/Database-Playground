@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, timezone
+from datetime import datetime
 import barely_json
 from .models import MongoQuery, MQT
 
@@ -71,7 +71,6 @@ def _fix_types(data: dict | list | str):
                 return datetime.fromisoformat(inner)
             except ValueError:
                 return val
-
 
         # Convert literals
         if val.lower() == "true":
