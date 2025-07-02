@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import styles from "./QueryInput.module.css";
 import RunButton from "./RunButton";
 
@@ -20,6 +20,34 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
     numbersColumnRef.current.style.height = `${textareaRef.current.clientHeight}px`;
   }
 
+  function selectionChangeHandler(e) {
+    let { selectionStart, selectionEnd } = e.target;
+
+    onQueryChange(
+      selectionEnd > selectionStart
+        ? e.target.value.substring(selectionStart, selectionEnd)
+        : e.target.value
+    );
+  }
+
+  let isSelectionChangeHandlerAdded = useRef(false);
+
+  useEffect(() => {
+    let input = textareaRef.current;
+
+    if (input && !isSelectionChangeHandlerAdded.current) {
+      input.addEventListener("selectionchange", selectionChangeHandler);
+      isSelectionChangeHandlerAdded.current = true;
+    }
+
+    return () => {
+      if (isSelectionChangeHandlerAdded.current) {
+        input.removeEventListener("selectionchange", selectionChangeHandler);
+        isSelectionChangeHandlerAdded.current = false;
+      }
+    };
+  }, []);
+
   return (
     <div className={styles["query-input-container"]} ref={containerRef}>
       <div className={styles["query-input-wrapper"]}>
@@ -37,7 +65,6 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
 
             changeNumberColumnValues(columnValues);
 
-            onQueryChange(e.target.value);
             adjustSizes();
 
             if (containerRef.current != null && !observerObserving) {
