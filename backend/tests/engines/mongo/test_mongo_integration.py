@@ -10,12 +10,14 @@ from tests.engines.mongo.fixtures import engine  # noqa
 from tests.utils import (
     mongo_tmp_db as tmp_db,
     remove_mongo_ids as remove_ids,
+    integration_test
 )
 
 
 TMP_DB = "tmp_test_db"
 
 
+@integration_test
 def test_get_db(engine: MongoEngine):  # noqa F811
     with pytest.raises(DBNotExists):
         engine.get_db("non_existing_db")
@@ -24,6 +26,7 @@ def test_get_db(engine: MongoEngine):  # noqa F811
         engine.get_db(TMP_DB)
 
 
+@integration_test
 def test_create_db(engine: MongoEngine):  # noqa F811
     with tmp_db(engine, TMP_DB, ""):
 
@@ -34,11 +37,13 @@ def test_create_db(engine: MongoEngine):  # noqa F811
         assert db.tables[0].name == "collection"
 
 
+@integration_test
 def test_get_dump(engine: MongoEngine):  # noqa F811
     with tmp_db(engine, TMP_DB, ""):
         print(engine.get_dump(TMP_DB))
 
 
+@integration_test
 def test_send_query(engine: MongoEngine):  # noqa F811
     with tmp_db(engine, TMP_DB, ""):
         results = engine.send_query(
@@ -60,3 +65,91 @@ def test_send_query(engine: MongoEngine):  # noqa F811
             "target": "Alucard",
             "age": 3021
         }
+
+
+@integration_test
+def test_multiple_inserts_and_find(engine: MongoEngine):  # noqa F811
+    with tmp_db(engine, TMP_DB, ""):
+        results = engine.send_query(
+            TMP_DB,
+            (
+                "db.integra.insertOne({name: 'A'});"
+                "db.integra.insertOne({name: 'B'});"
+                "db.integra.find();"
+            )
+        )
+        assert len(results) == 3
+        assert all(isinstance(r, MongoQueryResult) for r in results)
+        assert all(r.query.startswith("db.integra.") for r in results)
+        inserted_docs = [
+            remove_ids(doc) for doc in results[2].data  # type: ignore
+        ]
+        assert {"name": "A"} in inserted_docs
+        assert {"name": "B"} in inserted_docs
+
+
+@integration_test
+def test_data_types_parsing(engine: MongoEngine):  # noqa F811
+    with tmp_db(engine, TMP_DB, ""):
+        engine.send_query(
+            TMP_DB,
+            (
+                "db.integra.insertOne("
+                "{flag: true, deleted: false, missing: null, score: 3.14}"
+                ");"
+            )
+        )
+        results = engine.send_query(TMP_DB, "db.integra.find();")
+        doc = remove_ids(results[0].data[0])  # type: ignore
+        assert doc == {
+            "flag": True,
+            "deleted": False,
+            "missing": None,
+            "score": 3.14
+        }
+
+
+@integration_test
+def test_isodate_parsing(engine: MongoEngine):  # noqa F811
+    from datetime import datetime
+
+    with tmp_db(engine, TMP_DB, ""):
+        engine.send_query(
+            TMP_DB,
+            "db.integra.insertOne("
+            "{createdAt: ISODate('2023-07-02T15:04:05Z')}"
+            ");"
+        )
+        results = engine.send_query(TMP_DB, "db.integra.find();")
+        created_at = results[0].data[0]["createdAt"]  # type: ignore
+        assert isinstance(created_at, datetime)
+        assert created_at == datetime.fromisoformat('2023-07-02T15:04:05')
+
+
+@integration_test
+def test_nested_document(engine: MongoEngine):  # noqa F811
+    with tmp_db(engine, TMP_DB, ""):
+        engine.send_query(
+            TMP_DB,
+            "db.integra.insertOne({user: {name: 'Alucard', age: 5000}});"
+        )
+        results = engine.send_query(TMP_DB, "db.integra.find();")
+        doc = remove_ids(results[0].data[0])  # type: ignore
+        assert doc == {
+            "user": {
+                "name": "Alucard",
+                "age": 5000
+            }
+        }
+
+
+@integration_test
+def test_array_values(engine: MongoEngine):  # noqa F811
+    with tmp_db(engine, TMP_DB, ""):
+        engine.send_query(
+            TMP_DB,
+            "db.integra.insertOne({tags: ['vampire', 'immortal', 'night']});"
+        )
+        results = engine.send_query(TMP_DB, "db.integra.find();")
+        doc: dict = remove_ids(results[0].data[0])  # type: ignore
+        assert doc["tags"] == ["vampire", "immortal", "night"]

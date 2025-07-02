@@ -1,14 +1,14 @@
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 import barely_json
 from .models import MongoQuery, MQT
 
 
 PATTERNS = (
-   (MQT.DROP_COLLECTION, re.compile(r".*db\..*\.drop().*")),      # db.<collection>.drop()
-   (MQT.INSERT_ONE, re.compile(r".*db\..*\.insertOne(.*).*")),    # db.<collection>.insertOne(RJSON)
-   (MQT.INSERT_MANY, re.compile(r".*db\..*\.insertMany(.*).*")),  # db.<collection>.insertMany(RJSON)
-   (MQT.FIND, re.compile(r".*db\..*\.find(.*).*")),               # db.<collection>.find(RJSON)
+   (MQT.DROP_COLLECTION, re.compile(r".*db\..*\.drop().*")),
+   (MQT.INSERT_ONE, re.compile(r".*db\..*\.insertOne(.*).*")),
+   (MQT.INSERT_MANY, re.compile(r".*db\..*\.insertMany(.*).*")),
+   (MQT.FIND, re.compile(r".*db\..*\.find(.*).*")),
    # TODO : add more patterns
 )
 
@@ -65,11 +65,13 @@ def _fix_types(data: dict | list | str):
                or (inner.startswith("'") and inner.endswith("'")):
                 inner = inner[1:-1]
             try:
-                return datetime.fromisoformat(
-                    inner.replace('Z', '+00:00')
-                )  # handle Zulu time
+                # Replace Z with UTC offset
+                if inner.endswith("Z"):
+                    inner = inner.replace("Z", "+00:00")
+                return datetime.fromisoformat(inner)
             except ValueError:
                 return val
+
 
         # Convert literals
         if val.lower() == "true":

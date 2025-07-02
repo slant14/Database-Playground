@@ -1,6 +1,23 @@
+import os
+import pytest
 from contextlib import contextmanager
 
 from core.engines import PostgresEngine, MongoEngine
+
+
+INTEGRATION_TEST = os.environ.get("INTEGRATION_TEST", False)
+
+
+def integration_test(func):
+    """ Decorator function
+
+    Skips the test if INTEGRATION_TEST
+    env variable is unset or equals False
+    """
+    return pytest.mark.skipif(
+        (not INTEGRATION_TEST),
+        reason="INTEGRATION_TEST=false"
+    )(func)
 
 
 @contextmanager
