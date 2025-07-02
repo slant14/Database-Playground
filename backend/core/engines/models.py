@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 
 
 @dataclass
@@ -87,3 +88,26 @@ class QueryResult:
             "data": self.data,
             "execution_time": self.execution_time,
         }
+
+
+@dataclass
+class MongoQuery:
+
+    class Type(Enum):
+        GET_COLLECTION_NAMES = 1
+        DROP_COLLECTION = 2
+        INSERT_ONE = 3
+        INSERT_MANY = 4
+        FIND = 5
+        FIND_ONE = 6
+        AGGREGATE = 7
+        UPDATE_ONE = 8  # TODO: implement
+        UPDATE_MANY = 9  # TODO: implement
+
+    query: str
+    type: Type
+    collection: str
+    input: str | list | dict | None
+
+
+MQT = MongoQuery.Type

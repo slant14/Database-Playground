@@ -58,7 +58,7 @@ def test_dict_ordered_dict():
 
 
 def test_parse_aggregate():
-    data = parsing.parse_rjson(AGGREGATE_RJSON)
+    data = parsing._parse_rjson(AGGREGATE_RJSON)
     assert data == [
       {"$match": {"size": "medium"}},
       {"$group": {"_id": "$name", "totalQuantity": {"$sum": "$quantity"}}}
@@ -66,7 +66,7 @@ def test_parse_aggregate():
 
 
 def test_parse_insert():
-    data = parsing.parse_rjson(INSERT_RJSON)
+    data = parsing._parse_rjson(INSERT_RJSON)
     assert data == [
       {
         "_id": 1,
@@ -101,24 +101,24 @@ def test_parse_insert():
 
 
 def test_determine_query_type():
-    assert parsing.determine_query_type(
+    assert parsing._determine_query_type(
         "db.my_collection.drop();") == MQT.DROP_COLLECTION
-    assert parsing.determine_query_type(
+    assert parsing._determine_query_type(
         "db.my_collection.drop({some bullshit});") == MQT.DROP_COLLECTION
-    assert parsing.determine_query_type(
+    assert parsing._determine_query_type(
         "db.my_collection.insertOne({some bullshit});") == MQT.INSERT_ONE
-    assert parsing.determine_query_type(
+    assert parsing._determine_query_type(
         "db.my_collection.insertMany("
         "[{some bullshit}, {some more bullshit}]"
         ");") == MQT.INSERT_MANY
-    assert parsing.determine_query_type(
+    assert parsing._determine_query_type(
         "db.my_collection.find({some bullshit});") == MQT.FIND
 
 
 def test_extract_collection_name():
-    assert parsing.extract_collection_name(
+    assert parsing._extract_collection_name(
         "  \t db.my_collection.drop();") == "my_collection"
-    assert parsing.extract_collection_name(
+    assert parsing._extract_collection_name(
         "   \n db.nohypo.insertOne();") == "nohypo"
 
 

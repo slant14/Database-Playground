@@ -44,4 +44,9 @@ def test_send_query(engine: MongoEngine):  # noqa F811
                 "db.integra.find()"
             )
         )
-        print(results)
+        assert results[0].query == \
+            "db.integra.insertOne({target: 'Alucard', age: 3021})"
+        assert "acknowledged" in results[0].data
+        assert "inserted_id" in results[0].data
+        assert results[1].query == \
+            "db.integra.find()"
