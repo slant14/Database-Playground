@@ -1,7 +1,8 @@
 import re
-from datetime import datetime
 import barely_json
-from .models import MongoQuery, MQT
+from datetime import datetime
+
+from engines.models import MongoQuery, MQT
 
 
 PATTERNS = (

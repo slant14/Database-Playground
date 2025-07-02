@@ -6,11 +6,11 @@ from pymongo import MongoClient
 from pymongo.database import Database
 from bson import json_util
 
-from .models import DBInfo, QueryResult
-from .DBEngine import DBEngine
-from .exceptions import DBNotExists, DBExists
-from .mongo_parsing import parse_mql
-from .mongo_query_adapter import execute_queries
+from engines.models import DBInfo, QueryResult
+from engines.DBEngine import DBEngine
+from engines.exceptions import DBNotExists, DBExists
+from engines.mongo.mongo_parsing import parse_mql
+from engines.mongo.mongo_query_adapter import execute_queries
 
 
 # needed because db cannot

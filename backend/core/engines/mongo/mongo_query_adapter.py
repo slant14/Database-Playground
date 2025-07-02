@@ -5,9 +5,9 @@ from pymongo.results import (
 )
 from pymongo.cursor import Cursor
 from pymongo.command_cursor import CommandCursor
+from pymongo.database import Database as MongoDatabase
 
-from .models import MongoQuery, MQT, MongoQueryResult
-from .MongoEngine import Database as MongoDatabase
+from engines.models import MongoQuery, MQT, MongoQueryResult
 
 
 def execute_queries(
