@@ -1,4 +1,5 @@
 import { act } from "react";
+import { getCookie } from './utils';
 
 const BASE_URL = process.env.REACT_APP_API_URL || "";
 
@@ -64,25 +65,60 @@ export async function queryPostgres(text, id) {
   return res.json();
 }
 
-export async function createUser(email, password, role = "student") {
-  const res = await fetch(`${BASE_URL}/app/users/`, {
+export async function registerUser(name=null, email=null, password, role = "student") {
+  const res = await fetch(`${BASE_URL}/app/users/login_or_register/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ email, password, role }),
+    body: JSON.stringify({ name, email, password, role }),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
 
-export async function getClassromsById(user_id) {
-  const res = await fetch(`${BASE_URL}/app/classrooms/my?user_id=${user_id}`, {
+export async function getMyClassroms() {
+  //const token = getCookie("access");
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/my/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      //'Authorization': token ? `JWT ${token}` : undefined,
     },
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
+}
+
+async function tokenUpdate(url, options = {}) {
+  let token = getCookie("access");
+  options.headers = {
+    ...options.headers,
+    'Authorization': token ? `JWT ${token}` : undefined,
+    'Content-Type': 'application/json',
+  };
+  let res = await fetch(url, options);
+
+  if (res.status === 401 || res.status === 403) {
+    const refresh = getCookie("refresh");
+    if (refresh) {
+      const refreshRes = await fetch(`${BASE_URL}/api/token/refresh/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh }),
+      });
+      if (refreshRes.ok) {
+        const data = await refreshRes.json();
+        document.cookie = `access=${data.access}; path=/;`;
+        options.headers['Authorization'] = `JWT ${data.access}`;
+        res = await fetch(url, options);
+      } else {
+        document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        document.cookie = "refresh=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        window.location.href = "/";
+        return;
+      }
+    }
+  }
+  return res;
 }

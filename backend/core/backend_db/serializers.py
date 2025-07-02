@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Classroom, Enrollment, Course, Assignment, Submission, Topic
 from django.conf import settings
 from django.contrib.auth import get_user_model
+#from django.contrib.auth import authenticate
 
 User = get_user_model()
 
@@ -10,16 +11,43 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-        
+    
+    def validate(self, data):
+        name = data.get('name')
+        email = data.get('email')
+        if not name and not email:
+            raise serializers.ValidationError("Name or email is required")
+        return data
+    
+    def validate_name(self, value):
+        if User.objects.filter(name=value).exists():
+            raise serializers.ValidationError("User with this name already exists")
+        return value
+    
+    def validate_email(self, value):
+        if value is not None and User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("User with this email already exists")
+        return value
+
+    #def login(self, request):
+    #    user = authenticate(request, name=request.data.get('name'), email=request.data.get('email'), password=request.data.get('password'))
+    #    if user is not None:
+    #        return user
+    #    else:
+    #        raise serializers.ValidationError("Invalid credentials")
+
     def create(self, validated_data):
         password = validated_data.pop('password')
         user = User.objects.create_user(password=password, **validated_data)
         return user
+    
 
 class ClassroomSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.CharField(source='teacher.user.name', read_only=True)
     class Meta:
         model = Classroom
         fields = '__all__'
+        extra_fields = ['teacher_name']
 
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:

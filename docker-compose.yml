@@ -11,7 +11,7 @@ services:
     ports:
       - "7000:5432"
     volumes:
-      - ./backend_postgres_data:/var/lib/postgresql/data
+      - backend_pgdata:/var/lib/postgresql/data
 
   backend:
     build:
@@ -37,7 +37,7 @@ services:
       # - POSTGRES_USER=my_pg_user
       # - POSTGRES_PASSWORD=my_pg_password
     command: >
-        sh -c "rm -rf /app/backend_postgres_data &&
+        sh -c "python core/manage.py makemigrations &&
                 python core/manage.py migrate &&
                 python core/manage.py create_superuser_if_none && 
                 python core/manage.py runserver 0.0.0.0:8000"
@@ -73,7 +73,7 @@ services:
       POSTGRES_USER: my_pg_user
       POSTGRES_PASSWORD: my_pg_password
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - postgres_pgdata:/var/lib/postgresql/data
 
   mysql:
     image: mysql:8.0
@@ -95,3 +95,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: my_mongo_password
     volumes:
       - ./mongo_data:/data/db
+
+volumes:
+  backend_pgdata:
+  postgres_pgdata:

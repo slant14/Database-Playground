@@ -7,20 +7,21 @@ import Home from "./components/Home/Home";
 import ClassRooms from "./components/Classrooms/Classrooms";
 import Template from "./components/Template/Template";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
+import { getCookie } from './utils';
 
 class App extends React.Component {
   lastActiveButton = '';
   constructor(props) {
     super(props);
-    const lastPage = this.getCookie("lastPage");
+    const lastPage = getCookie("lastPage");
     this.state = {
       page: lastPage || "home",
       user: {
-        login: this.getCookie("login"),
-        password: this.getCookie("password"),
-        needMemorizing: this.getCookie("needMemorizing") === "true" ? true : false,
+        login: getCookie("login"),
+        password: getCookie("password"),
+        needMemorizing: getCookie("needMemorizing") === "true" ? true : false,
       },
-      isLogin: this.getCookie("login") ? true : false,
+      isLogin: getCookie("login") ? true : false,
       isModalOpen: false,
       activeButton: 'home',
     };
@@ -71,7 +72,7 @@ class App extends React.Component {
       case "code":
         return (
           <div>
-            <Code getCookie={this.getCookie} isLogin={this.state.isLogin} handleButtonClick={this.handleButtonClick}/>
+            <Code getCookie={getCookie} isLogin={this.state.isLogin} handleButtonClick={this.handleButtonClick}/>
           </div>);
       case "acc":
         return (
@@ -143,15 +144,17 @@ class App extends React.Component {
     }
   };
 
-  logIn = (login, password, needMemorizing) => {
+  logIn = (login, password, needMemorizing, token) => {
     this.setCookie("login", login, 7);
     this.setCookie("password", password, 7);
     this.setCookie("needMemorizing", needMemorizing, 7);
+    this.setCookie("access", token, 7);
     this.setPage("home");
     let user = {
       login: login,
       password: password,
       needMemorizing: needMemorizing,
+      token: token,
     }
     this.setState({ isLogin: true, user: user });
 
@@ -167,7 +170,17 @@ class App extends React.Component {
     this.deleteCookie("login");
     this.deleteCookie("password");
     this.deleteCookie("needMemorizing");
+    this.deleteCookie("access")
     this.updateLoginState();
+    this.setState({
+      isLogin: false,
+      user: {
+        login: "",
+        password: "",
+        needMemorizing: false,
+        token: "",
+      }
+    });
     this.setPage("home");
   }
 
@@ -192,15 +205,16 @@ class App extends React.Component {
 
 
   updateLoginState = () => {
-    const login = this.getCookie("login");
-    const password = this.getCookie("password");
+    const login = getCookie("login");
+    const password = getCookie("password");
+    const token = getCookie("access");
     this.setState({
-      isLogin: !!login && !!password,
+      isLogin: !!login && !!password && !!token,
     });
   };
 
 
-  getCookie = (name) => {
+  /*getCookie = (name) => {
     for (const entryString of document.cookie.split(";")) {
       const [entryName, entryValue] = entryString.split("=");
       if (decodeURIComponent(entryName) === name) {
@@ -208,7 +222,7 @@ class App extends React.Component {
       }
     }
     return undefined;
-  }
+  }*/
 
   handleCancel = () => {
     this.setState({ isModalOpen: false, activeButton: this.lastActiveButton })

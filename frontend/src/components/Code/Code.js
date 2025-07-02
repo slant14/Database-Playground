@@ -7,6 +7,7 @@ import { Button, FloatButton, Typography } from 'antd';
 import { FaRegLightbulb } from "react-icons/fa";
 import HintModal from './hintModal';
 import './Code.css';
+import { getCookie } from '../../utils';
 
 class Code extends React.Component {
   constructor(props) {
@@ -66,7 +67,8 @@ class Code extends React.Component {
       return;
     }
     this.setLoading(true);
-    let string = (this.props.getCookie("login") + this.props.getCookie("password"));
+    //let string = (this.props.getCookie("login") + this.props.getCookie("password"));
+    let string  = getCookie("login") + getCookie("password")
     getIState(string.hashCode())
       .then(data => {
         this.setState({ db_state: data }, () => {
@@ -183,7 +185,8 @@ class Code extends React.Component {
       const error = {
         message: "Please try once again, there is an error in your code",
       }
-      let string = (this.props.getCookie("login") + this.props.getCookie("password"));
+      //let string = (this.props.getCookie("login") + this.props.getCookie("password"));
+      let string = getCookie("login") + getCookie("password");
       if (!text.includes('\n')) {
         getCode(text, string.hashCode())
           .then(data => {
