@@ -6,7 +6,7 @@ from pymongo import MongoClient
 from pymongo.database import Database
 from bson import json_util
 
-from .models import DBInfo, QueryResult
+from .models import DBInfo, SQLQueryResult
 from .DBEngine import DBEngine
 from .exceptions import DBNotExists, DBExists
 from .mongo_parsing import parse_mql, MongoQuery
@@ -66,7 +66,7 @@ class MongoEngine(DBEngine):
                 raise DBNotExists
             client.drop_database(db_name)
 
-    def send_query(self, db_name: str, full_query: str) -> list[QueryResult]:
+    def send_query(self, db_name: str, full_query: str) -> list[SQLQueryResult]:
         mongo_queries = parse_mql(full_query)
         with self._connect() as client:
             db = client.get_database(db_name)

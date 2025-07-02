@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import TypeAlias
 
 
 @dataclass
@@ -75,10 +76,10 @@ class ColumnInfo:
 
 
 @dataclass
-class QueryResult:
+class SQLQueryResult:
     query: str
     rowcount: int
-    data: list | dict | str | None
+    data: list[tuple] | None
     execution_time: float
 
     def to_json(self) -> dict:
@@ -111,3 +112,20 @@ class MongoQuery:
 
 
 MQT = MongoQuery.Type
+
+
+@dataclass
+class MongoQueryResult:
+    query: str
+    data: list | dict | None
+    execution_time: float
+
+    def to_json(self) -> dict:
+        return {
+            "query": self.query,
+            "data": self.data,
+            "execution_time": self.execution_time,
+        }
+
+    
+QueryResult: TypeAlias = SQLQueryResult | MongoQueryResult

@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 import barely_json
 from .models import MongoQuery, MQT
 
@@ -15,6 +16,8 @@ PATTERNS = (
 def parse_mql(full_query: str) -> list[MongoQuery]:
     result = []
     for query in full_query.split(";"):
+        if not query:
+            continue
         # the following shit is done to remove \n
         # while keeping \\n that is likely needed by user
         query = query.strip() \
@@ -40,7 +43,55 @@ def _parse_rjson(rjson: str | None) -> dict | list | None:
     """
     if not rjson: return None  # noqa
     data = barely_json.parse(rjson)
-    return data
+    data = _fix_types(data)
+    return data  # type: ignore
+
+
+def _fix_types(data: dict | list | str):
+    """Recursively fix types in the parsed relaxed JSON structure."""
+    if isinstance(data, dict):
+        return {k: _fix_types(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [_fix_types(item) for item in data]
+    elif isinstance(data, str):
+        val = data.strip()
+        if (val.startswith('"') and val.endswith('"')) \
+           or (val.startswith("'") and val.endswith("'")):
+            val = val[1:-1]
+
+        if val.startswith("ISODate(") and val.endswith(")"):
+            inner = val[len("ISODate("):-1].strip()
+            if (inner.startswith('"') and inner.endswith('"')) \
+               or (inner.startswith("'") and inner.endswith("'")):
+                inner = inner[1:-1]
+            try:
+                return datetime.fromisoformat(
+                    inner.replace('Z', '+00:00')
+                )  # handle Zulu time
+            except ValueError:
+                return val
+
+        # Convert literals
+        if val.lower() == "true":
+            return True
+        elif val.lower() == "false":
+            return False
+        elif val.lower() == "null":
+            return None
+
+        # Try to convert numbers
+        try:
+            if '.' in val:
+                return float(val)
+            else:
+                return int(val)
+        except ValueError:
+            pass
+
+        # Return as string
+        return val
+    else:
+        return data
 
 
 def _determine_query_type(query: str) -> MongoQuery.Type:

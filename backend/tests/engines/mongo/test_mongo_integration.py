@@ -4,9 +4,13 @@ from core.engines import MongoEngine
 from core.engines.exceptions import (
     DBNotExists, DBExists
 )
+from core.engines.models import MongoQueryResult
 
 from tests.engines.mongo.fixtures import engine  # noqa
-from tests.utils import mongo_tmp_db as tmp_db
+from tests.utils import (
+    mongo_tmp_db as tmp_db,
+    remove_mongo_ids as remove_ids,
+)
 
 
 TMP_DB = "tmp_test_db"
@@ -41,12 +45,18 @@ def test_send_query(engine: MongoEngine):  # noqa F811
             TMP_DB,
             (
                 "db.integra.insertOne({target: 'Alucard', age: 3021});"
-                "db.integra.find()"
+                "db.integra.find();"
             )
         )
+        assert all(isinstance(r, MongoQueryResult) for r in results)
         assert results[0].query == \
             "db.integra.insertOne({target: 'Alucard', age: 3021})"
-        assert "acknowledged" in results[0].data
+        assert isinstance(results[0].data, dict)
+        assert ("acknowledged", 'True') in results[0].data.items()
         assert "inserted_id" in results[0].data
-        assert results[1].query == \
-            "db.integra.find()"
+        assert results[1].query == "db.integra.find()"
+        assert isinstance(results[1].data, list)
+        assert remove_ids(results[1].data[0]) == {  # type: ignore
+            "target": "Alucard",
+            "age": 3021
+        }

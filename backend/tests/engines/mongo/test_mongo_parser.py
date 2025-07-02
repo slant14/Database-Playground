@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from core.engines import mongo_parsing as parsing
 from core.engines.mongo_parsing import MQT
 from collections import OrderedDict as OD
@@ -75,7 +77,7 @@ def test_parse_insert():
           {"product": "Pen", "quantity": 2, "price": 1.20},
           {"product": "Notebook", "quantity": 1, "price": 3.50}
         ],
-        "date": 'ISODate("2024-07-01T10:00:00Z")',
+        "date": datetime.fromisoformat("2024-07-01T10:00:00Z"),
         "status": "shipped"
       },
       {
@@ -85,7 +87,7 @@ def test_parse_insert():
           {"product": "Pen", "quantity": 1, "price": 1.20},
           {"product": "Eraser", "quantity": 3, "price": 0.50}
         ],
-        "date": 'ISODate("2023-07-02T11:30:00Z")',
+        "date": datetime.fromisoformat("2023-07-02T11:30:00Z"),
         "status": "pending"
       },
       {
@@ -94,7 +96,7 @@ def test_parse_insert():
         "items": [
           {"product": "Pen", "quantity": 5, "price": 1.10}
         ],
-        "date": 'ISODate("2023-07-03T09:00:00Z")',
+        "date": datetime.fromisoformat("2023-07-03T09:00:00Z"),
         "status": "delivered"
       }
     ]
@@ -136,5 +138,5 @@ def test_parse_mql():
     assert queries[0].input == {
         "key_1": "val_1",
         "key_2": 54,
-        "key_3": 'ISODate("2023-07-03T09:00:00Z")'
+        "key_3": datetime.fromisoformat("2023-07-03T09:00:00Z")
     }

@@ -6,7 +6,7 @@ import psycopg2
 from psycopg2.extensions import cursor
 from psycopg2.sql import SQL, Identifier
 
-from .models import DBInfo, QueryResult
+from .models import DBInfo, SQLQueryResult
 from .DBEngine import DBEngine
 from .utility import postgres_wrap_exceptions as wrap_exceptions
 
@@ -61,7 +61,7 @@ class PostgresEngine(DBEngine):
                 cur.execute(SQL(DROP_DATABASE).format(Identifier(db_name)))
 
     @wrap_exceptions
-    def send_query(self, db_name: str, full_query: str) -> list[QueryResult]:
+    def send_query(self, db_name: str, full_query: str) -> list[SQLQueryResult]:
         results = []
         with self._connect(db_name) as conn:
             with conn.cursor() as cur:
@@ -76,7 +76,7 @@ class PostgresEngine(DBEngine):
             cur.execute(query)
 
     def _save_query_result(
-        self, cur: cursor, query: str, results: list[QueryResult]
+        self, cur: cursor, query: str, results: list[SQLQueryResult]
     ):
         rowcount = cur.rowcount
         data = None
@@ -88,7 +88,7 @@ class PostgresEngine(DBEngine):
             pass
         execution_time = time.perf_counter() - start
 
-        results.append(QueryResult(query, rowcount, data, execution_time))
+        results.append(SQLQueryResult(query, rowcount, data, execution_time))
 
     def _split_queries(self, big_query: str) -> list[str]:
         queries = []

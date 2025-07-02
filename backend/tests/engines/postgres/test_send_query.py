@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from core.engines.PostgresEngine import PostgresEngine
-from core.engines.models import QueryResult
+from core.engines.models import SQLQueryResult
 
 from psycopg2 import ProgrammingError
 
@@ -35,7 +35,7 @@ def test_send_query_executes_all_queries_and_collects_results(mock_connect, engi
     # Check result list
     assert len(results) == 2
     for result, expected_query in zip(results, ["SELECT 1", "SELECT 2"]):
-        assert isinstance(result, QueryResult)
+        assert isinstance(result, SQLQueryResult)
         assert result.query == expected_query
         assert result.data == [("row1",), ("row2",)]
         assert result.rowcount == 2
