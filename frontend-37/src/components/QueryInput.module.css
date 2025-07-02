@@ -41,6 +41,8 @@
   flex-shrink: 1;
 
   overflow: hidden;
+
+  user-select: none;
 }
 
 .query-input-rowcounter div {
@@ -77,6 +79,10 @@
   z-index: 1;
 
   scrollbar-width: thin;
+}
+
+.query-input-area::selection {
+  background-color: #dedeff;
 }
 
 .width-test {
