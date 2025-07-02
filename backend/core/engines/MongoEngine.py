@@ -6,29 +6,15 @@ from pymongo import MongoClient
 from pymongo.database import Database
 from bson import json_util
 
-from engines.models import DBInfo, QueryResult
-from engines.DBEngine import DBEngine
-from engines.exceptions import DBNotExists, DBExists
-from engines.mongo.mongo_parsing import parse_mql
-from engines.mongo.mongo_query_adapter import execute_queries
+from .models import DBInfo, QueryResult
+from .DBEngine import DBEngine
+from .exceptions import DBNotExists, DBExists
+from .mongo.mongo_parsing import parse_mql
+from .mongo.mongo_query_adapter import execute_queries
 
 
-# needed because db cannot
-# be created without data in it
-DEFAULT_DUMP = '''
-{
-  "db": {
-    "collection": [
-      {
-        "_id": {
-          "$oid": "686309dfac4152dfd0f29ba2"
-        },
-        "hello": "world"
-      }
-    ]
-  }
-}
-'''
+# needed because db cannot be created without data in it
+DEFAULT_DUMP = '{ "db": { "collection": [ { "hello": "world" } ] } }'
 
 
 class MongoEngine(DBEngine):

@@ -7,14 +7,18 @@ from pymongo.cursor import Cursor
 from pymongo.command_cursor import CommandCursor
 from pymongo.database import Database as MongoDatabase
 
-from engines.models import MongoQuery, MQT, MongoQueryResult
+from ..models import MongoQuery, MQT, MongoQueryResult
+from ..exceptions import QueryError
 
 
 def execute_queries(
         queries: list[MongoQuery],
         db: MongoDatabase
 ) -> Sequence[MongoQueryResult]:
-    return [_wrap_result(q, _execute_query(q, db)) for q in queries]
+    try:
+        return [_wrap_result(q, _execute_query(q, db)) for q in queries]
+    except Exception as e:
+        raise QueryError(str(e))
 
 
 def _execute_query(query: MongoQuery, db: MongoDatabase):
@@ -32,8 +36,7 @@ def _execute_query(query: MongoQuery, db: MongoDatabase):
         case MQT.INSERT_MANY:
             coll = db.get_collection(query.collection)
             if not isinstance(query.input, list):
-                # TODO: add custom exception
-                raise Exception("query.input is not list")
+                raise QueryError("query.input is not list")
             return coll.insert_many(query.input)
 
         case MQT.FIND:
@@ -47,8 +50,7 @@ def _execute_query(query: MongoQuery, db: MongoDatabase):
         case MQT.AGGREGATE:
             coll = db.get_collection(query.collection)
             if not isinstance(query.input, list):
-                # TODO: add custom exception
-                raise Exception("query.input is not list")
+                raise QueryError("query.input is not list")
             return coll.aggregate(query.input)
 
 

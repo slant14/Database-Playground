@@ -2,7 +2,8 @@ import re
 import barely_json
 from datetime import datetime
 
-from engines.models import MongoQuery, MQT
+from ..models import MongoQuery, MQT
+from ..exceptions import QueryError, ParsingError
 
 
 PATTERNS = (
@@ -42,10 +43,13 @@ def _parse_rjson(rjson: str | None) -> dict | list | None:
     """Parsing relaxed json \\
     Hopefully, its what is used by mongo
     """
-    if not rjson: return None  # noqa
-    data = barely_json.parse(rjson)
-    data = _fix_types(data)
-    return data  # type: ignore
+    try:
+        if not rjson: return None  # noqa
+        data = barely_json.parse(rjson)
+        data = _fix_types(data)
+        return data  # type: ignore
+    except Exception as e:
+        raise ParsingError(str(e))
 
 
 def _fix_types(data: dict | list | str):
@@ -100,7 +104,7 @@ def _determine_query_type(query: str) -> MongoQuery.Type:
     for type, pattern in PATTERNS:
         if pattern.fullmatch(query):
             return type
-    raise Exception("Unknown Query: "+query)  # TODO: set custom exception
+    raise QueryError("Unknown Query: "+query)
 
 
 def _extract_collection_name(query: str) -> str:

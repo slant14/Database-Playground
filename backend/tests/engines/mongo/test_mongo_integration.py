@@ -5,6 +5,7 @@ from core.engines.exceptions import (
     DBNotExists, DBExists
 )
 from core.engines.models import MongoQueryResult
+from core.engines.exceptions import QueryError
 
 from tests.engines.mongo.fixtures import engine  # noqa
 from tests.utils import (
@@ -153,3 +154,18 @@ def test_array_values(engine: MongoEngine):  # noqa F811
         results = engine.send_query(TMP_DB, "db.integra.find();")
         doc: dict = remove_ids(results[0].data[0])  # type: ignore
         assert doc["tags"] == ["vampire", "immortal", "night"]
+
+
+@integration_test
+def test_query_errors(engine: MongoEngine):  # noqa F811
+    with tmp_db(engine, TMP_DB, ""):
+        with pytest.raises(QueryError):
+            engine.send_query(
+                TMP_DB,
+                "db.integra.insertOne(this is some bullshit here);"
+            )
+        with pytest.raises(QueryError, match=r'Unknown Query:.*'):
+            engine.send_query(
+                TMP_DB,
+                "db.integra.invalid(this is some bullshit here);"
+            )

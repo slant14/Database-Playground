@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from core.engines import mongo_parsing as parsing
-from core.engines.mongo_parsing import MQT
+from core.engines.mongo import mongo_parsing as parsing
+from core.engines.mongo.mongo_parsing import MQT
 from collections import OrderedDict as OD
 
 
