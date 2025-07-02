@@ -5,15 +5,15 @@ import { NavLink } from "react-router";
 
 export function MainBar({ onClick }) {
   return (
-    <TopBar>
-      <TopBarElement>
-        <NavLink to="/" end>
-          Main
-        </NavLink>
-      </TopBarElement>
+    <TopBar contentStyle={{ flexBasis: "500px" }}>
       <TopBarElement>
         <NavLink to="/about" end>
           About
+        </NavLink>
+      </TopBarElement>
+      <TopBarElement>
+        <NavLink to="/" end>
+          Classrooms
         </NavLink>
       </TopBarElement>
       <TopBarElement>

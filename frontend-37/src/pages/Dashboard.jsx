@@ -1,5 +1,7 @@
 import dashboardImg from "../assets/people.png";
 import humansImg from "../assets/humans.jpg";
+import assignmentsImg from "../assets/taska.jpg";
+import humanWithDeskImg from "../assets/rectangleAndHuman.jpg";
 import styles from "./Dashboard.module.css";
 import { MainBar } from "../components/MainBar";
 import { useEffect } from "react";
@@ -47,9 +49,9 @@ export default function Dashboard() {
       <MainBar onClick={onClick} />
       <div className={styles.mainDiv}>
         <div>
-          <h1 className={styles.bigTitle}>Interactive databases exercises</h1>
+          <h1 className={styles.bigTitle}>Learn databases</h1>
           <p className={styles.description}>
-            Improve your skills in managing databases!
+            Complete assignments, experiment in playground and become expert!
           </p>
         </div>
         <img
@@ -60,24 +62,24 @@ export default function Dashboard() {
       </div>
       <div className={styles.rectangleContainer}>
         <div className={styles.rectangle}>
-          <img src={humansImg} alt="Humans" />
+          <img className={styles.peopleImg} src={humansImg} alt="Humans" />
           <div>
             <p className={styles.pAboutClassrooms}>Create classrooms</p>
             <p className={styles.pAboutAdding}>And add students</p>
           </div>
         </div>
         <div className={styles.rectangle}>
-          <img src={humansImg} alt="Humans" />
+          <img className={styles.assignmentsImg} src={assignmentsImg} alt="Assignments" />
           <div>
-            <p className={styles.pAboutClassrooms}>Create classrooms</p>
-            <p className={styles.pAboutAdding}>And add students</p>
+            <p className={styles.pAboutClassrooms}>Automatic grading</p>
+            <p className={styles.pAboutAdding}>For assignments</p>
           </div>
         </div>
         <div className={styles.rectangle}>
-          <img src={humansImg} alt="Humans" />
+          <img className={styles.humanWithDeskImg} src={humanWithDeskImg} alt="HumanWithDesk" />
           <div>
-            <p className={styles.pAboutClassrooms}>Create classrooms</p>
-            <p className={styles.pAboutAdding}>And add students</p>
+            <p className={styles.pAboutClassrooms}>Add TA's</p>
+            <p className={styles.pAboutAdding}>To help you manage classrooms</p>
           </div>
         </div>
       </div>
