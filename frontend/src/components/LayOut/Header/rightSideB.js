@@ -65,6 +65,7 @@ class RightSideB extends React.Component {
                     open={this.state.isRegisterModalOpen}
                     onCancel={this.handleRegisterCancel}
                     onSwitchToLogin={this.handleSwitchToLogin}
+                    logIn={this.props.logIn} 
                 />
             </div>
         );

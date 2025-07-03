@@ -1,6 +1,7 @@
 import React from "react"
 import { Modal, Input, Button, notification } from "antd";
 import "./Header.css"
+import { registerUser } from "../../../api";
 
 class RegisterModal extends React.Component {
   constructor(props) {
@@ -68,7 +69,7 @@ class RegisterModal extends React.Component {
     )
   }
 
-  handleRegister = () => {
+  handleRegister = async () => {
     const { login, email, password, confirmPassword } = this.state;
     
     if (login === "" || email === "" || password === "" || confirmPassword === "") {
@@ -100,8 +101,8 @@ class RegisterModal extends React.Component {
       });
       return;
     }
-    
-    // Здесь будет API вызов для регистрации
+    const data = await registerUser(this.state.login, this.state.email, this.state.password);
+    this.props.logIn(this.state.login, this.state.email, this.state.password, this.state.needMemorizing, data.access)
     this.myForm.reset();
     this.setState({
       login: "",
@@ -118,9 +119,9 @@ class RegisterModal extends React.Component {
     });
     
     this.props.onCancel();
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.props.onSwitchToLogin();
-    }, 500);
+    }, 500);*/
   }
 }
 

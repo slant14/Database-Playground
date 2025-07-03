@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Input, Button, notification } from "antd";
 import "./Header.css"
-import { registerUser } from "../../../api";
+import { loginUser } from "../../../api";
 
 
 
@@ -66,8 +66,8 @@ class MyModal extends React.Component {
                     placement: 'bottomRight',
                     duration: 2,                  });
                 } else {
-                  const data = await registerUser(this.state.login, null, this.state.password);
-                  this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing)
+                  const data = await loginUser(this.state.login, this.state.password);
+                  this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing, data.access)
                   notification.success({
                     message: 'Вход выполнен успешно',
                     description: 'Добро пожаловать в систему!',

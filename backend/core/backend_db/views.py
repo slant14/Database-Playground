@@ -26,8 +26,8 @@ def assignment_detail(request, pk):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    @action(detail=False, methods=['post'], url_path='login_or_register', permission_classes=[AllowAny])
-    def login_or_register(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'], url_path='login', permission_classes=[AllowAny])
+    def login(self, request, *args, **kwargs):
         name = request.data.get('name')
         email = request.data.get('email')
         password = request.data.get('password')
@@ -40,6 +40,16 @@ class UserViewSet(viewsets.ModelViewSet):
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
             }, status=status.HTTP_200_OK)
+        else:
+            return Response({}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    @action(detail=False, methods=['post'], url_path='register', permission_classes=[AllowAny])
+    def register(self, request, *args, **kwargs):
+        name = request.data.get('name')
+        email = request.data.get('email')
+        password = request.data.get('password')
+        if User.objects.filter(name=name).exists():
+            return Response({}, status=status.HTTP_302_FOUND)
         else:
             serializer = UserSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)

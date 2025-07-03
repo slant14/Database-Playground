@@ -12,7 +12,7 @@ class Header extends React.Component {
     return (
       <header className="header">
         <LeftSideB handleButtonClick={this.props.handleButtonClick} activeButton={this.props.activeButton} />
-        <RightSideB handleButtonClick={this.props.handleButtonClick} activeButton={this.props.activeButton} checkLogin={this.props.checkLogin} isModalOpen={this.props.isModalOpen} logIn={this.props.logIn} setPage={this.props.setPage} handleCancel={this.props.handleCancel} updateLogin={this.props.updateLogin} setUser={this.props.setUser} />
+        <RightSideB handleButtonClick={this.props.handleButtonClick} activeButton={this.props.activeButton} checkLogin={this.props.checkLogin} isModalOpen={this.props.isModalOpen} logIn={this.props.logIn} setPage={this.props.setPage} handleCancel={this.props.handleCancel} updateLogin={this.props.updateLogin} setUser={this.props.setUser} getCookie={this.props.setCookie}/>
       </header>
     )
   }

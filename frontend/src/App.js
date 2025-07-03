@@ -261,6 +261,7 @@ class App extends React.Component {
     }
     this.setState({ isLogin: true, user: user });
   }
+  
 
   componentDidUpdate(prevProps) {
     if (prevProps.current !== this.props.current) {
@@ -276,14 +277,7 @@ class App extends React.Component {
     this.deleteCookie("access")
     this.updateLoginState();
     this.setState({
-      isLogin: false,
-      user: {
-        login: "",
-        password: "",
-        needMemorizing: false,
-        selectedClassroom: null,
-        token: "",
-      }
+      selectedClassroom: null,
     });
     this.setPage("home");
     this.setCookie("lastPage", "home", 7);

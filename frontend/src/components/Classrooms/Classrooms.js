@@ -3,7 +3,6 @@ import { Typography, Button } from "antd";
 import { getMyClassroms } from '../../api';
 import './Classrooms.css';
 import image from "../../img/Screen.jpg"
-import image from "../../img/Screen.jpg"
 
 const { Title, Paragraph, Text, Link } = Typography;
 
@@ -88,7 +87,7 @@ class ClassRooms extends React.Component {
           marginBottom: 10
         }}>Class<Text style={{
           color: "#fff",
-        }}>Class<Text style={{
+        }}>Class</Text><Text style={{
           color: "#fff",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
