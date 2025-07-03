@@ -102,6 +102,7 @@ class RegisterModal extends React.Component {
       return;
     }
     const data = await registerUser(this.state.login, this.state.email, this.state.password);
+    console.log("FDFSFSD" + this.props.logIn)
     this.props.logIn(this.state.login, this.state.email, this.state.password, this.state.needMemorizing, data.access)
     this.myForm.reset();
     this.setState({
