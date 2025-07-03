@@ -1,19 +1,12 @@
 import pytest
 
 from core.engines import MongoEngine
-from core.engines.exceptions import (
-    DBNotExists, DBExists
-)
+from core.engines.exceptions import DBExists, DBNotExists, QueryError
 from core.engines.models import MongoQueryResult
-from core.engines.exceptions import QueryError
-
 from tests.engines.mongo.fixtures import engine  # noqa
-from tests.utils import (
-    mongo_tmp_db as tmp_db,
-    remove_mongo_ids as remove_ids,
-    integration_test
-)
-
+from tests.utils import integration_test
+from tests.utils import mongo_tmp_db as tmp_db
+from tests.utils import remove_mongo_ids as remove_ids
 
 TMP_DB = "tmp_test_db"
 

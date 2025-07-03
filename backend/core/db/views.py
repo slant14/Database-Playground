@@ -1,11 +1,10 @@
+from engines import postgres_engine
+from engines.exceptions import QueryError
+from engines.shortcuts import db_exists
 from rest_framework.parsers import BaseParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from engines import postgres_engine
-from engines.exceptions import QueryError
-from engines.shortcuts import db_exists
 from session.exceptions import ExceptionWithResponse
 from session.models import Session, SessionInfo
 from session.shortcuts import resolve_session_id

@@ -1,10 +1,10 @@
 import re
-import barely_json
 from datetime import datetime
 
-from ..models import MongoQuery, MQT
-from ..exceptions import QueryError, ParsingError
+import barely_json
 
+from ..exceptions import ParsingError, QueryError
+from ..models import MQT, MongoQuery
 
 PATTERNS = (
    (MQT.DROP_COLLECTION, re.compile(r".*db\..*\.drop().*")),
