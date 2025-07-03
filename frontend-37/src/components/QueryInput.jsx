@@ -7,8 +7,7 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
   let numbersColumnRef = useRef(null);
   let containerRef = useRef(null);
 
-  //let enterDown = useRef(false);
-  //let shiftDown = useRef(false);
+  let shiftDown = useRef(false);
 
   let [numberColumnValues, changeNumberColumnValues] = useState(["1"]);
 
@@ -47,7 +46,9 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
       if (isSelectionChangeHandlerAdded.current) {
         input.removeEventListener("selectionchange", selectionChangeHandler);
         isSelectionChangeHandlerAdded.current = false;
-      }
+      };
+
+      shiftDown.current = false;
     };
   }, []);
 
@@ -82,7 +83,7 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
             }
           }}
           onKeyDown={(e) => {
-            if(e.code == "Tab") {
+            if(e.key == "Tab") {
               e.preventDefault();
 
               let { selectionStart, selectionEnd } = e.target;
@@ -102,6 +103,19 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
               }
               
               e.target.setRangeText(replacement, selectionStart, selectionEnd, "end");
+            }
+
+            if(e.key == "Shift"){
+              shiftDown.current = true;
+            }
+
+            if(e.key == "Enter"){
+              if(shiftDown.current) onRunClicked();
+            }
+          }}
+          onKeyUp={(e) => {
+            if(e.key == "Shift"){
+              shiftDown.current = false;
             }
           }}
           placeholder="WHITE YOUR QUERY HERE"
