@@ -46,7 +46,7 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
       if (isSelectionChangeHandlerAdded.current) {
         input.removeEventListener("selectionchange", selectionChangeHandler);
         isSelectionChangeHandlerAdded.current = false;
-      };
+      }
 
       shiftDown.current = false;
     };
@@ -83,38 +83,53 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
             }
           }}
           onKeyDown={(e) => {
-            if(e.key == "Tab") {
+            if (e.key == "Tab") {
               e.preventDefault();
 
               let { selectionStart, selectionEnd } = e.target;
 
-              let lineStart = e.target.value.lastIndexOf("\n", selectionStart - 1) + 1;
-              let lineEnd = e.target.value.substring(selectionStart).indexOf("\n");
-              lineEnd = lineEnd == -1 ? e.target.value.length : selectionStart + lineEnd;
+              let lineStart =
+                e.target.value.lastIndexOf("\n", selectionStart - 1) + 1;
+              let lineEnd = e.target.value
+                .substring(selectionStart)
+                .indexOf("\n");
+              lineEnd =
+                lineEnd == -1
+                  ? e.target.value.length
+                  : selectionStart + lineEnd;
 
-              let actualLineStart = e.target.value.substring(lineStart, selectionEnd).search(/\S/);
+              let actualLineStart = e.target.value
+                .substring(lineStart, selectionEnd)
+                .search(/\S/);
 
-              if(actualLineStart == -1) actualLineStart = lineEnd;         
+              if (actualLineStart == -1) actualLineStart = lineEnd;
 
               let replacement = "    ";
 
-              if( selectionStart <= actualLineStart ) {
-                replacement = " ".repeat(4 - ((selectionStart - lineStart) % 4));
+              if (selectionStart <= actualLineStart) {
+                replacement = " ".repeat(
+                  4 - ((selectionStart - lineStart) % 4)
+                );
               }
-              
-              e.target.setRangeText(replacement, selectionStart, selectionEnd, "end");
+
+              e.target.setRangeText(
+                replacement,
+                selectionStart,
+                selectionEnd,
+                "end"
+              );
             }
 
-            if(e.key == "Shift"){
+            if (e.key == "Shift") {
               shiftDown.current = true;
             }
 
-            if(e.key == "Enter"){
-              if(shiftDown.current) onRunClicked();
+            if (e.key == "Enter") {
+              if (shiftDown.current) onRunClicked();
             }
           }}
           onKeyUp={(e) => {
-            if(e.key == "Shift"){
+            if (e.key == "Shift") {
               shiftDown.current = false;
             }
           }}
