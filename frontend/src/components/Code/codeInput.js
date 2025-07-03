@@ -1,21 +1,7 @@
 import React from "react"
-import { Button, Select, Upload, message } from "antd";
-import { UploadOutlined, SyncOutlined } from '@ant-design/icons';
+import { Button, Select, Upload, notification } from "antd";
+import { UploadOutlined} from '@ant-design/icons';
 
-
-const uploadProps = {
-    name: 'file',
-    action: '/upload',
-    headers: { authorization: 'auth' },
-    onChange(info) {
-        const { status, name } = info.file;
-        if (status === 'done') {
-            message.success(`${name} успешно загружен`);
-        } else if (status === 'error') {
-            message.error(`${name} не смог загрузиться`);
-        }
-    },
-};
 
 class CodeInput extends React.Component {
     constructor(props) {
@@ -26,20 +12,122 @@ class CodeInput extends React.Component {
         };
     }
 
+    cleanSqlContent = (content) => {
+        return content
+            .split('\n')
+            .filter(line => {
+                const trimmedLine = line.trim();
+                return trimmedLine !== '' && !trimmedLine.startsWith('--');
+            })
+            .join('\n');
+    };
+
+    handleFileUpload = (file) => {
+        const { chosenDb } = this.state;
+        let isValidFile = false;
+        let errorMessage = '';
+        if (chosenDb === 'Chroma') {
+            isValidFile = file.type === 'text/plain' || file.name.endsWith('.txt');
+            errorMessage = 'Для Chroma можно загружать только .txt файлы';
+        } else if (chosenDb === 'PostgreSQL') {
+            isValidFile = file.name.endsWith('.sql') || file.type === 'application/sql' || file.name.endsWith('.txt') || file.type === 'text/plain';
+            errorMessage = 'Для PostgreSQL можно загружать только .sql и .txt файлы';
+        } else {
+            notification.warning({
+                message: 'Выберите базу данных',
+                description: 'Сначала выберите базу данных из списка',
+                placement: 'bottomRight',
+                duration: 1.5,
+            });
+            return false;
+        }
+        if (!isValidFile) {
+            notification.error({
+                message: 'Неверный формат файла',
+                description: errorMessage,
+                placement: 'bottomRight',
+                duration: 1.5,
+            });
+            return false;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            let content = e.target.result;
+            if (file.name.endsWith('.sql')) {
+                content = this.cleanSqlContent(content);
+            }
+            this.setState({ code: content });
+            notification.success({
+                message: 'Файл загружен',
+                description: `${file.name} успешно загружен`,
+                placement: 'bottomRight',
+                duration: 1.5,
+            });
+        };
+        reader.onerror = () => {
+            notification.error({
+                message: 'Ошибка чтения файла',
+                description: `Не удалось прочитать файл ${file.name}`,
+                placement: 'bottomRight',
+                duration: 1.5,
+            });
+        };
+        reader.readAsText(file);
+        return false;
+    };
+
+    handleKeyDown = (e) => {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const textarea = e.target;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const newValue = this.state.code.substring(0, start) + '    ' + this.state.code.substring(end);
+            this.setState({ code: newValue }, () => {
+                textarea.selectionStart = textarea.selectionEnd = start + 4;
+            });
+        }
+    };
+
     render() {
+        const { chosenDb } = this.state;
+
+        let acceptedFiles = '';
+        if (chosenDb === 'Chroma') {
+            acceptedFiles = '.txt';
+        } else if (chosenDb === 'PostgreSQL') {
+            acceptedFiles = '.sql,.txt';
+        } else if (chosenDb === 'SQLite' || chosenDb === 'MongoDB') {
+            acceptedFiles = '.sql,.txt';
+        } else {
+            acceptedFiles = '.txt,.sql';
+        }
+        
+        const uploadProps = {
+            name: 'file',
+            accept: acceptedFiles,
+            beforeUpload: this.handleFileUpload,
+            showUploadList: false,
+        };
+
         return (
             <div>
                 <p className="code-general-text">Write your code or <span><Upload {...uploadProps}>
                     <Button icon={<UploadOutlined />} className='my-orange-button-outline' > Import File</Button>
                 </Upload></span></p>
-                <textarea className='code-textarea' placeholder='Will your code appear here?' onChange={(data) => this.setState({ code: data.target.value })}></textarea>
+                <textarea 
+                    className='code-textarea' 
+                    placeholder='Will your code appear here?' 
+                    value={this.state.code} 
+                    onChange={(data) => this.setState({ code: data.target.value })}
+                    onKeyDown={this.handleKeyDown}
+                ></textarea>
                 <div className='code-buttons' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'right' }}>
                     <Select
                         className='code-select'
                         defaultValue="Choose DB"
                         style={{ width: 190, marginRight: '10px', marginTop: '10px' }}
                         options={[
-                            { value: 'Choose DB', label: 'Choose DB', disabled: true },
                             { value: 'PostgreSQL', label: 'PostgreSQL' },
                             { value: 'SQLite', label: 'SQLite' },
                             { value: 'MongoDB', label: 'MongoDB' },

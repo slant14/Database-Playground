@@ -66,7 +66,7 @@
     border: 2px solid #fff;
     border-radius: 20px;
     padding: 24px;
-    background: #0d1117;
+    background: transparent !important;
 }
 
 .title {
@@ -77,9 +77,15 @@
     text-decoration: none;
 }
 
-.title:hover {
-    color: #51CB63;
-    text-decoration: underline;
+a.title {
+    color: #51CB63 !important;
+    text-decoration: none;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+a.title:hover {
+    color: #3c9249 !important;
 }
 
 .description {
@@ -90,11 +96,15 @@
     width: 100%;
     display: block;
     word-break: break-word;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
 }
 
 .text-container {
+    text-align: left;
     vertical-align: center;
     margin-top: 0px;
+    padding-left: 30px;
 }
 
 .button-row {
@@ -105,8 +115,20 @@
 }
 
 .myButton  {
-    background: #0d1117 !important;
+    background: transparent !important;
     color: #51CB63 !important;
+    border-color: #51CB63 !important;
+    border: 1.5px solid;
+    border-radius: 7px !important;
+    font-size: 18px !important;    
+    padding: 14px 40px !important; 
+    height: 48px !important;  
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.myButton-solid{
+    background: #51CB63 !important;
+    color: #ffffff !important;
     border-color: #51CB63 !important;
     border: 1.5px solid;
     border-radius: 7px !important;
