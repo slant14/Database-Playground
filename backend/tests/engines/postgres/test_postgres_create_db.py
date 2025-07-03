@@ -1,4 +1,5 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 from tests.engines.postgres.fixtures import engine  # noqa F401
 
 

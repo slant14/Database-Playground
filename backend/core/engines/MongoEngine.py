@@ -1,17 +1,16 @@
 from contextlib import contextmanager
-from urllib.parse import quote_plus
 from typing import Sequence
+from urllib.parse import quote_plus
 
+from bson import json_util
 from pymongo import MongoClient
 from pymongo.database import Database
-from bson import json_util
 
-from .models import DBInfo, QueryResult
 from .DBEngine import DBEngine
-from .exceptions import DBNotExists, DBExists
+from .exceptions import DBExists, DBNotExists
+from .models import DBInfo, QueryResult
 from .mongo.mongo_parsing import parse_mql
 from .mongo.mongo_query_adapter import execute_queries
-
 
 # needed because db cannot be created without data in it
 DEFAULT_DUMP = '{ "db": { "collection": [ { "hello": "world" } ] } }'

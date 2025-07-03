@@ -1,14 +1,12 @@
 from typing import Sequence
-from pymongo.results import (
-    InsertOneResult,
-    InsertManyResult,
-)
-from pymongo.cursor import Cursor
-from pymongo.command_cursor import CommandCursor
-from pymongo.database import Database as MongoDatabase
 
-from ..models import MongoQuery, MQT, MongoQueryResult
+from pymongo.command_cursor import CommandCursor
+from pymongo.cursor import Cursor
+from pymongo.database import Database as MongoDatabase
+from pymongo.results import InsertManyResult, InsertOneResult
+
 from ..exceptions import QueryError
+from ..models import MQT, MongoQuery, MongoQueryResult
 
 
 def execute_queries(

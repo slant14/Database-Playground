@@ -1,14 +1,10 @@
 import pytest
 
+from core.engines.exceptions import DBExists, DBNotExists, QueryError
 from core.engines.PostgresEngine import PostgresEngine
-from core.engines.exceptions import DBNotExists, DBExists, QueryError
-
 from tests.engines.postgres.fixtures import engine  # noqa F401
-from tests.utils import (
-    postgres_tmp_db as tmp_db,
-    integration_test
-)
-
+from tests.utils import integration_test
+from tests.utils import postgres_tmp_db as tmp_db
 
 DUMP_USERS = """
 CREATE TABLE users (
