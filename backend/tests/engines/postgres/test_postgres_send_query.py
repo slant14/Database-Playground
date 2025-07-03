@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from core.engines.PostgresEngine import PostgresEngine
-from core.engines.models import QueryResult
+from core.engines.models import SQLQueryResult
 
 from psycopg2 import ProgrammingError
 
@@ -12,7 +12,9 @@ def engine():
 
 
 @patch("core.engines.PostgresEngine.psycopg2.connect")
-def test_send_query_executes_all_queries_and_collects_results(mock_connect, engine):
+def test_send_query_executes_all_queries_and_collects_results(
+    mock_connect, engine
+):
     # Setup mocks
     conn_mock = MagicMock()
     cursor_mock = MagicMock()
@@ -28,14 +30,15 @@ def test_send_query_executes_all_queries_and_collects_results(mock_connect, engi
     results = engine.send_query("test_db", queries)
 
     # Check that both queries were executed
-    executed_queries = [call[0][0] for call in cursor_mock.execute.call_args_list]
+    executed_queries = [call[0][0] for call
+                        in cursor_mock.execute.call_args_list]
     assert "SELECT 1" in executed_queries
     assert "SELECT 2" in executed_queries
 
     # Check result list
     assert len(results) == 2
     for result, expected_query in zip(results, ["SELECT 1", "SELECT 2"]):
-        assert isinstance(result, QueryResult)
+        assert isinstance(result, SQLQueryResult)
         assert result.query == expected_query
         assert result.data == [("row1",), ("row2",)]
         assert result.rowcount == 2
@@ -56,7 +59,9 @@ def test_send_query_handles_non_select_queries(mock_connect, engine):
     queries = "INSERT INTO test (id) VALUES (1);"
     results = engine.send_query("test_db", queries)
 
-    cursor_mock.execute.assert_called_once_with("INSERT INTO test (id) VALUES (1)")
+    cursor_mock.execute.assert_called_once_with(
+        "INSERT INTO test (id) VALUES (1)"
+    )
     assert len(results) == 1
     assert results[0].query == "INSERT INTO test (id) VALUES (1)"
     assert results[0].data is None
