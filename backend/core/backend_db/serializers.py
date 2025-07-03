@@ -43,11 +43,21 @@ class UserSerializer(serializers.ModelSerializer):
     
 
 class ClassroomSerializer(serializers.ModelSerializer):
-    teacher_name = serializers.CharField(source='teacher.user.name', read_only=True)
+    TA_names = serializers.SerializerMethodField()
+    primary_instructor_name = serializers.CharField(source='primary_instructor.user.name', read_only=True)
     class Meta:
         model = Classroom
         fields = '__all__'
-        extra_fields = ['teacher_name']
+        extra_fields = ['TA_names', 'primary_instructor_name']
+
+    def get_TA_names(self, obj):
+        return [ta.user.name for ta in obj.TA.all()]
+        
+    def validate_TA(self, value):
+        for profile in value:
+            if profile.user.role != 'ta':
+                raise serializers.ValidationError(f"{profile.user.name} is not a TA")
+        return value
 
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:

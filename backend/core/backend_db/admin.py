@@ -28,13 +28,18 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(User)
 admin.site.register(Profile)
 
-admin.site.register(Classroom)
+#admin.site.register(Classroom)
 admin.site.register(Topic)
 
-#@admin.register(Classroom)
-#class ClassroomAdmin(admin.ModelAdmin):
-#    list_display = ('id', 'created_at')
-#    search_fields = ()
+@admin.register(Classroom)
+class ClassroomAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'primary_instructor', 'capacity', 'created_date')
+    search_fields = ('title',)
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "TA":
+            kwargs["queryset"] = Profile.objects.filter(user__role='ta')
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
 
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):

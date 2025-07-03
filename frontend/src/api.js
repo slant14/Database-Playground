@@ -113,6 +113,52 @@ export async function getMyClassroms() {
   return res.json();
 }
 
+export async function getMyClassroomClassmates(id) {
+  //const token = getCookie("access");
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/students/?classroom_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      //'Authorization': token ? `JWT ${token}` : undefined,
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+export async function getMyAssignments() {
+  const res = await tokenUpdate(`${BASE_URL}/app/assignments/my/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+export async function getCourseAssignments(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/assignments/by_course/?course_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+export async function getMySubmissions() {
+  const res = await tokenUpdate(`${BASE_URL}/app/assignments/submitted/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
 async function tokenUpdate(url, options = {}) {
   let token = getCookie("access");
   options.headers = {
