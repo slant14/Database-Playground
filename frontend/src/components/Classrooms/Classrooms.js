@@ -86,7 +86,7 @@ class ClassRooms extends React.Component {
                 <ul>
                   <li>
                     <span>
-                      <span style={{color:"#51CB63", fontWeight:400}}>Primary Instructor:</span> {el.teacher_name}
+                      <span style={{color:"#51CB63", fontWeight:400}}>Primary Instructor:</span> {el.primary_instructor_name}
                     </span>
                   </li>
                   <li>

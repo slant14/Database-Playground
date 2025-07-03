@@ -105,12 +105,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'school_db'),
-        'USER': os.environ.get('POSTGRES_USER', 'app_admin'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'StrongPassword!'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
-        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+           'ENGINE': 'django.db.backends.postgresql',
+           'NAME': os.environ.get('POSTGRES_DB', 'backend_db'),
+           'USER': os.environ.get('POSTGRES_USER', 'backend_user'),
+           'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'backend_pass'),
+           'HOST': os.environ.get('POSTGRES_HOST', 'backend-db'),
+           'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
 }
 

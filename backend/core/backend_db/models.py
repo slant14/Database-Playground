@@ -82,7 +82,8 @@ class Topic(models.Model):
 class Classroom(models.Model):
     title = models.CharField(max_length = 200)
     description = models.TextField()
-    teacher = models.ForeignKey(to = Profile, on_delete = models.CASCADE)
+    TA = models.ManyToManyField(Profile, related_name='ta_classrooms')
+    primary_instructor = models.ForeignKey(to = Profile, on_delete = models.CASCADE)
     topic = models.ForeignKey(to = Topic, on_delete = models.DO_NOTHING, null = True)
     created_date = models.DateTimeField(auto_now_add = True)
     capacity = models.IntegerField()
@@ -115,7 +116,7 @@ class Assignment(models.Model):
     statement = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='assignments')
-
+    
     def __str__(self):
         return self.name
 
