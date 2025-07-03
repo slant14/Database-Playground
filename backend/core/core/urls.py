@@ -16,7 +16,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="contact@snippets.local"),
         license=openapi.License(name="BSD License"),
     ),
-    url="https://api.dbpg.ru",
+    url="http://localhost:8000",
     public=True,
     permission_classes=(permissions.AllowAny,),
 )

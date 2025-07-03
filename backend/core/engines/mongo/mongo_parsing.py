@@ -7,10 +7,13 @@ from ..exceptions import ParsingError, QueryError
 from ..models import MQT, MongoQuery
 
 PATTERNS = (
-   (MQT.DROP_COLLECTION, re.compile(r".*db\..*\.drop().*")),
+   (MQT.GET_COLLECTION_NAMES, re.compile(r".*db\.getCollectionNames(.*).*")),
+   (MQT.DROP_COLLECTION, re.compile(r".*db\..*\.drop(.*).*")),
    (MQT.INSERT_ONE, re.compile(r".*db\..*\.insertOne(.*).*")),
    (MQT.INSERT_MANY, re.compile(r".*db\..*\.insertMany(.*).*")),
    (MQT.FIND, re.compile(r".*db\..*\.find(.*).*")),
+   (MQT.FIND_ONE, re.compile(r".*db\..*\.findOne(.*).*")),
+   (MQT.AGGREGATE, re.compile(r".*db\..*\.aggregate(.*).*")),
    # TODO : add more patterns
 )
 

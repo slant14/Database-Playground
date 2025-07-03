@@ -161,3 +161,18 @@ def test_query_errors(engine: MongoEngine):  # noqa F811
                 TMP_DB,
                 "db.integra.invalid(this is some bullshit here);"
             )
+
+
+@integration_test
+def test_query_get_collections(engine: MongoEngine):  # noqa F811
+    with tmp_db(engine, TMP_DB, ""):
+        results = engine.send_query(TMP_DB, r"db.getCollectionNames()")
+
+        assert len(results) == 1
+        assert results[0].data == ['collection']
+
+        engine.send_query(TMP_DB, r'db.new_col.insertOne({data: 3})')
+        results = engine.send_query(TMP_DB, r"db.getCollectionNames()")
+
+        assert len(results) == 1
+        assert results[0].data == ['collection', 'new_col']
