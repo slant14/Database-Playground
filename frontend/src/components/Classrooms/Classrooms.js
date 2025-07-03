@@ -11,33 +11,6 @@ class ClassRooms extends React.Component {
     super(props)
     this.state = {
       id: 1,
-      classrooms: [{
-        title: "Introduction to Programmming",
-        teacher_name: "Zlata Schedrikova",
-        capacity: 324,
-        created_date: 23
-      },
-      {
-        title: "Analitical Geometry and Linear Algebra",
-        teacher_name: "Zlata Schedrikova",
-        capacity: 324,
-        created_date: 23
-        },
-      {
-        title: "Computer Architecture",
-        teacher_name: "Zlata Schedrikova",
-        capacity: 324,
-        created_date: 23
-      },
-      {
-        title: "Math Analysis",
-        teacher_name: "Zlata Schedrikova",
-        capacity: 324,
-        created_date: 23
-      }
-      ],
-      selectedClassroom: null,
-      //studentId: 1,
       classrooms: []
     }
   }
@@ -87,8 +60,6 @@ class ClassRooms extends React.Component {
           marginBottom: 10
         }}>Class<Text style={{
           color: "#fff",
-        }}>Class</Text><Text style={{
-          color: "#fff",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
@@ -96,7 +67,7 @@ class ClassRooms extends React.Component {
         }}>rooms</Text>
         </Title>
         
-        <div className="classrooms">
+        <div className="courses">
           {this.state.classrooms.map((el, idx) => (
             <div className="card" key={idx} >
                <img
@@ -122,7 +93,7 @@ class ClassRooms extends React.Component {
                   </li>
                     <li>
                     <span className="Created-Button">
-                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {el.created_date}
+                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {el.created_date ? el.created_date.slice(0, 10).replace(/-/g, "/") : ""}
                       <Button className="view" onClick={() => this.props.selectClassroom(el)}>
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                         <span style={{ position: "relative", top: "-1px" }}>View</span>

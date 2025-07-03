@@ -24,8 +24,6 @@
     margin-bottom: 25px;
     margin-left: 20px;
     text-align: left;
-
-
 }
 
 .card {
@@ -73,7 +71,7 @@
     max-width: 120px;
     width: auto;
     align-self: flex-end;
-    margin-left: 200px;
+    margin-left: 100px;
 }
 
 .view:hover {

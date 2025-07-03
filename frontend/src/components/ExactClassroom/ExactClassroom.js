@@ -7,6 +7,20 @@ const { Title, Paragraph, Text, Link } = Typography;
 
 class ExactClassroom extends React.Component {
   
+  constructor(props) {
+    super(props)
+    
+  }
+
+  async componentDidMount() {
+      try {
+        const classrooms = await getMyClassroms();
+        this.setState({ classrooms });
+      } catch (error) {
+        console.error("Failed to fetch classrooms:", error);
+      }
+    }
+
   render() {
     const classroom = this.props.classroom;
     
