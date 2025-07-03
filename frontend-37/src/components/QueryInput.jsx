@@ -100,8 +100,6 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
               if( selectionStart <= actualLineStart ) {
                 replacement = " ".repeat(4 - ((selectionStart - lineStart) % 4));
               }
-
-              alert(actualLineStart)
               
               e.target.setRangeText(replacement, selectionStart, selectionEnd, "end");
             }
