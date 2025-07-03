@@ -1,10 +1,9 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from psycopg2 import ProgrammingError
-
 from core.engines.models import SQLQueryResult
 from core.engines.PostgresEngine import PostgresEngine
+from psycopg2 import ProgrammingError
 
 
 @pytest.fixture

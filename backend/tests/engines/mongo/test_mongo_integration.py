@@ -1,5 +1,4 @@
 import pytest
-
 from core.engines import MongoEngine
 from core.engines.exceptions import DBExists, DBNotExists, QueryError
 from core.engines.models import MongoQueryResult

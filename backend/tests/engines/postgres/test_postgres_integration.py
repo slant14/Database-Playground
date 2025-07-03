@@ -1,5 +1,4 @@
 import pytest
-
 from core.engines.exceptions import DBExists, DBNotExists, QueryError
 from core.engines.PostgresEngine import PostgresEngine
 from tests.engines.postgres.fixtures import engine  # noqa F401

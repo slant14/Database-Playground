@@ -2,7 +2,6 @@ import os
 from contextlib import contextmanager
 
 import pytest
-
 from core.engines import MongoEngine, PostgresEngine
 
 INTEGRATION_TEST = os.environ.get("INTEGRATION_TEST", False)
