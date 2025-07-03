@@ -3,7 +3,7 @@
 .my-modal .ant-modal-content,
 .my-modal .ant-modal-title {
     font-family: 'Noto Sans', sans-serif;
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     color: rgb(255, 255, 255) !important;
 }
 
@@ -38,7 +38,7 @@
     opacity: 0.3;
 }
 
-/* Стили для иконки глаза в поле пароля */
+
 .my-modal .ant-input-suffix {
     color: #a2aab3 !important;
 }
@@ -68,14 +68,14 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
-    background-color: #161b22;
+    background-color: #191d1a;
     color: rgb(255, 255, 255);
     font-weight: 700;
     border-bottom: 1.5px solid #51CB63;
 }
 
 .logo-button-outline {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     border: none !important;
     padding: 0 !important;
     vertical-align: top;

@@ -29,7 +29,7 @@
 }
 
 .card {
-    background-color: #161b22;
+    background-color: #191d1a;
     display: flex;
     flex-direction: column;
     border: 2px solid #a2aab3;
@@ -59,7 +59,7 @@
 }
 
 .view { 
-    background: #161b22 !important;
+    background: #191d1a !important;
     color: #51CB63 !important;
     border-color: #51CB63 !important;
     border: 1.5px solid;
