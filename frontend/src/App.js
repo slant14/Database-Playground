@@ -1,4 +1,5 @@
 import React from "react";
+import { App as AntApp } from "antd";
 import Footer from "./components/LayOut/footer";
 import Header from "./components/LayOut/Header/Header";
 import Account from "./components/Account/Account";
@@ -17,6 +18,15 @@ class App extends React.Component {
     const login = this.getCookie("login");
     const password = this.getCookie("password");
     const needMemorizing = this.getCookie("needMemorizing") === "true";
+    const savedClassroom = this.getCookie("selectedClassroom");
+    let selectedClassroom = null;
+    if (savedClassroom) {
+      try {
+        selectedClassroom = JSON.parse(savedClassroom);
+      } catch (error) {
+        selectedClassroom = null;
+      }
+    }
     
     this.state = {
       page: lastPage || "home",
@@ -27,20 +37,82 @@ class App extends React.Component {
       },
       isLogin: !!(login && password),
       isModalOpen: false,
-      activeButton: 'home',
-      selectedClassroom: null,
+      activeButton: lastPage || 'home',
+      selectedClassroom: selectedClassroom,
+      isHintModalOpen: false,
+      isTableModalOpen: false,
     };
     this.setPage = this.setPage.bind(this);
     this.logOut = this.logOut.bind(this);
     this.updateLoginState = this.updateLoginState.bind(this);
     this.pageRef = {};
+    this.codeRef = React.createRef();
+    this.outputDBStateRef = React.createRef();
     this.handleButtonClick = this.handleButtonClick.bind(this)
     this.handleCancel = this.handleCancel.bind(this);
     this.login = this.login.bind(this);
   }
 
+  componentDidMount() {
+    window.addEventListener('popstate', this.handlePopState);
+    window.history.replaceState({ page: this.state.page }, '', window.location.pathname);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('popstate', this.handlePopState);
+  }
+
+  handlePopState = (event) => {
+    if (this.state.isModalOpen) {
+      this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
+      window.history.pushState({ page: this.state.page }, '', window.location.pathname);
+      return;
+    }
+    
+    if (this.state.isHintModalOpen) {
+      if (this.codeRef.current) {
+        const wasClosed = this.codeRef.current.close();
+        if (wasClosed) {
+          window.history.pushState({ page: 'code' }, '', window.location.pathname);
+        }
+      } else {
+        this.setState({ isHintModalOpen: false });
+        window.history.pushState({ page: 'code' }, '', window.location.pathname);
+      }
+      return;
+    }
+    
+    if (this.state.isTableModalOpen) {
+      if (this.outputDBStateRef.current) {
+        const wasClosed = this.outputDBStateRef.current.close();
+        if (wasClosed) {
+          window.history.pushState({ page: 'code' }, '', window.location.pathname);
+        }
+      } else {
+        this.setState({ isTableModalOpen: false });
+        window.history.pushState({ page: 'code' }, '', window.location.pathname);
+      }
+      return;
+    }
+    
+    if (this.state.page === "code") {
+      this.setState({ page: "template", activeButton: "template" });
+      this.setCookie("lastPage", "template", 7);
+    } else if (this.state.page === "exactClassroom") {
+      this.setState({ page: "classrooms", activeButton: "classrooms" });
+      this.setCookie("lastPage", "classrooms", 7);
+    } else if (event.state && event.state.page) {
+      this.setState({ page: event.state.page, activeButton: event.state.page });
+      this.setCookie("lastPage", event.state.page, 7);
+    } else {
+      this.setState({ page: "home", activeButton: "home" });
+      this.setCookie("lastPage", "home", 7);
+    }
+  };
+
   setPage = (page) => {
     this.setState({ page: page });
+    window.history.pushState({ page: page }, '', window.location.pathname);
   };
 
   getPageRef = (page) => {
@@ -75,6 +147,16 @@ class App extends React.Component {
             <ClassRooms selectClassroom={this.selectClassroom}/>
           </div>);
       case "exactClassroom":
+        if (!this.state.selectedClassroom) {
+          setTimeout(() => {
+            this.handleButtonClick("classrooms");
+          }, 0);
+          return (
+            <div>
+              <ExactClassroom classroom={null}/>
+            </div>
+          );
+        }
         return (
           <div>
             <ExactClassroom classroom={this.state.selectedClassroom}/>
@@ -83,7 +165,15 @@ class App extends React.Component {
       case "code":
         return (
           <div>
-            <Code getCookie={this.getCookie} isLogin={this.state.isLogin} handleButtonClick={this.handleButtonClick}/>
+            <Code 
+              ref={this.codeRef}
+              getCookie={this.getCookie} 
+              isLogin={this.state.isLogin} 
+              handleButtonClick={this.handleButtonClick}
+              setHintModalOpen={this.setHintModalOpen}
+              setTableModalOpen={this.setTableModalOpen}
+              outputDBStateRef={this.outputDBStateRef}
+            />
           </div>);
       case "acc":
         return (
@@ -148,6 +238,7 @@ class App extends React.Component {
     if (button === "signin") {
       this.lastActiveButton = this.state.activeButton;
       this.setState({ isModalOpen: true, activeButton: "signin" });
+      window.history.pushState({ modalType: 'login', page: this.state.page }, '', window.location.pathname);
     } else {
       this.setCookie("lastPage", button, 7);
       this.setState({ activeButton: button });
@@ -159,14 +250,13 @@ class App extends React.Component {
     this.setCookie("login", login, 7);
     this.setCookie("password", password, 7);
     this.setCookie("needMemorizing", needMemorizing, 7);
-    this.setPage("home");
+    this.setCookie("lastPage", this.state.page, 7);
     let user = {
       login: login,
       password: password,
       needMemorizing: needMemorizing,
     }
     this.setState({ isLogin: true, user: user });
-
   }
 
   componentDidUpdate(prevProps) {
@@ -179,8 +269,12 @@ class App extends React.Component {
     this.deleteCookie("login");
     this.deleteCookie("password");
     this.deleteCookie("needMemorizing");
+    this.deleteCookie("selectedClassroom");
     this.updateLoginState();
+    this.setState({ selectedClassroom: null });
     this.setPage("home");
+    this.setCookie("lastPage", "home", 7);
+    this.lastActiveButton = "home";
   }
 
   setCookie = (name, value, days = 7) => {
@@ -217,12 +311,22 @@ class App extends React.Component {
   }
 
   handleCancel = () => {
-    this.setState({ isModalOpen: false, activeButton: this.lastActiveButton })
+    this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
+    window.history.pushState({ page: this.state.page }, '', window.location.pathname);
+  };
+
+  setHintModalOpen = (isOpen) => {
+    this.setState({ isHintModalOpen: isOpen });
+  };
+
+  setTableModalOpen = (isOpen) => {
+    this.setState({ isTableModalOpen: isOpen });
   };
 
   login = () => {
     this.setLogin();
     this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
+    window.history.pushState({ page: this.state.page }, '', window.location.pathname);
   };
 
   getRandomInt(max) {
@@ -230,7 +334,10 @@ class App extends React.Component {
   }
 
   selectClassroom = (classroom) => {
-    this.setState({ selectedClassroom: classroom, page: "exactClassroom" });
+    this.setState({ selectedClassroom: classroom});
+    this.setCookie("selectedClassroom", JSON.stringify(classroom), 7);
+    this.setPage("exactClassroom");
+    this.setCookie("lastPage", "exactClassroom", 7);
   };
 }
 

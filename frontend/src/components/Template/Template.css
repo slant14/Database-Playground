@@ -35,7 +35,7 @@
     margin-top: 20px;
     margin-left: 0px;
     margin-right: 30px;
-    background-color: #0d1117;
+    background-color: transparent !important;
     border: #a2aab3 2px solid;
     border-radius: 10px;
     padding: 20px;

@@ -6,6 +6,73 @@
     margin-left: 15px;
 }
 
+
+.ant-notification-notice {
+  border-radius: 8px;
+  background-color: #161b22;
+  border: 1px solid !important;
+}
+
+.ant-notification-notice-success {
+  border-color: #51CB63 !important;
+}
+
+.ant-notification-notice-success .ant-notification-notice-message {
+  color: #51CB63 !important;
+  font-weight: 600 !important;
+}
+
+.ant-notification-notice-success .ant-notification-notice-description {
+  color: #a2aab3 !important;
+}
+
+.ant-notification-notice-success .ant-notification-notice-icon .anticon {
+  color: #51CB63 !important;
+}
+
+.ant-notification-notice-warning {
+  border-color: #fa8c16 !important;
+}
+
+.ant-notification-notice-warning .ant-notification-notice-message {
+  color: #fa8c16 !important;
+  font-weight: 600 !important;
+}
+
+.ant-notification-notice-warning .ant-notification-notice-description {
+  color: #a2aab3 !important;
+}
+
+.ant-notification-notice-warning .ant-notification-notice-icon .anticon {
+  color: #fa8c16 !important;
+}
+
+.ant-notification-notice-error {
+  border-color: #c01619 !important;
+}
+
+.ant-notification-notice-error .ant-notification-notice-message {
+  color: #c01619 !important;
+  font-weight: 600 !important;
+}
+
+.ant-notification-notice-error .ant-notification-notice-description {
+  color: #a2aab3 !important;
+}
+
+.ant-notification-notice-error .ant-notification-notice-icon .anticon {
+  color: #c01619 !important;
+}
+
+.ant-notification-notice-close {
+  color: #a2aab3 !important;
+}
+
+.ant-notification-notice-close:hover {
+  color: #6a6f75 !important;
+}
+
+
 .my-orange-button-solid {
     background-color: #51CB63 !important;
     color: #ffffff;
@@ -30,7 +97,7 @@
 }
 
 .lamp {
-    background-color: #161b22;
+    background-color: transparent !important;
     color: #51CB63;
     border: 1px solid #51CB63;
     margin-right: 50px;
@@ -45,7 +112,7 @@
 }
 
 .my-back-button {
-    background-color: #161b22 !important;
+    background-color: transparent !important;
     color: #c01619 !important;
     font-family: 'Noto Sans', sans-serif;
     border-color: #c01619 !important;
@@ -104,8 +171,8 @@ textarea:active {
 
 .code-output {
     width: 500px;
-    height: 350px;
-    max-height: 350px;
+    height: 349px;
+    max-height: 349px;
     overflow-y: auto;
     background-color: #161b22;
     color: #fff;
@@ -266,6 +333,7 @@ textarea:active {
     padding: 10px;
     border-radius: 8px;
     margin-top: 10px;
+    margin-bottom: 20px;
     border: 1px solid #a2aab3;
     display: flex;
     flex-wrap: nowrap;
@@ -306,15 +374,15 @@ textarea:active {
 
 .code-table-scheme {
     width: 500px;
-    height: 202px;
-    max-height: 202px;
+    height: 230px;
+    max-height: 230px;
     font-family: 'Noto Sans', sans-serif;
     font-weight: 400;
     margin-top: 10px;
     display: flex;
     align-items: center;
     overflow: auto;
-    background: #0d1117 !important;
+    background: transparent !important;
     scrollbar-color: #a2aab3 #0d1117 !important;
     scrollbar-width: thin !important;
 }

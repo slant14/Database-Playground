@@ -4,7 +4,7 @@ import { getChromaInitialState } from '../../api';
 import { getPostgresTable, createPostgresTable, queryPostgres } from '../../api';
 import CodeInput from './codeInput';
 import OutputInputs from './output';
-import { Button, FloatButton, Typography } from 'antd';
+import { Button, FloatButton, Typography, notification } from 'antd';
 import { FaRegLightbulb } from "react-icons/fa";
 import HintModal from './hintModal';
 import HintModalPS from './hintModalPS';
@@ -43,7 +43,16 @@ class Code extends React.Component {
           />
         </main>
         <aside className="code-aside">
-          <OutputInputs response={this.state.response} db_state={this.state.db_state} chosenDB={this.state.chosenDb} postgresTableInfo={this.state.postgresTableInfo} postgresResponse={this.state.postgresResponse} userid={this.getUserId()}/>
+          <OutputInputs 
+            response={this.state.response} 
+            db_state={this.state.db_state} 
+            chosenDB={this.state.chosenDb} 
+            postgresTableInfo={this.state.postgresTableInfo} 
+            postgresResponse={this.state.postgresResponse} 
+            userid={this.getUserId()}
+            setTableModalOpen={this.props.setTableModalOpen}
+            outputDBStateRef={this.props.outputDBStateRef}
+          />
         </aside>
         {this.state.chosenDb === "Chroma" || this.state.chosenDb === "PostgreSQL" ? <FloatButton icon={<FaRegLightbulb />} type="basic" className='lamp' onClick={this.open} tooltip="Command Tips" /> : null}
         {this.state.chosenDb === "Chroma" ? <HintModal title={<Typography.Text className='modal-title'>Types of command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>Chroma</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
@@ -63,8 +72,7 @@ class Code extends React.Component {
       const combinedString = loginCookie + passwordCookie;
       return combinedString.hashCode ? combinedString.hashCode() : this.generateHashCode(combinedString);
     } catch (error) {
-      console.error('Error generating user ID:', error);
-      return "0"; // fallback ID
+      return "0";
     }
   }
 
@@ -80,16 +88,23 @@ class Code extends React.Component {
 
   open = () => {
     this.setState({ isModalOpen: true });
-    console.log(this.state.isModalOpen);
+    if (this.props.setHintModalOpen) {
+      this.props.setHintModalOpen(true);
+    }
+    window.history.pushState({ modalType: 'hint', page: 'code' }, '', window.location.pathname);
   };
 
   close = () => {
+    const wasOpen = this.state.isModalOpen;
     this.setState({ isModalOpen: false });
+    if (this.props.setHintModalOpen) {
+      this.props.setHintModalOpen(false);
+    }
+    return wasOpen;
   }
 
   getInitialState() {
     if (this.props.isLogin === false) {
-      console.log("User not logged in, skipping state request");
       return;
     }
     this.setLoading(true);
@@ -100,42 +115,35 @@ class Code extends React.Component {
         this.setLoading(false);
       })
       .catch(error => {
-        console.error('Error loading DB state:', error);
         this.setLoading(false);
       });
   }
 
   postgresTableHandle = () => {
     if (this.props.isLogin === false) {
-      console.log("User not logged in, skipping state request");
       return;
     }
     this.setLoading(true);
     const userId = this.getUserId();
     getPostgresTable(userId)
       .then(data => {
-        console.log('PostgreSQL table data:', data);
         this.setState({ postgresTableInfo: data.tables});
         this.setLoading(false);
       })
       .catch(error => {
         createPostgresTable(userId)
           .then(data => {
-            console.log('PostgreSQL table created:', data);
             getPostgresTable(userId)
               .then(data => {
-                console.log('PostgreSQL table data after creation:', data);
                 this.setState({ postgresTableInfo: data.tables });
                 this.setState({ isLoading: false });
               })
               .catch(error => {
-                console.error('Error fetching PostgreSQL table after creation:', error);
                 this.setState({ isLoading: false });
               })
             this.setLoading(false);
           })
           .catch(error => {
-            console.error('Error creating PostgreSQL table:', error);
             this.setLoading(false);
           });
         this.setLoading(false);
@@ -143,7 +151,6 @@ class Code extends React.Component {
   }
 
   handleDbSelection(selectedDb) {
-    console.log('Database selected:', selectedDb);
     this.setState({ chosenDb: selectedDb });
     switch (selectedDb) {
       case "Chroma":
@@ -153,7 +160,6 @@ class Code extends React.Component {
         this.postgresTableHandle();
         break;
       default:
-        console.log(`${selectedDb} is not yet supported for state loading`);
         this.setState({ db_state: {} });
     }
   }
@@ -167,7 +173,6 @@ class Code extends React.Component {
       if (command === '') continue;
 
       try {
-        console.log(`Executing command ${i + 1}:`, command);
         const data = await getChromaResponse(command, userId);
 
         if (data === "Error") {
@@ -189,12 +194,9 @@ class Code extends React.Component {
             commands: allResults,
             totalCommands: allResults.length
           }
-        }, () => {
-          console.log(`Command ${i + 1} completed. Total results:`, allResults.length);
         });
 
       } catch (error) {
-        console.error(`Error in command ${i + 1}:`, error);
         allResults.push({
           command: command,
           result: { message: "Error occurred while executing command" },
@@ -216,14 +218,29 @@ class Code extends React.Component {
 
   getIt(text, chosenDb) {
     if (this.props.isLogin === false) {
-      alert("Please log in to run the code");
+      notification.warning({
+        message: 'Требуется авторизация',
+        description: 'Пожалуйста, войдите в систему для выполнения кода',
+        placement: 'bottomRight',
+        duration: 2,
+      });
       return;
     }
     if (chosenDb === "Choose DB") {
-      alert("Please choose a database");
+      notification.warning({
+        message: 'Выберите базу данных',
+        description: 'Пожалуйста, выберите базу данных из списка',
+        placement: 'bottomRight',
+        duration: 2,
+      });
       return;
     } else if (text === "" || text === null) {
-      alert("Please write your code");
+      notification.warning({
+        message: 'Пустой код',
+        description: 'Пожалуйста, напишите код для выполнения',
+        placement: 'bottomRight',
+        duration: 2,
+      });
       return;
     }
     if (chosenDb === "PostgreSQL") {
@@ -231,19 +248,15 @@ class Code extends React.Component {
       const userId = this.getUserId();
       queryPostgres(text, userId)
         .then(data => {
-          console.log('Code.js - QueryPostgres result:', data);
           if (data === "Error") {
             this.setState({postgresResponse: { message: "Error occurred while executing command" } });
           } else {
-            this.setState({postgresResponse: data}, () => {
-              console.log('Code.js - PostgresResponse state:', this.state.postgresResponse);
-            });
+            this.setState({postgresResponse: data});
           }
           this.postgresTableHandle();
           this.setLoading(false);
         })
         .catch(error => {
-          console.error('Error:', error);
           this.setState({
             postgresResponse: { 
               error: true, 
@@ -256,11 +269,21 @@ class Code extends React.Component {
       return;
     }
     if (chosenDb === "SQLite") {
-      alert("Please choose another DB for now");
+      notification.warning({
+        message: 'База данных недоступна',
+        description: 'Пожалуйста, выберите другую базу данных',
+        placement: 'bottomRight',
+        duration: 2,
+      });
       return;
     }
     if (chosenDb === "MongoDB") {
-      alert("Please choose another DB for now");
+      notification.warning({
+        message: 'База данных недоступна',
+        description: 'Пожалуйста, выберите другую базу данных',
+        placement: 'bottomRight',
+        duration: 2,
+      });
       return;
     }
     if (chosenDb === "Chroma") {
@@ -269,7 +292,6 @@ class Code extends React.Component {
         message: "Please try once again, there is an error in your code",
       }
       const userId = this.getUserId();
-      console.log("SDASDASDASDAD", userId)
       if (!text.includes('\n')) {
         getChromaResponse(text, userId)
           .then(data => {
@@ -288,15 +310,12 @@ class Code extends React.Component {
                   command: text,
                   result: data
                 }
-              }, () => {
-                console.log('Single command result:', this.state.response);
               });
             }
             this.getInitialState(chosenDb);
             this.setLoading(false);
           })
           .catch(error => {
-            console.error('Error:', error);
             this.setLoading(false);
           });
       }

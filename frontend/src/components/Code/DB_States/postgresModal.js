@@ -53,7 +53,6 @@ class PostgresModal extends React.Component {
         } else if (result.success && result.data) {
           tableData = result.data;
         } else {
-          console.log('PostgresModal - No suitable data structure found');
           tableData = [];
         }
         
@@ -62,14 +61,12 @@ class PostgresModal extends React.Component {
           loading: false 
         });
       } else {
-        console.log('PostgresModal - Result is Error or null');
         this.setState({ 
           error: 'Failed to fetch table data', 
           loading: false 
         });
       }
     } catch (error) {
-      console.error('PostgresModal - Catch error:', error);
       this.setState({ 
         error: 'Error: ' + error.message, 
         loading: false 

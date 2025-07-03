@@ -5,7 +5,6 @@ class Delete extends React.Component {
 
     render() {
         return (
-            console.log("After delete: ", this.props.response),
             <div>
                 {Object.keys(this.props.response).length === 0 ? <Typography.Text className='code-text'>Request result will appear here</Typography.Text> :
                     <div className="code-output-item">

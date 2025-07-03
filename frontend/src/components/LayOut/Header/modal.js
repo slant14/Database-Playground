@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal, Input, Button } from "antd";
+import { Modal, Input, Button, notification } from "antd";
 import "./Header.css"
 
 class MyModal extends React.Component {
@@ -31,25 +31,51 @@ class MyModal extends React.Component {
             <input type="checkbox" id="isHappy" onChange={(data) => this.setState({ needMemorizing: data.target.checked })} />
             <span>Remember me</span>
           </label>
-          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
-            <Button onClick={() => {
-              this.myForm.reset()
-              this.props.onCancel()
-            }} className="my-orange-button-outline">
-              Cancel
-            </Button>
-            <Button type="primary" onClick={() => {
-              this.myForm.reset()
-              if (this.state.login === "" || this.state.password === "") {
-                alert("Please fill in all fields")
-              } else {
-                this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing)
+          
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
+            <div>
+              <span>No account? </span>
+              <span 
+                style={{ color: '#51CB63', cursor: 'pointer' }}
+                onClick={() => {
+                  if (this.props.onSwitchToRegister) {
+                    this.props.onSwitchToRegister();
+                  }
+                }}
+              >
+                Registration
+              </span>
+            </div>
+            
+            <div style={{ display: "flex", gap: "10px" }}>
+              <Button onClick={() => {
+                this.myForm.reset()
                 this.props.onCancel()
-              }
-            }} className="my-orange-button-solid">
-              Sign In
-            </Button>
-
+              }} className="my-orange-button-outline">
+                Cancel
+              </Button>
+              <Button type="primary" onClick={() => {
+                this.myForm.reset()
+                if (this.state.login === "" || this.state.password === "") {
+                  notification.warning({
+                    message: 'Неполные данные',
+                    description: 'Пожалуйста, заполните все поля',
+                    placement: 'bottomRight',
+                    duration: 2,                  });
+                } else {
+                  this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing)
+                  notification.success({
+                    message: 'Вход выполнен успешно',
+                    description: 'Добро пожаловать в систему!',
+                    placement: 'bottomRight',
+                    duration: 2,
+                  });
+                  this.props.onCancel()
+                }
+              }} className="my-orange-button-solid">
+                Sign In
+              </Button>
+            </div>
           </div>
         </form>
 

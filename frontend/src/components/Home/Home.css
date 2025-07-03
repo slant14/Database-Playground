@@ -66,7 +66,7 @@
     border: 2px solid #fff;
     border-radius: 20px;
     padding: 24px;
-    background: #0d1117;
+    background: transparent !important;
 }
 
 .title {
@@ -85,7 +85,7 @@ a.title {
 }
 
 a.title:hover {
-    color: #fff !important;
+    color: #3c9249 !important;
 }
 
 .description {
@@ -115,8 +115,20 @@ a.title:hover {
 }
 
 .myButton  {
-    background: #0d1117 !important;
+    background: transparent !important;
     color: #51CB63 !important;
+    border-color: #51CB63 !important;
+    border: 1.5px solid;
+    border-radius: 7px !important;
+    font-size: 18px !important;    
+    padding: 14px 40px !important; 
+    height: 48px !important;  
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.myButton-solid{
+    background: #51CB63 !important;
+    color: #ffffff !important;
     border-color: #51CB63 !important;
     border: 1.5px solid;
     border-radius: 7px !important;

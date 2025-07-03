@@ -62,10 +62,19 @@ class OutputDBState extends React.Component {
 
     open = () => {
         this.setState({ isPostgresModalOpen: true });
+        if (this.props.setTableModalOpen) {
+            this.props.setTableModalOpen(true);
+        }
+        window.history.pushState({ modalType: 'table', page: 'code' }, '', window.location.pathname);
     };
 
     close = () => {
+        const wasOpen = this.state.isPostgresModalOpen;
         this.setState({ isPostgresModalOpen: false });
+        if (this.props.setTableModalOpen) {
+            this.props.setTableModalOpen(false);
+        }
+        return wasOpen;
     }
 }
 
