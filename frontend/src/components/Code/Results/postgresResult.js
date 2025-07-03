@@ -5,6 +5,17 @@ import { ImPointRight } from "react-icons/im";
 
 class PostgresResult extends React.Component {
 
+    cleanQueryForDisplay = (query) => {
+        return query
+            .split('\n')
+            .filter(line => {
+                const trimmedLine = line.trim();
+                return trimmedLine !== '' && !trimmedLine.startsWith('--');
+            })
+            .join('\n')
+            .trim();
+    };
+
     render() {
         const { response } = this.props;
 
@@ -43,7 +54,7 @@ class PostgresResult extends React.Component {
                                     {response.results.map((result, index) => (
                                         <div key={index} style={{ marginTop: '10px' }}>
                                             <Typography.Text className='code-text' style={{ color: '#51CB63', fontSize: '13px' }}>
-                                                Query: <Typography.Text className='code-text' style={{ color: '#fff', fontSize: '13px' }}>{result.query}</Typography.Text>
+                                                Query: <Typography.Text className='code-text' style={{ color: '#fff', fontSize: '13px' }}>{this.cleanQueryForDisplay(result.query)}</Typography.Text>
                                             </Typography.Text>
                                             <br />
                                             <Typography.Text className='code-text' style={{ color: '#51CB63', fontSize: '13px' }}>

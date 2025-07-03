@@ -65,7 +65,7 @@ export async function queryPostgres(text, id) {
     
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(`API call failed (${res.status}): ${errorData.detail || errorData.error || 'Unknown error'}`);
+      throw new Error(`${errorData.detail || errorData.error || 'Unknown error'}`);
     }
     
     return res.json();

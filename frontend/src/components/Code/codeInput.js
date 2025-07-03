@@ -12,30 +12,20 @@ class CodeInput extends React.Component {
         };
     }
 
-    cleanSqlContent = (content) => {
-        return content
-            .split('\n')
-            .filter(line => {
-                const trimmedLine = line.trim();
-                return trimmedLine !== '' && !trimmedLine.startsWith('--');
-            })
-            .join('\n');
-    };
-
     handleFileUpload = (file) => {
         const { chosenDb } = this.state;
         let isValidFile = false;
         let errorMessage = '';
         if (chosenDb === 'Chroma') {
             isValidFile = file.type === 'text/plain' || file.name.endsWith('.txt');
-            errorMessage = 'Для Chroma можно загружать только .txt файлы';
+            errorMessage = 'For Chroma you can only upload .txt files';
         } else if (chosenDb === 'PostgreSQL') {
             isValidFile = file.name.endsWith('.sql') || file.type === 'application/sql' || file.name.endsWith('.txt') || file.type === 'text/plain';
-            errorMessage = 'Для PostgreSQL можно загружать только .sql и .txt файлы';
+            errorMessage = 'For PostgreSQL you can only upload .sql and .txt files';
         } else {
             notification.warning({
-                message: 'Выберите базу данных',
-                description: 'Сначала выберите базу данных из списка',
+                message: 'Select database',
+                description: 'First select a database from the list',
                 placement: 'bottomRight',
                 duration: 1.5,
             });
@@ -43,7 +33,7 @@ class CodeInput extends React.Component {
         }
         if (!isValidFile) {
             notification.error({
-                message: 'Неверный формат файла',
+                message: 'Invalid file format',
                 description: errorMessage,
                 placement: 'bottomRight',
                 duration: 1.5,
@@ -53,21 +43,18 @@ class CodeInput extends React.Component {
         const reader = new FileReader();
         reader.onload = (e) => {
             let content = e.target.result;
-            if (file.name.endsWith('.sql')) {
-                content = this.cleanSqlContent(content);
-            }
             this.setState({ code: content });
             notification.success({
-                message: 'Файл загружен',
-                description: `${file.name} успешно загружен`,
+                message: 'File uploaded',
+                description: `${file.name} successfully uploaded`,
                 placement: 'bottomRight',
                 duration: 1.5,
             });
         };
         reader.onerror = () => {
             notification.error({
-                message: 'Ошибка чтения файла',
-                description: `Не удалось прочитать файл ${file.name}`,
+                message: 'File reading error',
+                description: `Failed to read file ${file.name}`,
                 placement: 'bottomRight',
                 duration: 1.5,
             });

@@ -58,15 +58,15 @@ class MyModal extends React.Component {
                 this.myForm.reset()
                 if (this.state.login === "" || this.state.password === "") {
                   notification.warning({
-                    message: 'Неполные данные',
-                    description: 'Пожалуйста, заполните все поля',
+                    message: 'Incomplete data',
+                    description: 'Please fill in all fields',
                     placement: 'bottomRight',
                     duration: 2,                  });
                 } else {
                   this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing)
                   notification.success({
-                    message: 'Вход выполнен успешно',
-                    description: 'Добро пожаловать в систему!',
+                    message: 'Login successful',
+                    description: 'Welcome to the system!',
                     placement: 'bottomRight',
                     duration: 2,
                   });
