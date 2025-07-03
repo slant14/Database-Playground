@@ -220,8 +220,8 @@ class Code extends React.Component {
   getIt(text, chosenDb) {
     if (this.props.isLogin === false) {
       notification.warning({
-        message: 'Требуется авторизация',
-        description: 'Пожалуйста, войдите в систему для выполнения кода',
+        message: 'Authorization required',
+        description: 'Please log in to execute code',
         placement: 'bottomRight',
         duration: 2,
       });
@@ -229,16 +229,16 @@ class Code extends React.Component {
     }
     if (chosenDb === "Choose DB") {
       notification.warning({
-        message: 'Выберите базу данных',
-        description: 'Пожалуйста, выберите базу данных из списка',
+        message: 'Select database',
+        description: 'Please select a database from the list',
         placement: 'bottomRight',
         duration: 2,
       });
       return;
     } else if (text === "" || text === null) {
       notification.warning({
-        message: 'Пустой код',
-        description: 'Пожалуйста, напишите код для выполнения',
+        message: 'Empty code',
+        description: 'Please write code to execute',
         placement: 'bottomRight',
         duration: 2,
       });
@@ -271,8 +271,8 @@ class Code extends React.Component {
     }
     if (chosenDb === "SQLite") {
       notification.warning({
-        message: 'База данных недоступна',
-        description: 'Пожалуйста, выберите другую базу данных',
+        message: 'Database unavailable',
+        description: 'Please select another database',
         placement: 'bottomRight',
         duration: 2,
       });
@@ -280,8 +280,8 @@ class Code extends React.Component {
     }
     if (chosenDb === "MongoDB") {
       notification.warning({
-        message: 'База данных недоступна',
-        description: 'Пожалуйста, выберите другую базу данных',
+        message: 'Database unavailable',
+        description: 'Please select another database',
         placement: 'bottomRight',
         duration: 2,
       });

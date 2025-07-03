@@ -56,12 +56,18 @@ class App extends React.Component {
 
   componentDidMount() {
     window.addEventListener('popstate', this.handlePopState);
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
     window.history.replaceState({ page: this.state.page }, '', window.location.pathname);
   }
 
   componentWillUnmount() {
     window.removeEventListener('popstate', this.handlePopState);
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
+
+  handleBeforeUnload = () => {
+    this.deleteCookie("lastPage");
+  };
 
   handlePopState = (event) => {
     if (this.state.isModalOpen) {

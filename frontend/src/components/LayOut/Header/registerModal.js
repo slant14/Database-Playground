@@ -74,8 +74,8 @@ class RegisterModal extends React.Component {
     
     if (login === "" || email === "" || password === "" || confirmPassword === "") {
       notification.warning({
-        message: 'Неполные данные',
-        description: 'Пожалуйста, заполните все поля',
+        message: 'Incomplete data',
+        description: 'Please fill in all fields',
         placement: 'bottomRight',
         duration: 2,
       });
@@ -84,8 +84,8 @@ class RegisterModal extends React.Component {
     
     if (password !== confirmPassword) {
       notification.error({
-        message: 'Пароли не совпадают',
-        description: 'Пожалуйста, убедитесь что пароли совпадают',
+        message: 'Passwords do not match',
+        description: 'Please make sure passwords match',
         placement: 'bottomRight',
         duration: 2,
       });
@@ -94,8 +94,8 @@ class RegisterModal extends React.Component {
     
     if (password.length < 6) {
       notification.warning({
-        message: 'Слабый пароль',
-        description: 'Пароль должен содержать минимум 6 символов',
+        message: 'Weak password',
+        description: 'Password must contain at least 6 characters',
         placement: 'bottomRight',
         duration: 2,
       });
@@ -113,8 +113,8 @@ class RegisterModal extends React.Component {
     });
     
     notification.success({
-      message: 'Регистрация успешна!',
-      description: 'Ваш аккаунт создан. Теперь вы можете войти в систему.',
+      message: 'Registration successful!',
+      description: 'Your account has been created. You can now log in to the system.',
       placement: 'bottomRight',
       duration: 3,
     });

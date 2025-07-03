@@ -1,5 +1,5 @@
 .my-orange-button-outline {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     color: #51CB63;
     font-family: 'Noto Sans', sans-serif;
     border-color: #51CB63;
@@ -9,7 +9,7 @@
 
 .ant-notification-notice {
   border-radius: 8px;
-  background-color: #161b22;
+  background-color: #191d1a;
   border: 1px solid !important;
 }
 
@@ -90,7 +90,7 @@
 
 .my-orange-button-outline:disabled,
 .my-orange-button-solid:disabled {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     color: #51CB63 !important;
     border-color: #51CB63 !important;
     cursor: not-allowed;
@@ -147,7 +147,7 @@
 .code-textarea {
     width: 500px;
     height: 600px;
-    background-color: #161b22;
+    background-color: #191d1a;
     color: #fff;
     font-family: 'Noto Sans', sans-serif;
     font-weight: 400;
@@ -174,7 +174,7 @@ textarea:active {
     height: 349px;
     max-height: 349px;
     overflow-y: auto;
-    background-color: #161b22;
+    background-color: #191d1a;
     color: #fff;
     font-family: 'Noto Sans', sans-serif;
     font-weight: 400;
@@ -187,7 +187,7 @@ textarea:active {
     width: 500px;
     height: 185px;
     max-height: 185px;
-    background-color: #161b22;
+    background-color: #191d1a;
     color: #fff;
     font-family: 'Noto Sans', sans-serif;
     font-weight: 400;
@@ -265,7 +265,7 @@ textarea:active {
 }
 
 .ant-select-dropdown {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     border: 1px solid #a2aab3;
 }
 
@@ -274,7 +274,7 @@ textarea:active {
 }
 
 .ant-select-item-option-selected .ant-select-item-option-content {
-    color: #161b22 !important;
+    color: #191d1a !important;
 }
 
 .ant-select-item-option-selected {
@@ -286,7 +286,7 @@ textarea:active {
 }
 
 .ant-select-selector {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     border: 1px solid #a2aab3 !important;
 }
 
@@ -326,7 +326,7 @@ textarea:active {
 }
 .code-table-list {
     width: 500px;
-    background-color: #161b22;
+    background-color: #191d1a;
     color: #fff;
     font-family: 'Noto Sans', sans-serif;
     font-weight: 400;
@@ -344,7 +344,7 @@ textarea:active {
 }
 
 .ant-table-cell::before {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
 }
 
 .ant-table-cell {
@@ -352,14 +352,14 @@ textarea:active {
 }
 
 .my-table-button-outline {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     color: #a2aab3;
     font-family: 'Noto Sans', sans-serif;
     border-color: #a2aab3;
 }
 
 .my-table-button-solid {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     color: #51CB63;
     font-family: 'Noto Sans', sans-serif;
     border-color: #51CB63;
@@ -367,7 +367,7 @@ textarea:active {
 
 .my-table-button-outline:hover,
 .my-table-button-solid:hover {
-    background: #161b22 !important;
+    background: #191d1a !important;
     color: #51CB63 !important;
     border-color: #51CB63 !important;
 }
@@ -391,26 +391,26 @@ textarea:active {
     width: 100%;
     max-width: 450px;
     max-height: 180px;
-    background: #161b22 !important;
+    background: #191d1a !important;
 }
 
 .code-table-scheme .ant-table {
-    background: #161b22 !important;
+    background: #191d1a !important;
     font-family: 'Noto Sans', sans-serif !important;
 }
 
 .code-table-scheme .ant-table-container {
-    background: #161b22 !important;
+    background: #191d1a !important;
     border-radius: 0px !important;
 }
 
 .code-table-scheme .ant-table-content {
-    background: #161b22 !important;
+    background: #191d1a !important;
     max-height: 160px;
 }
 
 .code-table-scheme .ant-table-body {
-    background: #161b22 !important;
+    background: #191d1a !important;
     overflow-x: auto;
     overflow-y: auto;
     max-height: 160px;
@@ -418,7 +418,7 @@ textarea:active {
 }
 
 .code-table-scheme .ant-table-thead > tr > th {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     color: #51CB63 !important;
     border: 1px solid #a2aab3 !important;
     border-radius: 0px !important;
@@ -427,7 +427,7 @@ textarea:active {
 }
 
 .code-table-scheme .ant-table-tbody > tr > td {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     color: #a2aab3 !important;
     border: 1px solid #a2aab3 !important;
     border-radius: 0px !important;
@@ -464,12 +464,12 @@ textarea:active {
 }
 
 .my-modal .ant-modal-content {
-    background: #161b22 !important;
+    background: #191d1a !important;
     border: 1px solid #a2aab3 !important;
 }
 
 .my-modal .ant-modal-header {
-    background: #161b22 !important;
+    background: #191d1a !important;
     border-bottom: none !important;
 }
 
@@ -491,7 +491,7 @@ textarea:active {
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 8px;
-    scrollbar-color: #a2aab3 #161b22 !important;
+    scrollbar-color: #a2aab3 #191d1a !important;
     scrollbar-width: thin !important;
 }
 
@@ -500,7 +500,7 @@ textarea:active {
 }
 
 .my-modal .ant-modal-body::-webkit-scrollbar-track {
-    background: #161b22 !important;
+    background: #191d1a !important;
     border-radius: 8px;
     margin: 2px;
 }
@@ -508,7 +508,7 @@ textarea:active {
 .my-modal .ant-modal-body::-webkit-scrollbar-thumb {
     background: #a2aab3 !important;
     border-radius: 8px;
-    border: 1px solid #161b22;
+    border: 1px solid #191d1a;
 }
 
 .my-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
@@ -516,39 +516,39 @@ textarea:active {
 }
 
 .my-modal .ant-modal-body::-webkit-scrollbar-corner {
-    background: #161b22 !important;
+    background: #191d1a !important;
 }
 
 .postgres-modal-table .ant-table-wrapper {
     width: 100%;
-    background: #161b22 !important;
+    background: #191d1a !important;
 }
 
 .postgres-modal-table .ant-table {
-    background: #161b22 !important;
+    background: #191d1a !important;
     font-family: 'Noto Sans', sans-serif !important;
 }
 
 .postgres-modal-table .ant-table-container {
-    background: #161b22 !important;
+    background: #191d1a !important;
     border-radius: 0px !important;
 }
 
 .postgres-modal-table .ant-table-content {
-    background: #161b22 !important;
+    background: #191d1a !important;
 }
 
 .postgres-modal-table .ant-table-body {
-    background: #161b22 !important;
+    background: #191d1a !important;
     overflow-x: auto;
     overflow-y: auto;
     padding-bottom: 8px;
-    scrollbar-color: #a2aab3 #161b22 !important;
+    scrollbar-color: #a2aab3 #191d1a !important;
     scrollbar-width: thin !important;
 }
 
 .postgres-modal-table .ant-table-thead > tr > th {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     color: #51CB63 !important;
     border: 1px solid #a2aab3 !important;
     border-radius: 0px !important;
@@ -557,7 +557,7 @@ textarea:active {
 }
 
 .postgres-modal-table .ant-table-tbody > tr > td {
-    background-color: #161b22 !important;
+    background-color: #191d1a !important;
     color: #a2aab3 !important;
     border: 1px solid #a2aab3 !important;
     border-radius: 0px !important;
@@ -574,14 +574,14 @@ textarea:active {
 }
 
 .postgres-modal-table .ant-table-body::-webkit-scrollbar-track {
-    background: #161b22 !important;
+    background: #191d1a !important;
     margin: 2px;
 }
 
 .postgres-modal-table .ant-table-body::-webkit-scrollbar-thumb {
     background: #a2aab3 !important;
     border-radius: 8px;
-    border: 1px solid #161b22;
+    border: 1px solid #191d1a;
 }
 
 .postgres-modal-table .ant-table-body::-webkit-scrollbar-thumb:hover {
@@ -589,7 +589,7 @@ textarea:active {
 }
 
 .postgres-modal-table .ant-table-body::-webkit-scrollbar-corner {
-    background: #161b22 !important;
+    background: #191d1a !important;
 }
 
 .postgres-modal-table .ant-pagination {
@@ -597,7 +597,7 @@ textarea:active {
 }
 
 .postgres-modal-table .ant-pagination .ant-pagination-item {
-    background: #161b22 !important;
+    background: #191d1a !important;
     border: 1px solid #a2aab3 !important;
     margin: 0 4px !important;
 }
