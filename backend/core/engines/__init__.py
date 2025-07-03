@@ -1,6 +1,6 @@
+from .DBEngine import DBEngine
+from .MongoEngine import MongoEngine
 from .PostgresEngine import PostgresEngine
-from .SQLEngine import SQLEngine
-
 
 postgres_engine = PostgresEngine(
     user="dbpg",
@@ -8,9 +8,17 @@ postgres_engine = PostgresEngine(
     host="postgres",
 )
 
+mongo_engine = MongoEngine(
+    user="dbpg",
+    password="dbpg_pwd",
+    host="mongodb",
+)
+
 
 __all__ = [
-    "SQLEngine",
+    "DBEngine",
     "PostgresEngine",
+    "MongoEngine",
     "postgres_engine",
+    "mongo_engine",
 ]

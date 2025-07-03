@@ -1,10 +1,9 @@
 from core.engines import PostgresEngine
 
-
-QUERY = \
-"""
+QUERY = """
 SELECT * FROM users;
 """
+
 
 def do_it():
     engine = PostgresEngine(

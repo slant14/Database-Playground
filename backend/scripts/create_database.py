@@ -1,8 +1,6 @@
 from core.engines import PostgresEngine
 
-
-DUMP = \
-"""
+DUMP = """
 CREATE TABLE users (
     id serial primary key,
     name varchar(30) not null,
