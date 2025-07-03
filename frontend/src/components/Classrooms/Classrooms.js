@@ -11,31 +11,6 @@ class ClassRooms extends React.Component {
     super(props)
     this.state = {
       id: 1,
-      classrooms: [{
-        title: "Introduction to Programmming",
-        teacher_name: "Zlata Schedrikova",
-        capacity: 324,
-        created_date: 23
-      },
-      {
-        title: "Analitical Geometry and Linear Algebra",
-        teacher_name: "Zlata Schedrikova",
-        capacity: 324,
-        created_date: 23
-        },
-      {
-        title: "Computer Architecture",
-        teacher_name: "Zlata Schedrikova",
-        capacity: 324,
-        created_date: 23
-      },
-      {
-        title: "Math Analysis",
-        teacher_name: "Zlata Schedrikova",
-        capacity: 324,
-        created_date: 23
-      }
-      ],
       selectedClassroom: null,
       //studentId: 1,
       classrooms: []
@@ -85,9 +60,8 @@ class ClassRooms extends React.Component {
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
           marginBottom: 10
-        }}>Class<Text style={{
-          color: "#fff",
-        }}>Class</Text><Text style={{
+        }}>Class
+        <Text style={{
           color: "#fff",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
