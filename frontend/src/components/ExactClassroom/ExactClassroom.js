@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, Button } from "antd";
 import './ExactClassroom.css';
 import image from "../../img/WideScreen.jpg"
+import { getMyClassroomClassmates } from '../../api';
 
 const { Title, Paragraph, Text, Link } = Typography;
 
