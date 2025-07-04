@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Button } from "antd";
-import { getClassromsById } from '../../api';
+import { getMyClassroms } from '../../api';
 import './Classrooms.css';
 import image from "../../img/Screen.jpg"
 
@@ -11,40 +11,15 @@ class ClassRooms extends React.Component {
     super(props)
     this.state = {
       id: 1,
-      courses: [{
-        name: "Introduction to Programmming",
-        teacher: "Zlata Schedrikova",
-        numberOfStudents: 324,
-        date: 23
-      },
-      {
-        name: "Analitical Geometry and Linear Algebra",
-        teacher: "Zlata Schedrikova",
-        numberOfStudents: 324,
-        date: 23
-        },
-      {
-        name: "Computer Architecture",
-        teacher: "Zlata Schedrikova",
-        numberOfStudents: 324,
-        date: 23
-      },
-      {
-        name: "Math Analysis",
-        teacher: "Zlata Schedrikova",
-        numberOfStudents: 324,
-        date: 23
-      }
-      ],
       selectedClassroom: null,
-      studentId: 1,
+      //studentId: 1,
       classrooms: []
     }
   }
 
   async componentDidMount() {
     try {
-      const classrooms = await getClassromsById(this.state.studentId);
+      const classrooms = await getMyClassroms();
       this.setState({ classrooms });
     } catch (error) {
       console.error("Failed to fetch classrooms:", error);
@@ -52,7 +27,7 @@ class ClassRooms extends React.Component {
   }
 
   render() {
-    if (this.state.courses.length === 0) {
+    if (this.state.classrooms.length === 0) {
       return (
         <div className="classrooms">
           <Title style={{
@@ -79,11 +54,14 @@ class ClassRooms extends React.Component {
         <Title style={{
           marginTop: 30,
           color: "#51CB63",
+          marginTop: 30,
+          color: "#51CB63",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
           marginBottom: 10
-        }}>Class<Text style={{
+        }}>Class
+        <Text style={{
           color: "#fff",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
@@ -92,8 +70,8 @@ class ClassRooms extends React.Component {
         }}>rooms</Text>
         </Title>
         
-        <div className="courses">
-          {this.state.courses.map((el, idx) => (
+        <div className="classrooms">
+          {this.state.classrooms.map((el, idx) => (
             <div className="card" key={idx} >
                <img
                 src={image}
@@ -101,24 +79,24 @@ class ClassRooms extends React.Component {
                 style={{ width: "500px", borderTopLeftRadius: "14px", borderTopRightRadius: "14px", borderBottomLeftRadius: "0", borderBottomRightRadius: "0" }}
               />
               <Text className="plain-title">
-                {el.name}
+                {el.title}
               </Text>
               
               <div className="plain-description">
                 <ul>
                   <li>
                     <span>
-                      <span style={{color:"#51CB63", fontWeight:400}}>Primary Instructor:</span> {el.teacher}
+                      <span style={{color:"#51CB63", fontWeight:400}}>Primary Instructor:</span> {el.primary_instructor_name}
                     </span>
                   </li>
                   <li>
                     <span>
-                      <span style={{color:"#51CB63", fontWeight:400}}>Number of Students:</span> {el.numberOfStudents}
+                      <span style={{color:"#51CB63", fontWeight:400}}>Number of Students:</span> {el.capacity}
                     </span>
                   </li>
                     <li>
                     <span className="Created-Button">
-                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {el.date}
+                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {el.created_date}
                       <Button className="view" onClick={() => this.props.selectClassroom(el)}>
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                         <span style={{ position: "relative", top: "-1px" }}>View</span>
@@ -137,6 +115,10 @@ class ClassRooms extends React.Component {
     );
   }
   
+
+  selectClassroom = (classroom) => {
+    this.setState({ selectedClassroom: classroom });
+  };
 
   selectClassroom = (classroom) => {
     this.setState({ selectedClassroom: classroom });

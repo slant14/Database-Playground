@@ -10,7 +10,6 @@ class ChromaResult extends React.Component {
 
     render() {
         const { response } = this.props;
-        console.log("Response in OutputResult: ", response);
         return (
                 <div>
                     {Object.keys(response).length === 0 ? 
@@ -55,7 +54,6 @@ class ChromaResult extends React.Component {
             return <Typography.Text className='code-text' style={{ color: '#B22222' }}>Please try once again, there is an error in your code</Typography.Text>;
         }
         
-        console.log("ABABABAB");
         return (
             <div>
                 {result.command === 'ADD' ? <Add response={result} /> : ""}

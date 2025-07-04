@@ -1,21 +1,21 @@
 .footeree {
     margin-left: 20px;
-    background-color: #0d1117 !important;
+    background-color: transparent !important;
     color: rgba(137, 146, 155, 1) !important;
     text-align: left;
     font-family: 'Noto Sans', sans-serif;
     font-weight: 400;
     font-size: 15px;
-    opacity: 0.8;
+    opacity: 0.6;
     position: fixed !important;
     bottom: 0;
-    width: 100%;
+    width: 30%;
 }
 
 .footeree span {
   display: flex;
   align-items: center;
-  gap: 10px; /* расстояние между элементами */
+  gap: 10px; 
 }
 
 .footeree a {

@@ -31,7 +31,7 @@ class OutputDBState extends React.Component {
             case "Chroma":
                 return <ChromaState response={response} db_state={db_state} />;
             case "PostgreSQL":
-                return <PostgresState response={response} db_state={db_state} open={this.open} close={this.close} isPostgresModalOpen={this.state.isPostgresModalOpen} postgresTableInfo={this.props.postgresTableInfo}/>;
+                return <PostgresState response={response} db_state={db_state} open={this.open} close={this.close} isPostgresModalOpen={this.state.isPostgresModalOpen} postgresTableInfo={this.props.postgresTableInfo} userid={this.props.userid}/>;
             default:
                 return null;
         }
@@ -62,10 +62,19 @@ class OutputDBState extends React.Component {
 
     open = () => {
         this.setState({ isPostgresModalOpen: true });
+        if (this.props.setTableModalOpen) {
+            this.props.setTableModalOpen(true);
+        }
+        window.history.pushState({ modalType: 'table', page: 'code' }, '', window.location.pathname);
     };
 
     close = () => {
+        const wasOpen = this.state.isPostgresModalOpen;
         this.setState({ isPostgresModalOpen: false });
+        if (this.props.setTableModalOpen) {
+            this.props.setTableModalOpen(false);
+        }
+        return wasOpen;
     }
 }
 

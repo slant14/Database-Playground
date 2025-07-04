@@ -6,6 +6,7 @@ import { BiLogoPostgresql } from "react-icons/bi";
 import { SiMongodb } from "react-icons/si";
 import { FaDatabase } from "react-icons/fa";
 import MyModal from "../LayOut/Header/modal";
+import RegisterModal from "../LayOut/Header/registerModal";
 import { MdAccountCircle } from "react-icons/md";
 import { FaCode } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
@@ -14,6 +15,26 @@ import { FaBook } from "react-icons/fa";
 const { Title, Paragraph, Text } = Typography;
 
 class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isRegisterModalOpen: false,
+    };
+  }
+
+  handleSwitchToRegister = () => {
+    this.setState({ isRegisterModalOpen: true });
+    this.props.handleCancel();
+  };
+
+  handleSwitchToLogin = () => {
+    this.setState({ isRegisterModalOpen: false });
+    this.props.handleButtonClick("signin");
+  };
+
+  handleRegisterCancel = () => {
+    this.setState({ isRegisterModalOpen: false });
+  };
   render() {
     return (
       <div className="home">
@@ -37,7 +58,7 @@ class Home extends React.Component {
               </span>
             </Button>
             {!this.props.isLogin ?
-              <Button variant="solid" className="myButton" onClick={() => this.props.handleButtonClick("signin")}><span style={{ position: "relative", top: "-1px" }}>Sign In</span></Button> :
+              <Button variant="solid" className={this.props.isModalOpen || this.state.isRegisterModalOpen ? "myButton-solid" : "myButton"} onClick={() => this.props.handleButtonClick("signin")}><span style={{ position: "relative", top: "-1px" }}>Sign In</span></Button> :
               <Button
                 variant="solid"
                 className="myButton"
@@ -47,7 +68,24 @@ class Home extends React.Component {
                   <span style={{ position: "relative", top: "-1px" }}>Account</span> <MdAccountCircle />
                 </span>
               </Button>}
-            <MyModal open={this.props.isModalOpen} logIn={this.props.logIn} setPage={this.props.setPage} onCancel={this.props.handleCancel} updateLogIn={this.props.updateLogIn} setCookie={this.props.setCookie} footer={null} setUser={this.props.setUser} title="Sing In" />
+            <MyModal 
+              open={this.props.isModalOpen} 
+              logIn={this.props.logIn} 
+              setPage={this.props.setPage} 
+              onCancel={this.props.handleCancel} 
+              updateLogIn={this.props.updateLogIn} 
+              setCookie={this.props.setCookie} 
+              footer={null} 
+              setUser={this.props.setUser} 
+              title="Sign In"
+              onSwitchToRegister={this.handleSwitchToRegister}
+            />
+            <RegisterModal 
+              open={this.state.isRegisterModalOpen}
+              onCancel={this.handleRegisterCancel}
+              onSwitchToLogin={this.handleSwitchToLogin}
+              logIn={this.props.logIn}
+            />
 
           </span>
         </div>
@@ -101,7 +139,7 @@ class Home extends React.Component {
 
         <div className="start">
           <Paragraph className="home-text" style={{ fontSize: 20, fontWeight: 600 }}>
-            <Text className="home-text" style={{ fontSize: 20, fontWeight: 600, color: '#51CB63' }}>No</Text> setup, <Text className="home-text" style={{ fontSize: 20, fontWeight: 600, color: '#51CB63' }}>No</Text> installation. <br />
+            <Text className="home-text" style={{ fontSize: 20, fontWeight: 600, color: '#51CB63' }}>No</Text> setup, <Text className="home-text" style={{ fontSize: 20, fontWeight: 600, color: '#51CB63' }}>No</Text> installation <br />
             Just write queries and explore!
           </Paragraph>
         </div>
