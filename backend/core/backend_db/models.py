@@ -86,10 +86,14 @@ class Classroom(models.Model):
     primary_instructor = models.ForeignKey(to = Profile, on_delete = models.CASCADE)
     topic = models.ForeignKey(to = Topic, on_delete = models.DO_NOTHING, null = True)
     created_date = models.DateTimeField(auto_now_add = True)
-    capacity = models.IntegerField()
+    #capacity = models.IntegerField()
 
     def __str__(self) -> str:
         return self.title
+    
+    @property
+    def capacity(self):
+        return self.enrollments.count()
 
 class Enrollment(models.Model):
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
