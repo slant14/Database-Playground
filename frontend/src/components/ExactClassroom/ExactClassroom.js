@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, Button } from "antd";
 import './ExactClassroom.css';
 import image from "../../img/WideScreen.jpg"
+import { getMyClassroomClassmates } from '../../api';
 
 const { Title, Paragraph, Text, Link } = Typography;
 
@@ -9,15 +10,19 @@ class ExactClassroom extends React.Component {
   
   constructor(props) {
     super(props)
-    
+    this.state = {
+      students: [],
+      assignmentsFinished: [],
+      assignmentsActive: []
+    }
   }
 
   async componentDidMount() {
       try {
-        const classrooms = await getMyClassroms();
-        this.setState({ classrooms });
+        const students = await getMyClassroomClassmates(this.props.classroom.id);
+        this.setState({ students });
       } catch (error) {
-        console.error("Failed to fetch classrooms:", error);
+        console.error("Failed to fetch students:", error);
       }
     }
 
@@ -55,14 +60,24 @@ class ExactClassroom extends React.Component {
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
           marginBottom: 10
-        }}>{classroom.name}</Title>
+        }}>{classroom.title}</Title>
 
         <div className="classroom-desciption">
-          <Text className="class-props">Primary Instructor: {classroom.teacher}</Text><br />
-          <Text className="class-props">Number of Students: {classroom.numberOfStudents}</Text><br />
-          <Text className="class-props">Created: {classroom.date}</Text>
+          <Text className="class-props">Primary Instructor: {classroom.primary_instructor_name}</Text><br />
+          <Text className="class-props">Number of Students: {classroom.capacity}</Text><br />
+          <Text className="class-props">Created: {classroom.created_date}</Text>
         </div>
         
+        <div className="students-list">
+          {this.state.students.map((el, idx) => {
+            <Text>
+              el.name
+            </Text>
+          })
+
+          }
+        </div>
+
       </div>
     );
   }
