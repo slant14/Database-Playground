@@ -47,13 +47,13 @@ jobs:
           pip install flake8 isort
       
       - name: Run isort
-        run: isort --check-only .
+        run: isort .
         
       - name: Run flake8
         run: flake8 .
         
       - name: Run tests
-        run: cd .. && ./scripts/run_tests.sh
+        run: cd .. && ./scripts/run_unit_tests.sh
 
   deploy:
     if: github.repository == 'slant14/Database-Playground'

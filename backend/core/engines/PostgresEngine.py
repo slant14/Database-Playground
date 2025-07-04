@@ -1,18 +1,19 @@
 import subprocess
 import time
 from contextlib import contextmanager
+from typing import Sequence
 
 import psycopg2
 from psycopg2.extensions import cursor
 from psycopg2.sql import SQL, Identifier
 
-from .models import DBInfo, QueryResult
-from .SQLEngine import SQLEngine
+from .DBEngine import DBEngine
+from .models import DBInfo, SQLQueryResult
 from .utility import postgres_wrap_exceptions as wrap_exceptions
 
 SELECT_COLUMNS = """
-SELECT table_name, column_name, data_type 
-FROM information_schema.columns 
+SELECT table_name, column_name, data_type
+FROM information_schema.columns
 WHERE table_schema = 'public'
 ORDER BY table_name, ordinal_position;
 """
@@ -22,7 +23,18 @@ CREATE_DATABASE = "CREATE DATABASE {};"
 DROP_DATABASE = "DROP DATABASE {};"
 
 
-class PostgresEngine(SQLEngine):
+class PostgresEngine(DBEngine):
+
+    def __init__(
+        self,
+        user: str,
+        password: str,
+        root_db: str | None = None,
+        host: str = "127.0.0.1",
+        port: int = 5432,
+    ):
+        super().__init__(user, password, host, port)
+        self._root_db = root_db if root_db else user
 
     @wrap_exceptions
     def get_db(self, db_name: str) -> DBInfo:
@@ -33,14 +45,14 @@ class PostgresEngine(SQLEngine):
         return DBInfo.from_fetchall_columns(db_name, result)
 
     @wrap_exceptions
-    def create_db(self, db_name: str, sql_dump: str):
+    def create_db(self, db_name: str, dump: str):
         with self._connect_autocommit(self._root_db) as conn:
             with conn.cursor() as cur:
                 cur.execute(SQL(CREATE_DATABASE).format(Identifier(db_name)))
 
         with self._connect(db_name) as conn:
             with conn.cursor() as cur:
-                self._execute_sql_dump(cur, sql_dump)
+                self._execute_sql_dump(cur, dump)
                 conn.commit()
 
     @wrap_exceptions
@@ -50,7 +62,8 @@ class PostgresEngine(SQLEngine):
                 cur.execute(SQL(DROP_DATABASE).format(Identifier(db_name)))
 
     @wrap_exceptions
-    def send_query(self, db_name: str, full_query: str) -> list[QueryResult]:
+    def send_query(
+            self, db_name: str, full_query: str) -> Sequence[SQLQueryResult]:
         results = []
         with self._connect(db_name) as conn:
             with conn.cursor() as cur:
@@ -64,18 +77,31 @@ class PostgresEngine(SQLEngine):
         for query in queries:
             cur.execute(query)
 
-    def _save_query_result(self, cur: cursor, query: str, results: list[QueryResult]):
+    def _save_query_result(
+        self, cur: cursor, query: str, results: list[SQLQueryResult]
+    ):
         rowcount = cur.rowcount
         data = None
-
         start = time.perf_counter()
         try:
-            data = cur.fetchall()
+            raw_data = cur.fetchall()
+            # Only try formatting if description is available (for SELECT)
+            if cur.description:
+                column_names = [str(desc[0]) for desc in cur.description]
+                data = {
+                    "columns": column_names,
+                    "data": {col: [] for col in column_names}
+                }
+                for row in raw_data:
+                    for col, value in zip(column_names, row):
+                        data["data"][col].append(value)
+            else:
+                data = raw_data  # fallback, shouldn't usually happen
         except psycopg2.ProgrammingError:
-            pass
+            # For queries that do not return results (e.g., INSERT, DROP)
+            data = None
         execution_time = time.perf_counter() - start
-
-        results.append(QueryResult(query, rowcount, data, execution_time))
+        results.append(SQLQueryResult(query, rowcount, data, execution_time))
 
     def _split_queries(self, big_query: str) -> list[str]:
         queries = []

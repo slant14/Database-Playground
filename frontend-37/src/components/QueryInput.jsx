@@ -7,6 +7,8 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
   let numbersColumnRef = useRef(null);
   let containerRef = useRef(null);
 
+  let shiftDown = useRef(false);
+
   let [numberColumnValues, changeNumberColumnValues] = useState(["1"]);
 
   let containerResizeObserver = new ResizeObserver(adjustSizes);
@@ -45,6 +47,8 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
         input.removeEventListener("selectionchange", selectionChangeHandler);
         isSelectionChangeHandlerAdded.current = false;
       }
+
+      shiftDown.current = false;
     };
   }, []);
 
@@ -76,6 +80,57 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
             if (numbersColumnRef.current) {
               numbersColumnRef.current.scrollTop =
                 textareaRef.current.scrollTop;
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key == "Tab") {
+              e.preventDefault();
+
+              let { selectionStart, selectionEnd } = e.target;
+
+              let lineStart =
+                e.target.value.lastIndexOf("\n", selectionStart - 1) + 1;
+              let lineEnd = e.target.value
+                .substring(selectionStart)
+                .indexOf("\n");
+              lineEnd =
+                lineEnd == -1
+                  ? e.target.value.length
+                  : selectionStart + lineEnd;
+
+              let actualLineStart = e.target.value
+                .substring(lineStart, selectionEnd)
+                .search(/\S/);
+
+              if (actualLineStart == -1) actualLineStart = lineEnd;
+
+              let replacement = "    ";
+
+              if (selectionStart <= actualLineStart) {
+                replacement = " ".repeat(
+                  4 - ((selectionStart - lineStart) % 4)
+                );
+              }
+
+              e.target.setRangeText(
+                replacement,
+                selectionStart,
+                selectionEnd,
+                "end"
+              );
+            }
+
+            if (e.key == "Shift") {
+              shiftDown.current = true;
+            }
+
+            if (e.key == "Enter") {
+              if (shiftDown.current) onRunClicked();
+            }
+          }}
+          onKeyUp={(e) => {
+            if (e.key == "Shift") {
+              shiftDown.current = false;
             }
           }}
           placeholder="WHITE YOUR QUERY HERE"

@@ -1,7 +1,6 @@
 import uuid
 
 from django.db import models
-
 from templates.models import Template
 
 
@@ -17,5 +16,6 @@ class Session(models.Model):
 
 class SessionInfo(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
-    template = models.ForeignKey(Template, on_delete=models.SET_NULL, null=True)
+    template = models.ForeignKey(
+        Template, on_delete=models.SET_NULL, null=True)
     db_name = models.CharField(max_length=20)

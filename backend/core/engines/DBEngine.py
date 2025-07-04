@@ -1,24 +1,20 @@
 from abc import ABC, abstractmethod
+from typing import Sequence
 
 from .models import DBInfo, QueryResult
 
 
-class SQLEngine(ABC):
+class DBEngine(ABC):
 
     def __init__(
         self,
         user: str,
         password: str,
-        root_db: str | None = None,
-        host: str = "127.0.0.1",
-        port: int = 5432,
+        host: str,
+        port: int,
     ):
-        if not root_db:
-            root_db = user
-
         self._user = user
         self._password = password
-        self._root_db = root_db
         self._host = host
         self._port = port
 
@@ -30,7 +26,7 @@ class SQLEngine(ABC):
         """
 
     @abstractmethod
-    def create_db(self, db_name: str, sql_dump: str):
+    def create_db(self, db_name: str, dump: str):
         """Creates database and executes `sql_dump`
         to create tables and populate with data
 
@@ -46,7 +42,8 @@ class SQLEngine(ABC):
         """
 
     @abstractmethod
-    def send_query(self, db_name: str, full_query: str) -> list[QueryResult]:
+    def send_query(
+            self, db_name: str, full_query: str) -> Sequence[QueryResult]:
         """Sends query to database,
         returns the output of subqueries as a list
 

@@ -1,8 +1,8 @@
 from core.engines import PostgresEngine
-from tests.engines.postgres.fixtures import engine # noqa
+from tests.engines.postgres.fixtures import engine  # noqa F401
 
 
-def test_regular_split(engine: PostgresEngine):
+def test_regular_split(engine: PostgresEngine):  # noqa F811
     """ Test of how queries splitted regularly """
 
     queries = engine._split_queries("""
@@ -22,7 +22,7 @@ def test_regular_split(engine: PostgresEngine):
     assert queries[3] == "INSERT INTO users DEFAULT VALUES"
 
 
-def test_stripping(engine: PostgresEngine):
+def test_stripping(engine: PostgresEngine):  # noqa F811
     """ Test of how queries are stripped when splitted """
 
     queries = engine._split_queries("""

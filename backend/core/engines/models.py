@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from enum import Enum
+from typing import TypeAlias
 
 
 @dataclass
@@ -20,6 +22,16 @@ class DBInfo:
                 )
         return db
 
+    @staticmethod
+    def from_collection_names(
+        db_name: str,
+        collections: list[str]
+    ) -> "DBInfo":
+        db = DBInfo(db_name, tables=[])
+        for c in collections:
+            db.tables.append(TableInfo(c, []))
+        return db
+
     def to_json(self) -> dict:
         return {
             "name": self.name,
@@ -29,7 +41,7 @@ class DBInfo:
     def __repr__(self) -> str:
         tables_str = ""
         for table in self.tables:
-            tables_str += f"\n  {str(table).replace('\n', '\n  ')}"
+            tables_str += "\n  "+str(table).replace("\n", "\n  ")
         return f"Database {self.name}:  {tables_str}"
 
 
@@ -64,10 +76,10 @@ class ColumnInfo:
 
 
 @dataclass
-class QueryResult:
+class SQLQueryResult:
     query: str
     rowcount: int
-    data: list[tuple] | None
+    data: dict | list[tuple] | None
     execution_time: float
 
     def to_json(self) -> dict:
@@ -77,3 +89,43 @@ class QueryResult:
             "data": self.data,
             "execution_time": self.execution_time,
         }
+
+
+@dataclass
+class MongoQuery:
+
+    class Type(Enum):
+        GET_COLLECTION_NAMES = 1
+        DROP_COLLECTION = 2
+        INSERT_ONE = 3
+        INSERT_MANY = 4
+        FIND = 5
+        FIND_ONE = 6
+        AGGREGATE = 7
+        UPDATE_ONE = 8  # TODO: implement
+        UPDATE_MANY = 9  # TODO: implement
+
+    query: str
+    type: Type
+    collection: str
+    input: str | list | dict | None
+
+
+MQT = MongoQuery.Type
+
+
+@dataclass
+class MongoQueryResult:
+    query: str
+    data: list | dict | None
+    execution_time: float
+
+    def to_json(self) -> dict:
+        return {
+            "query": self.query,
+            "data": self.data,
+            "execution_time": self.execution_time,
+        }
+
+
+QueryResult: TypeAlias = SQLQueryResult | MongoQueryResult

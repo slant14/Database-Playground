@@ -1,12 +1,10 @@
-import pytest
-from unittest.mock import patch, MagicMock
-from tests.engines.postgres.fixtures import engine
+from unittest.mock import MagicMock, patch
 
-from core.engines.PostgresEngine import PostgresEngine
+from tests.engines.postgres.fixtures import engine  # noqa F401
 
 
 @patch("core.engines.PostgresEngine.psycopg2.connect")
-def test_create_db_creates_and_initializes(mock_connect, engine):
+def test_create_db_creates_and_initializes(mock_connect, engine):  # noqa F811
     # Setup mocks
     autocommit_conn = MagicMock()
     autocommit_cursor = MagicMock()
@@ -17,12 +15,14 @@ def test_create_db_creates_and_initializes(mock_connect, engine):
     mock_connect.side_effect = [autocommit_conn, connect_conn]
 
     autocommit_conn.__enter__.return_value = autocommit_conn
-    autocommit_conn.cursor.return_value.__enter__.return_value = autocommit_cursor
+    autocommit_conn.cursor \
+                   .return_value.__enter__.return_value = autocommit_cursor
 
     connect_conn.__enter__.return_value = connect_conn
     connect_conn.cursor.return_value.__enter__.return_value = connect_cursor
 
-    sql_dump = "CREATE TABLE test_table (id INT); INSERT INTO test_table VALUES (1);"
+    sql_dump = "CREATE TABLE test_table (id INT); " \
+               "INSERT INTO test_table VALUES (1);"
     engine.create_db("my_test_db", sql_dump)
 
     # 1. Assert CREATE DATABASE was called
@@ -31,7 +31,8 @@ def test_create_db_creates_and_initializes(mock_connect, engine):
     assert "my_test_db" in str(create_call)
 
     # 2. Assert SQL dump was executed
-    calls = [call_args[0][0] for call_args in connect_cursor.execute.call_args_list]
+    calls = [call_args[0][0]
+             for call_args in connect_cursor.execute.call_args_list]
     assert "CREATE TABLE test_table (id INT)" in calls
     assert "INSERT INTO test_table VALUES (1)" in calls
 
@@ -39,9 +40,8 @@ def test_create_db_creates_and_initializes(mock_connect, engine):
     connect_conn.commit.assert_called_once()
 
 
-
 @patch("core.engines.PostgresEngine.psycopg2.connect")
-def test_create_db_with_empty_dump(mock_connect, engine):
+def test_create_db_with_empty_dump(mock_connect, engine):  # noqa F811
     conn = MagicMock()
     cursor = MagicMock()
     mock_connect.return_value = conn
@@ -54,5 +54,6 @@ def test_create_db_with_empty_dump(mock_connect, engine):
     assert "CREATE DATABASE" in str(create_call)
 
     # Should not try to execute anything after that
-    # Total of 1 call to `psycopg2.connect` = 1 for autocommit, 1 for real connection
+    # Total of 1 call to `psycopg2.connect` = 1 for autocommit,
+    # and 1 for real connection
     assert mock_connect.call_count == 2
