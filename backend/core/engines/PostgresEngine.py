@@ -82,14 +82,25 @@ class PostgresEngine(DBEngine):
     ):
         rowcount = cur.rowcount
         data = None
-
         start = time.perf_counter()
         try:
-            data = cur.fetchall()
+            raw_data = cur.fetchall()
+            # Only try formatting if description is available (for SELECT)
+            if cur.description:
+                column_names = [str(desc[0]) for desc in cur.description]
+                data = {
+                    "columns": column_names,
+                    "data": {col: [] for col in column_names}
+                }
+                for row in raw_data:
+                    for col, value in zip(column_names, row):
+                        data["data"][col].append(value)
+            else:
+                data = raw_data  # fallback, shouldn't usually happen
         except psycopg2.ProgrammingError:
-            pass
+            # For queries that do not return results (e.g., INSERT, DROP)
+            data = None
         execution_time = time.perf_counter() - start
-
         results.append(SQLQueryResult(query, rowcount, data, execution_time))
 
     def _split_queries(self, big_query: str) -> list[str]:
