@@ -1,14 +1,53 @@
 .resTable {
-  width: 99%;
   height: 100%;
-  padding: 10px;
+  padding: 15px;
   gap: 10px;
   margin-left: auto;
   margin-right: auto;
-  overflow: scroll;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   overflow-x: auto;
   overflow-y: auto;
   scrollbar-width: thin;
+  font-size: 24px;
+}
+
+.clockImg {
+  width: 32px;
+  height: 28px;
+  margin-right: 10px;
+}
+
+.totalTime {
+  margin-left: auto;
+}
+
+.timee {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.clk {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.errors {
+  padding-left: 15px;
+  padding-top: 15px;
+}
+
+.errorIn {
+  color: #FF0000;
+  font-size: 24px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.oshibka {
+  font-size: 24px;
+  margin-top: 15px;
 }

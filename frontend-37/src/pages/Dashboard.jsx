@@ -46,7 +46,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <MainBar onClick={onClick} />
+      <MainBar onClick={onClick} con/>
       <div className={styles.mainDiv}>
         <div>
           <h1 className={styles.bigTitle}>Learn databases</h1>

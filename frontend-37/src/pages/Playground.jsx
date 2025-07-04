@@ -50,6 +50,7 @@ export default function Playground() {
       <PlaygroundBar style={{ margin: 0 }} />
 
       <div
+        className="mono"
         style={{
           flex: 1,
           display: "flex",

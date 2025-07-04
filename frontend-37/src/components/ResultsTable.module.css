@@ -4,24 +4,68 @@ table {
   width: 100%;
 }
 
-td,
-th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
+
+
+table, tr, td, th {
+  box-sizing: border-box;
 }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
+td,
+th {
+  border-bottom: 2px solid white;
+  border-top: 2px solid white;
+  text-align: left;
+  padding: 8px;
+  text-align: center;
+  justify-content: space-evenly;
 }
 
 .beautiful {
   height: auto;
-  width: 99%;
   margin-left: auto;
   margin-right: auto;
-  background-color: #c7c7c7;
-  border-radius: 10px;
-  padding: 10px;
+  background-color: #E9E9FF;
 }
 
+.clocksImg {
+  width: 32px;
+  height: 28px;
+  margin-right: 5px;
+}
+
+
+.rowAffect {
+  margin-top: 10px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.greatSpan {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;           
+  padding: 4px 0;                
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+details > summary {
+  list-style-type: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary::before {
+  content: url('data:image/svg+xml;utf8,<svg width="21" height="21" viewBox="0 0 21 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 13L0 25.1244L0 0.875645L21 13Z" fill="%239988FF"/></svg>');
+}
+
+details[open] > summary::before {
+  content: url('data:image/svg+xml;utf8,<svg width="21" height="21" viewBox="0 0 26 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 21L0.875645 0L25.1244 0L13 21Z" fill="%239988FF"/></svg>');
+}
