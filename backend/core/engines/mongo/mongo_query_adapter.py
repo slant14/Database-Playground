@@ -79,13 +79,21 @@ def _wrap_result(
 
         case MQT.FIND:
             c: Cursor = raw_result
-            items = [i for i in c]
+            items = [_fix_types(i) for i in c]
             return MongoQueryResult(q.query, items, 0)
 
         case MQT.AGGREGATE:
             cc: CommandCursor = raw_result
-            items = [i for i in cc]
+            items = [_fix_types(i) for i in cc]
             return MongoQueryResult(q.query, items, 0)
 
         case _:
             raise Exception("Unknown raw_result", raw_result)
+
+
+def _fix_types(item):
+    if isinstance(item, dict):
+        return {k: _fix_types(v) for k,v in item.items()}
+    if isinstance(item, list):
+        return [_fix_types(v) for v in item]
+    return str(item)
