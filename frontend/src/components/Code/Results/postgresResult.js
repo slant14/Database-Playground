@@ -23,6 +23,7 @@ class PostgresResult extends React.Component {
             return (
                 <div>
                     <Typography.Text className='code-initial-text'>Request result will appear here</Typography.Text>
+                    
                 </div>
             );
         }

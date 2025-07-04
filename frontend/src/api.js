@@ -144,7 +144,7 @@ export async function getCourseAssignments(id) {
       'Content-Type': 'application/json',
     },
   });
-  if (!res.ok) throw new Error("API call failed");
+  if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 
