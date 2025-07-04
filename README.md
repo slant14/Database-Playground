@@ -1,7 +1,7 @@
 # Database-Playground
 
 ### FOR TEAM 37
-To develop locally, set appropriate host in `frontend-37/src/const.src`
+To develop locally, set appropriate host in `frontend-37/src/const.js`
 Use `API_URL` from this file when you need to send request to backend
 
 ---
