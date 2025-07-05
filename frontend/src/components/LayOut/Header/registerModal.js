@@ -94,35 +94,47 @@ class RegisterModal extends React.Component {
     
     if (password.length < 6) {
       notification.warning({
-        message: 'Weak password',
+        message: 'Weak password', 
         description: 'Password must contain at least 6 characters',
         placement: 'bottomRight',
         duration: 2,
       });
       return;
     }
-    const data = await registerUser(this.state.login, this.state.email, this.state.password);
-    console.log("FDFSFSD" + this.props.logIn)
-    this.props.logIn(this.state.login, this.state.email, this.state.password, this.state.needMemorizing, data.access, data.refresh)
-    this.myForm.reset();
-    this.setState({
-      login: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+    try {
+      const data = await registerUser(this.state.login, this.state.email, this.state.password);
+      this.props.logIn(this.state.login, this.state.password, false, data.access, data.refresh);
+      
+      this.myForm.reset();
+      this.setState({
+        login: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      
+      notification.success({
+        message: 'Registration successful!',
+        description: 'Your account has been created. You can now log in to the system.',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      
+      this.props.onCancel();
+      setTimeout(() => {
+        this.props.onSwitchToLogin();
+      }, 500);
+    } catch (error) {
+      notification.error({
+        message: 'Registration failed',
+        description: error.message || 'Please try again later',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+    }
+
     
-    notification.success({
-      message: 'Registration successful!',
-      description: 'Your account has been created. You can now log in to the system.',
-      placement: 'bottomRight',
-      duration: 3,
-    });
     
-    this.props.onCancel();
-    /*setTimeout(() => {
-      this.props.onSwitchToLogin();
-    }, 500);*/
   }
 }
 
