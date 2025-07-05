@@ -28,7 +28,7 @@ class MyModal extends React.Component {
         className="my-modal"
       >
         <form ref={el => this.myForm = el}>
-          <p>Your login or email: </p> <Input placeholder="Login" className="login" onChange={(data) => this.setState({ login: data.target.value })} />
+          <p>Your login: </p> <Input placeholder="Login" className="login" onChange={(data) => this.setState({ login: data.target.value })} />
           <p>Your password: </p> <Input.Password placeholder="Password" className="damn" onChange={(data) => this.setState({ password: data.target.value })} />
           <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <input type="checkbox" id="isHappy" onChange={(data) => this.setState({ needMemorizing: data.target.checked })} />
