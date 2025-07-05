@@ -51,7 +51,6 @@ export async function createPostgresTable(id) {
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
-
 }
 
 export async function queryPostgres(text, id) {
