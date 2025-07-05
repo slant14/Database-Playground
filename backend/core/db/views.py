@@ -103,7 +103,7 @@ class QueryView(APIView):
         try:
             results = engine.send_query(db_name, query)
         except QueryError as e:
-            return Response({"detail": "QueryError: " + str(e)}, status=400)
+            return Response({"detail": "QueryError: " + str(e)}, status=200)
 
         schema = engine.get_db(db_name)
 
