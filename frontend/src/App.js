@@ -15,7 +15,22 @@ class App extends React.Component {
   lastActiveButton = '';
   constructor(props) {
     super(props);
-    const lastPage = getCookie("lastPage");
+    
+    // Проверяем статус предыдущей сессии
+    const wasReloaded = sessionStorage.getItem('wasReloaded') === 'true';
+    
+    let lastPage = getCookie("lastPage");
+    
+    // Если это первый запуск после закрытия браузера/вкладки (не перезагрузка),
+    // то сбрасываем lastPage
+    if (!wasReloaded && lastPage) {
+      this.deleteCookieSync("lastPage");
+      lastPage = null;
+    }
+    
+    // Очищаем sessionStorage для новой сессии
+    sessionStorage.clear();
+    
     const login = getCookie("login");
     const password = getCookie("password");
     const needMemorizing = getCookie("needMemorizing") === "true";
@@ -57,16 +72,35 @@ class App extends React.Component {
   componentDidMount() {
     window.addEventListener('popstate', this.handlePopState);
     window.addEventListener('beforeunload', this.handleBeforeUnload);
+    window.addEventListener('pagehide', this.handlePageHide);
+    
+    sessionStorage.setItem('wasReloaded', 'true');
+    
     window.history.replaceState({ page: this.state.page }, '', window.location.pathname);
   }
 
   componentWillUnmount() {
     window.removeEventListener('popstate', this.handlePopState);
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    window.removeEventListener('pagehide', this.handlePageHide);
   }
 
-  handleBeforeUnload = () => {
-    this.deleteCookie("lastPage");
+  handleBeforeUnload = (event) => {
+    this.setCookie("lastPage", this.state.page, 7);
+    sessionStorage.setItem('wasReloaded', 'true');
+  };
+
+  handlePageHide = (event) => {
+    if (event.persisted) {
+      sessionStorage.setItem('wasReloaded', 'true');
+    } else {
+      setTimeout(() => {
+        const wasReloaded = sessionStorage.getItem('wasReloaded');
+        if (!wasReloaded) {
+          this.deleteCookieSync("lastPage");
+        }
+      }, 100);
+    }
   };
 
   handlePopState = (event) => {
@@ -253,17 +287,19 @@ class App extends React.Component {
     }
   };
 
-  logIn = (login, password, needMemorizing, token) => {
+  logIn = (login, password, needMemorizing, token, refresh_token) => {
     this.setCookie("login", login, 7);
     this.setCookie("password", password, 7);
     this.setCookie("needMemorizing", needMemorizing, 7);
     this.setCookie("access", token, 7);
+    this.setCookie("refresh", refresh_token, 7)
     this.setCookie("lastPage", this.state.page, 7);
     let user = {
       login: login,
       password: password,
       needMemorizing: needMemorizing,
       token: token,
+      refresh: refresh_token,
     }
     this.setState({ isLogin: true, user: user });
   }
@@ -280,7 +316,9 @@ class App extends React.Component {
     this.deleteCookie("password");
     this.deleteCookie("needMemorizing");
     this.deleteCookie("selectedClassroom");
-    this.deleteCookie("access")
+    this.deleteCookie("access");
+    this.deleteCookie("refresh");
+    this.deleteCookie("lastPage"); // Удаляем lastPage только при выходе
     this.updateLoginState();
     this.setState({
       selectedClassroom: null,
@@ -303,11 +341,16 @@ class App extends React.Component {
     this.updateLoginState();
   }
 
+  deleteCookieSync = (name) => {
+    document.cookie = `${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+  }
+
 
   updateLoginState = () => {
     const login = getCookie("login");
     const password = getCookie("password");
     const token = getCookie("access");
+    const refresh_token = getCookie("refresh");
     this.setState({
       isLogin: !!login && !!password && !!token,
     });

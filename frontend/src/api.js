@@ -51,7 +51,6 @@ export async function createPostgresTable(id) {
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
-
 }
 
 export async function queryPostgres(text, id) {
@@ -160,6 +159,7 @@ export async function getMySubmissions() {
 }
 
 async function tokenUpdate(url, options = {}) {
+  console.log("tokenUpdate called, url:", url);
   let token = getCookie("access");
   options.headers = {
     ...options.headers,
@@ -170,24 +170,39 @@ async function tokenUpdate(url, options = {}) {
 
   if (res.status === 401 || res.status === 403) {
     const refresh = getCookie("refresh");
+    console.log("401/403 detected. Refresh token:", refresh);
     if (refresh) {
       const refreshRes = await fetch(`${BASE_URL}/api/token/refresh/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh }),
       });
+      console.log("Refresh response status:", refreshRes.status);
       if (refreshRes.ok) {
         const data = await refreshRes.json();
         document.cookie = `access=${data.access}; path=/;`;
         options.headers['Authorization'] = `JWT ${data.access}`;
         res = await fetch(url, options);
+        console.log("Retried request with new access token, status:", res.status);
+        console.log("New access token:", data.access);
+        console.log("Access token before:", token);
+        console.log("Refresh token:", refresh);
+        console.log("Refresh response:", refreshRes);
+        console.log("New access token:", data.access);
       } else {
         document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
         document.cookie = "refresh=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
         window.location.href = "/";
+        console.log("Refresh failed, redirecting to /");
         return;
       }
-    }
+    } else {
+      console.log("No refresh token found, cannot refresh.");
+      return res;
+    } 
+  } else {
+    console.log("Access token before:", token);
   }
+
   return res;
 }

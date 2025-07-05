@@ -6,8 +6,8 @@ postgres_engine = PostgresEngine(
                 root_db="",
                 host="postgres",
                 port=5432,
-                user=config("POSTGRES_USER"),
-                password=config("POSTGRES_PASSWORD"),
+                user="my_pg_user",
+                password="my_pg_password",
             )
 
 __all__ = [

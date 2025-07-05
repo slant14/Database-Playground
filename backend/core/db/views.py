@@ -6,6 +6,7 @@ from rest_framework.parsers import BaseParser
 from engines import postgres_engine
 from engines.exceptions import QueryError
 from engines.shortcuts import db_exists
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from chroma.ChromaClient import ChromaClient
 from django.views.decorators.csrf import csrf_exempt
@@ -21,7 +22,7 @@ from .docs import (
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ChromaQueryParser(APIView):
-    
+    permission_classes=[AllowAny]
     def post(self, request):
         data = json.loads(request.body)
         action = data.get('action')
@@ -89,12 +90,14 @@ class ChromaQueryParser(APIView):
 
 
 class PlainTextParser(BaseParser):
+    permission_classes=[AllowAny]
     media_type = 'text/plain'
     def parse(self, stream, media_type=None, parser_context=None):
         return stream.read().decode('utf-8')
 
 
 class PutView(APIView):
+    permission_classes=[AllowAny]
     @put_db_schema_doc
     def put(self, request: Request):
         data = json.loads(request.body)
@@ -125,6 +128,7 @@ class PutView(APIView):
 
 
 class SchemaView(APIView):
+    permission_classes=[AllowAny]
     @get_db_schema_doc
     def post(self, request: Request):
         try:
@@ -141,7 +145,7 @@ class SchemaView(APIView):
 
 
 class QueryView(APIView):
-
+    permission_classes=[AllowAny]
     parser_classes = [PlainTextParser]
 
     @post_db_query_doc
