@@ -253,17 +253,19 @@ class App extends React.Component {
     }
   };
 
-  logIn = (login, password, needMemorizing, token) => {
+  logIn = (login, password, needMemorizing, token, refresh_token) => {
     this.setCookie("login", login, 7);
     this.setCookie("password", password, 7);
     this.setCookie("needMemorizing", needMemorizing, 7);
     this.setCookie("access", token, 7);
+    this.setCookie("refresh", refresh_token, 7)
     this.setCookie("lastPage", this.state.page, 7);
     let user = {
       login: login,
       password: password,
       needMemorizing: needMemorizing,
       token: token,
+      refresh: refresh_token,
     }
     this.setState({ isLogin: true, user: user });
   }
@@ -280,7 +282,8 @@ class App extends React.Component {
     this.deleteCookie("password");
     this.deleteCookie("needMemorizing");
     this.deleteCookie("selectedClassroom");
-    this.deleteCookie("access")
+    this.deleteCookie("access");
+    this.deleteCookie("refresh");
     this.updateLoginState();
     this.setState({
       selectedClassroom: null,
@@ -308,6 +311,7 @@ class App extends React.Component {
     const login = getCookie("login");
     const password = getCookie("password");
     const token = getCookie("access");
+    const refresh_token = getCookie("refresh");
     this.setState({
       isLogin: !!login && !!password && !!token,
     });
