@@ -133,8 +133,7 @@ def fix_types_to_str(item):
     return str(item)
 
 
-def split_update_input( input: str | None
-) -> tuple[ str | None, str | None, str | None ]:
+def split_update_input(input: str | None) -> tuple[str | None, str | None, str | None]:
     """ Splits input into query, update, options objects """
     if input is None:
         return (None, None, None)

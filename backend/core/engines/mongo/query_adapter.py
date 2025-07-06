@@ -134,5 +134,3 @@ def _wrap_result(
 
         case _:
             raise Exception("Unknown raw_result", raw_result)
-
-
