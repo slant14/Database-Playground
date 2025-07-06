@@ -4,7 +4,7 @@
 Fault tolerance is the bedrock of a reliable and uninterrupted experience. The customer relies on software system to be consistently available and perform as expected.
 
 #### Test Scenario 1: Inappropriate Query Request Handling
-| Attribute         | Value                                                                 |
+| Scenario Part     | Value                                                                 |
 |-------------------|-----------------------------------------------------------------------|
 | Quality Attribute | Fault tolerance                                                      |
 | Source            | User Interface                                                       |
@@ -32,7 +32,7 @@ Test Execution:
 
 
 #### Test Scenario 2: Invalid Input Data Processing
-| Attribute         | Value                                                                 |
+| Scenario Part     | Value                                                                 |
 |-------------------|-----------------------------------------------------------------------|
 | Quality Attribute | Fault tolerance                                                       |
 | Source            | User interface                                         |
@@ -69,7 +69,7 @@ Test Execution:
 Time behaviour is synonymous with efficiency and responsiveness. A system that performs well translates directly into a positive and productive user experience.
 
 #### Test Scenario 1: Concurrent Chroma DB Creation
-| Attribute         | Value                                                                 |
+| Scenario Part     | Value                                                                 |
 |-------------------|-----------------------------------------------------------------------|
 | Quality Attribute | Time behaviour                                                        |
 | Source            | Multiple users simultaneously create Chroma database                  |
@@ -96,7 +96,7 @@ Test Execution:
 
 
 #### Test Scenario 2: High-Volume Data Retrieval
-| Attribute         | Value                                                                 |
+| Scenario Part     | Value                                                                 |
 |-------------------|-----------------------------------------------------------------------|
 | Quality Attribute | Time behaviour                                                           |
 | Source            | End-user performing a search                                          |
@@ -127,7 +127,7 @@ Test Execution:
 Scalability translates directly into a future-proof and reliable investment. It assures that the software will continue to meet evolving needs and grow alongside business without requiring costly and disruptive overhauls.
 
 #### Test Scenario 1: New Database Integration
-| Attribute         | Value                                                                 |
+| Scenario Part     | Value                                                                 |
 |-------------------|-----------------------------------------------------------------------|
 | Quality Attribute | Scalability                                                           |
 | Source            | Someone wants to add functionality                                    |
@@ -153,7 +153,7 @@ Test Execution:
    - Verify the completeness and correctness of the retrieved data
 
 #### Test Scenario 2: New Feature Module Addition
-| Attribute         | Value                                                                 |
+| Scenario Part     | Value                                                                 |
 |-------------------|-----------------------------------------------------------------------|
 | Quality Attribute | Scalability                                                           |
 | Source            | Product development team or business stakeholder                      |
