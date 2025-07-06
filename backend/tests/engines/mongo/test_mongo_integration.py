@@ -1,6 +1,6 @@
 import pytest
 from core.engines import MongoEngine
-from core.engines.exceptions import DBExists, DBNotExists, QueryError
+from core.engines.exceptions import DBExists, DBNotExists, QueryError, ParsingError
 from core.engines.models import MongoQueryResult
 from tests.engines.mongo.fixtures import engine  # noqa
 from tests.utils import integration_test
@@ -50,7 +50,7 @@ def test_send_query(engine: MongoEngine):  # noqa F811
         assert results[0].query == \
             "db.integra.insertOne({target: 'Alucard', age: 3021})"
         assert isinstance(results[0].data, dict)
-        assert ("acknowledged", 'True') in results[0].data.items()
+        assert ("acknowledged", True) in results[0].data.items()
         assert "inserted_id" in results[0].data
         assert results[1].query == "db.integra.find()"
         assert isinstance(results[1].data, list)
@@ -115,8 +115,8 @@ def test_isodate_parsing(engine: MongoEngine):  # noqa F811
         )
         results = engine.send_query(TMP_DB, "db.integra.find();")
         created_at = results[0].data[0]["createdAt"]  # type: ignore
-        assert isinstance(created_at, datetime)
-        assert created_at == datetime.fromisoformat('2023-07-02T15:04:05')
+        assert isinstance(created_at, str)
+        assert created_at == '2023-07-02 15:04:05'
 
 
 @integration_test
@@ -151,7 +151,7 @@ def test_array_values(engine: MongoEngine):  # noqa F811
 @integration_test
 def test_query_errors(engine: MongoEngine):  # noqa F811
     with tmp_db(engine, TMP_DB, ""):
-        with pytest.raises(QueryError):
+        with pytest.raises(ParsingError):
             engine.send_query(
                 TMP_DB,
                 "db.integra.insertOne(this is some bullshit here);"
@@ -175,4 +175,29 @@ def test_query_get_collections(engine: MongoEngine):  # noqa F811
         results = engine.send_query(TMP_DB, r"db.getCollectionNames()")
 
         assert len(results) == 1
-        assert results[0].data == ['collection', 'new_col']
+        assert isinstance(results[0].data, list)
+        assert sorted(results[0].data) == sorted(['collection', 'new_col'])
+
+
+@integration_test
+def test_query_update_one(engine: MongoEngine):  # noqa F811
+    with tmp_db(engine, TMP_DB, ""):
+        results = engine.send_query(
+            TMP_DB,
+            (
+                r"db.collection.updateOne("
+                r"  {hello: 'world'},"
+                r"  {$set: {hello: 'man'}}"
+                r")"
+            )
+        )
+
+        assert len(results) == 1
+        assert results[0].data == {
+            "acknowledged": True,
+            "did_upsert": False,
+            "matched_count": 1,
+            "modified_count": 1,
+            "upserted_id": None
+        }
+

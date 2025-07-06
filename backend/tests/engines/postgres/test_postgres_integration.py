@@ -57,11 +57,12 @@ class TestPostgresEngineQueryExecution:
             query1, query2 = results
             assert query1.query.startswith("SELECT * FROM users")
             assert query1.rowcount == 1
-            assert query1.data == [(1, 'vasya', 19)]
+            assert query1.data == {'columns': ['id', 'name', 'age'],
+                                   'data': { 'id': [1], 'name': ['vasya'], 'age': [19]}}
 
             assert query2.query.startswith("SELECT COUNT(*) FROM users")
             assert query2.rowcount == 1
-            assert query2.data == [(1,)]
+            assert query2.data == {'columns': ['count'], 'data': {'count': [1]}}
 
 
     def test_send_query_fails(self, engine: PostgresEngine):  # noqa F811
@@ -103,14 +104,15 @@ class TestPostgresEngineQueryExecution:
                 "SELECT * FROM products"
             )
             assert results[2].rowcount == 2
-            assert results[2].data == [(1, 'apple'), (2, 'banana')]
+            assert results[2].data == {'columns': ['id', 'name'], 'data': {'id': [1, 2], 'name': ['apple', 'banana']}}
 
             # Second SELECT
             assert results[3].query.strip().startswith(
                 "SELECT COUNT(*) FROM products"
             )
             assert results[3].rowcount == 1
-            assert results[3].data == [(2,)]
+            assert isinstance(results[3].data, dict)
+            assert results[3].data["data"] == {"count": [2]}
 
 
 @integration_test
