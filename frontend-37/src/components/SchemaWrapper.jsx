@@ -8,6 +8,7 @@ export default function SchemaWrapper() {
   const { schemas } = useSchemas();
   const [activeSchema, setActiveSchema] = useState(schemas[0] || null);
 
+  console.log(schemas);
   useEffect(() => {
     if (!activeSchema || !schemas.includes(activeSchema)) {
       setActiveSchema(schemas[0] || null);
@@ -26,7 +27,7 @@ export default function SchemaWrapper() {
   }
 
   return (
-    <div className={styles.wrapper} style={{ width: "100%", height: "100%" }}>
+    <div className={styles.wrapper}>
       <div className={styles.tabs}>
         {schemas.map((schema) => (
           <Tab

@@ -4,7 +4,6 @@ import clockImg from "../assets/clock.jpg";
 function Table({ results }) {
   if (!results) return;
   const nums = [];
-  console.log(results, "!!!!");
   if (results.columns) {
     for (let i = 0; i < results.columns[0].length; i++) nums.push(i);
 
@@ -36,7 +35,6 @@ function Table({ results }) {
 }
 
 export default function ResultsTable({ results, queryNum }) {
-  console.log(results, "results! are you null?");
   if (results === null) {
     const rowsAffected = Math.max(0, results.rowcount);
     return (

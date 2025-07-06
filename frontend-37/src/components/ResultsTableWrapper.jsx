@@ -94,11 +94,8 @@ function takeLine(str) {
 
 export default function ResultsTableWrapper() {
   const { results } = useResults();
-  console.log(results, "before");
   if (!results) return <></>;
-  console.log(results, "res");
   if (results.detail) {
-    console.log(results.detail, "det");
     return (
       <div className={styles.errors}>
         <p className={styles.errorIn}>Error in query detected:</p>

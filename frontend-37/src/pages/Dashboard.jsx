@@ -26,18 +26,13 @@ export default function Dashboard() {
   }, []);
 
   const onClick = async () => {
-    const res = await fetch(
+    await fetch(
       `${API_URL}/session/info/?session_id=${localStorage.getItem("session_id")}`,
       {
         credentials: "include",
       }
     );
-    const json = await res.json();
-    if (json.template) {
-      navigate("/playground");
-    } else {
-      navigate("/template");
-    }
+    navigate("/template");
   };
 
   return (

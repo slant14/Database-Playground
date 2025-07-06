@@ -7,10 +7,12 @@ export function TemplateList({ data, templateChoice, onTemplateChoiceChange }) {
         className={styles["template-list-item"]}
         key={template.id}
         onClick={() => {
-          onTemplateChoiceChange(template.id);
+          onTemplateChoiceChange(template);
         }}
         style={
-          template.id == templateChoice ? { backgroundColor: "#009E00" } : null
+          template.id == templateChoice.id
+            ? { backgroundColor: "#009E00" }
+            : null
         }
       >
         <div className={styles["template-list-data"]}>

@@ -3,8 +3,10 @@ import { TopBarElement } from "./ui/TopBarElement";
 import { Button } from "./ui/Button";
 import { NavLink } from "react-router";
 import saveSvg from "../assets/save.svg";
+import { useTemplate } from "../hooks/useTemplate";
 
 export function PlaygroundBar() {
+  const { template } = useTemplate();
   return (
     <TopBar
       style={{
@@ -41,7 +43,7 @@ export function PlaygroundBar() {
               fontSize: 24 + "px",
             }}
           >
-            PostgreSQL | Template #1
+            {template}
           </Button>
         </NavLink>
       </TopBarElement>

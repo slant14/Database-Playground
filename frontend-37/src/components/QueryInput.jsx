@@ -46,9 +46,7 @@ export default function QueryInput() {
       credentials: "include",
     });
 
-    console.log(res, "res mongo");
     const json = await res.json();
-    console.log(json, "json mongo");
     if (json.results) updateResults(json.results);
     else updateResults(json);
     if (json.schema) updateSchemas(json.schema.tables);

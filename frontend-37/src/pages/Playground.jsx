@@ -6,11 +6,14 @@ import ResultsTableWrapper from "../components/ResultsTableWrapper";
 import { API_URL } from "../const";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useSchemas } from "../hooks/useSchemas";
+import { useTemplate } from "../hooks/useTemplate";
+import MongoSchema from "../components/MongoSchema";
 
 export default function Playground() {
   const session_id = localStorage.getItem("session_id");
   const { updateSchemas } = useSchemas();
   const [templateType, setTemplateType] = useState("");
+  const { updateTemplate } = useTemplate();
 
   useEffect(() => {
     const run = async () => {
@@ -21,7 +24,6 @@ export default function Playground() {
         }
       );
       const json1 = await res1.json();
-      console.log(json1, "SCHEMA!!!");
       updateSchemas(json1.tables);
 
       const res2 = await fetch(
@@ -31,6 +33,7 @@ export default function Playground() {
 
       const res3 = await fetch(`${API_URL}/template/${json2.template}`);
       const json3 = await res3.json();
+      updateTemplate(json3.name);
       setTemplateType(json3.type);
     };
     run();
@@ -47,8 +50,8 @@ export default function Playground() {
             overflow: "hidden",
           }}
         >
-          PSQL
           <PlaygroundBar style={{ margin: 0 }} />
+
           <div
             className="mono"
             style={{
@@ -124,8 +127,12 @@ export default function Playground() {
             overflow: "hidden",
           }}
         >
-          MONGO
-          <PlaygroundBar style={{ margin: 0 }} />
+          <div>
+            <PlaygroundBar style={{ margin: 0 }} />
+            <div style={{ marginLeft: 15, marginTop: 10 }}>
+              <MongoSchema />
+            </div>
+          </div>
           <div
             className="mono"
             style={{
