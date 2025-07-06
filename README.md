@@ -1,19 +1,4 @@
 # Database-Playground
-
-
-
-To deploy the project locally:<br>
-docker-compose up --build
-
-To deploy the project on the server:<br>
-docker-compose build --build-arg REACT_APP_API_URL=http://your-server-ip:8000<br>
-docker-compose up
-
-If you want to build only frontend:<br>
-docker-compose build --build-arg REACT_APP_API_URL=http://your-server-ip:8000 frontend<br>
-Then with builded backend: docker-compose up
-
-
 ## Development
 ### Kanban board
 [The board](https://github.com/orgs/S25-SWP-Team46/projects/1/views/3) shows the current iteration.
@@ -109,7 +94,7 @@ With its modular layers, strong cohesion, and loose coupling, Database Playgroun
 
 ### Dynamic view
 
-`dynamic-view' https://github.com/S25-SWP-Team46/DP-fork/tree/main/docs/architecture/deployment-view
+[`dynamic-view](https://github.com/S25-SWP-Team46/DP-fork/tree/main/docs/architecture/deployment-view)
 
 All measurements were taken in a production‐like environment (React frontend, Dockerized Django backend, AWS RDS PostgreSQL):
 
@@ -123,7 +108,7 @@ All measurements were taken in a production‐like environment (React frontend, 
 
 ### Deployment view
 
-`deployment-view` docs/architecture/deployment-view
+[`deployment-view`](./docs/architecture/deployment-view)
 
 The project is deployed in Yandex Cloud on an Ubuntu 24.04 server using Docker containers, with GitHub Actions automating the CI/CD process. Customers access the "Frontend" via a web browser over the Internet. For customers to run the project on their own server, they must add their server's username, IP address, and SSH key to GitHub secrets and then trigger the "Deploy Project" workflow. The "Frontend" communicates with the "Backend" via RestAPI, which in turn interacts with "Backend-DB," "Chroma," "Postgres," "MySQL," and "MongoDB," all running securely within Docker on the server.
 
