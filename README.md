@@ -151,11 +151,6 @@ Clean REST interfaces and a database adapter pattern ensure loose coupling; cont
 - **Testability**  
   Robust backend test suite (pytest + Django TestCase) and automated linting (flake8) integrated into GitHub Actions; each service container can be spun up in isolation for targeted integration tests.
 
-#### Conclusion
-
-With its modular layers, strong cohesion, and loose coupling, Database Playground offers a maintainable, scalable foundation—further reinforced by containerized deployment and automated CI/CD.
-
-
 ### Dynamic view
 
 [dynamic-view](https://github.com/S25-SWP-Team46/DP-fork/tree/main/docs/architecture/deployment-view)
