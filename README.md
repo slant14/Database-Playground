@@ -183,4 +183,27 @@ All measurements were taken in a production‐like environment (React frontend, 
 
 The project is deployed in Yandex Cloud on an Ubuntu 24.04 server using Docker containers, with GitHub Actions automating the CI/CD process. Customers access the "Frontend" via a web browser over the Internet. For customers to run the project on their own server, they must add their server's username, IP address, and SSH key to GitHub secrets and then trigger the "Deploy Project" workflow. The "Frontend" communicates with the "Backend" via RestAPI, which in turn interacts with "Backend-DB," "Chroma," "Postgres," "MySQL," and "MongoDB," all running securely within Docker on the server.
 
+## Usage 
+### EXISTED USER - w/o admin panel
+Go to http://89.169.178.180:3000/ and login with 
+Login: 
+```
+Leonid
+```
+Password: 
+```
+123456
+```
+Then go to 
+1) Classrooms -> View
+2) Templates -> 
+	-> Create Template 
+	-> Choose DB... (Postgres or Chroma - check Command Tips in the right bottom section) 
+	-> write requests and click Run Code 
+	-> check DB changes in real time, check execution measuring in the Request Result field. 
 
+
+---
+### NEW USER - admin usage
+- The user enters the main page of the application -> then he selects the sign in button, after which a modal window opens for login, if you enter the data of an unregistered user, an error will be displayed. Therefore, the next step is to select the registration option on the model window and enter the requested data (name and email are unique for each user, the email must correspond to the standard form and the passwords must match). Next, the user can go to the account tab, where his name will be displayed. The following steps are required to verify registration: 1. In the account tab, click on LogOut and then on the main page of the message with the previously entered name and password.  2. Log in to the admin panel at http://89.169.178.180:8000/admin / enter name: admin, password: admin. Next, go to the Users field in the db structure, where you can see the newly registered user.
+- Without leaving the admin page, the user must go to the Classrooms field and click on the add classroom button. Next, by filling in all the necessary fields, create a class by clicking on the Save button (TA (Teacher Assistant) can only be the user who has the TA role set in the user settings. In order to set it, you need to go to the users field, select the user, and select Teacher Assistant in the role field). After successfully creating the class, open the Enrollment field and create a new Enrollment, where you need to select the user you want to add (for example, add yourself), the class you want to add the user to, and the rating you want to assign to the user. After successfully creating an Enrollment, you can log back in to http://89.169.178.180:3000 / where by updating (or visiting) the class page, you can see the class you just added yourself to.
