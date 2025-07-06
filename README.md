@@ -33,3 +33,14 @@ All issues must be created using one of our issue templates, located in [`.githu
 - [Technical Task](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/task.yml)
 
 Each template enforces the required fields (e.g., GIVEN/WHEN/THEN for user stories; steps, expected & actual behavior for bugs; subtasks checklist for technical tasks).
+
+## Quality assurance
+### Quality attribute scenarios
+https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/quality-attribute-scenarios.md
+
+### Automated tests
+
+
+
+
+
