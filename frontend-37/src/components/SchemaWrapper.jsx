@@ -6,6 +6,7 @@ import { useSchemas } from "../hooks/useSchemas";
 
 export default function SchemaWrapper() {
   const { schemas } = useSchemas();
+  if (!schemas) return;
   const [activeSchema, setActiveSchema] = useState(schemas[0] || null);
 
   console.log(schemas);

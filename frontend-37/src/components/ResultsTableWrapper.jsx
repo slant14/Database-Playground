@@ -94,7 +94,7 @@ function takeLine(str) {
 
 export default function ResultsTableWrapper() {
   const { results } = useResults();
-  if (!results) return <></>;
+  if (!results) return;
   if (results.detail) {
     return (
       <div className={styles.errors}>

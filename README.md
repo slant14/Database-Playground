@@ -1,5 +1,25 @@
 # Database-Playground
 
+## Launch/Access instructions
+### You can visit [deployed version](https://dbpg.ru)
+### Or you can build the app yourself:
+
+1. Clone the repo:
+```sh
+$ git clone https://github.com/Delta-Software-Innopolis/Database-Playground
+$ cd Database-Playground
+```
+2. In order for app to run you need `.env` and `db.sqlite`, you can take sample data from the `deploy` directory:
+```sh
+$ cp deploy/db.sqlite backend/core/db.sqlite
+$ cp deploy/.env.sample .env
+```
+3. Run the app via `Docker Compose` (Install it [here](https://docs.docker.com/compose/install/)):
+```sh
+$ docker compose up --build
+```
+4. Working version should be available at http://localhost:5173
+
 ## Build and deployment
 ### Continuous Integration
 - [backend.yml](https://github.com/Delta-Software-Innopolis/Database-Playground/blob/pre-chroma/.github/workflows/backend.yml):
