@@ -60,8 +60,11 @@ jobs:
           
           echo "Stopping existing containers..."
           sudo docker-compose down
-          
-          echo "Building and starting containers..."
-          sudo docker-compose up --build -d
+
+          echo "Building containers..."
+          docker-compose build --build-arg REACT_APP_API_URL=http://${{ secrets.SERVER_USERNAME }}:8000
+
+          echo "Starting containers..."
+          docker-compose up -d
           
           echo "Deployment completed!"
