@@ -92,7 +92,6 @@ This workflow focuses on database engine unit tests. pytest runs unit tests from
 This lightweight workflow is solely for static analysis. flake8 checks for critical syntax errors (failing the workflow) and reports other style issues as warnings.
 
 ---
-### Continuous Deployment
 
 ### Continuous Deployment
 [`deploy.yml`](.github/workflows/deploy.yml)
