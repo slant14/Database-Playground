@@ -36,10 +36,19 @@ Each template enforces the required fields (e.g., GIVEN/WHEN/THEN for user stori
 
 ## Quality assurance
 ### Quality attribute scenarios
-https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/quality-attribute-scenarios.md
+`quality-attribute-scenarios.md` https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/quality-attribute-scenarios.md
 
 ### Automated tests
 
+## Build and Deployment
+### Continuous Deployment
+CD `deploy.yml` file - https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/workflows/deploy.yml
+
+Used tools:
+- **Docker** is the containerization platform that runs our applications on the server. Our script ensures it's installed and builds the project with docker-compose on the server
+- **GitHub Actions** lets to run a script to automatically clone the repository to our server and run docker-compose after a push to the main branch or by clicking a button. GitHub allows for additional criteria to be configured, such as passing CI tests.
+
+All CD workflow runs can be seen here - https://github.com/S25-SWP-Team46/DP-fork/actions/workflows/deploy.yml
 
 
 
