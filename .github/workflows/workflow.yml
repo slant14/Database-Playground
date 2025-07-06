@@ -26,6 +26,9 @@ jobs:
         
       - name: Run Prettier
         run: npm run format
+        
+      - name: Run Depcruise 
+        run: npm run depcruise
 
   backend:
     runs-on: ubuntu-latest
