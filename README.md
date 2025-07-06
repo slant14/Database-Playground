@@ -9,9 +9,9 @@
 $ git clone https://github.com/Delta-Software-Innopolis/Database-Playground
 $ cd Database-Playground
 ```
-2. In order for app to run you need `.env` and `db.sqlite`, you can take sample data from the `deploy` directory:
+2. In order for app to run you need `.env` and `db.sqlite3`, you can take sample data from the `deploy` directory:
 ```sh
-$ cp deploy/db.sqlite backend/core/db.sqlite
+$ cp deploy/db.sqlite backend/core/db.sqlite3
 $ cp deploy/.env.sample .env
 ```
 3. Run the app via `Docker Compose` (Install it [here](https://docs.docker.com/compose/install/)):
