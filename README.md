@@ -50,7 +50,7 @@ The Django secret key, necessary to run Django app and the SSH key, server IP, U
 
 ## Quality assurance
 ### Quality attribute scenarios
-[`quality-attribute-scenarios.md`] (https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/quality-attribute-scenarios.md)
+[`quality-attribute-scenarios.md`](https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/quality-attribute-scenarios.md)
 
 ### Automated tests
 
