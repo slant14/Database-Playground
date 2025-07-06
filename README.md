@@ -14,7 +14,8 @@ We use a simplified workflow inspired by GitHub Flow:
   [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE)`](.github/ISSUE_TEMPLATE):  
 	- [User Story  ](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/backlog-bug-report.yml)
 	- [Bug Report](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/backlog-user-story.yml)
-	- [Technical Task](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/task.yml)  
+	- [Technical Task](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/task.yml)
+   
 and labels:
 	- `enhancement` — new functionality 
 	- `User Story` — new functionality from the customers view
