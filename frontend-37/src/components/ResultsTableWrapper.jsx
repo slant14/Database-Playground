@@ -111,7 +111,7 @@ export default function ResultsTableWrapper() {
   return (
     <div>
       {results.map((item) => (
-        <ResultsTable results={item} queryNum={1} />
+        <ResultsTable results={item} queryNum={1} key={item} />
       ))}
     </div>
   );

@@ -2,6 +2,7 @@ import { useSchemas } from "../hooks/useSchemas";
 
 export default function MongoSchema() {
   const { schemas } = useSchemas();
+  if (!schemas) return;
 
   return (
     <div
@@ -23,6 +24,7 @@ export default function MongoSchema() {
             marginLeft: 15,
             fontWeight: "bold",
           }}
+          key={schema.name}
         >
           {schema.name}
         </div>
