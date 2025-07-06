@@ -83,6 +83,7 @@ export async function registerUser(name=null, email=null, password, role = "stud
     },
     body: JSON.stringify({ name, email, password, role }),
   });
+  if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
 
@@ -94,6 +95,7 @@ export async function loginUser(name=null, password, role = "student") {
     },
     body: JSON.stringify({ name, password, role }),
   });
+  if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
 
