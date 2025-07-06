@@ -18,6 +18,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         timeout: 3600s
+        command_timeout: 3600s
         script: |
           echo "Checking and installing Docker if needed..."
           if ! command -v docker &> /dev/null; then
