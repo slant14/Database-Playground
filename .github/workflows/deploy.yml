@@ -54,15 +54,12 @@ jobs:
           echo "Resetting any local changes and pulling latest changes..."
           git fetch origin main
           git reset --hard origin/main
-
-          # Set React API URL in .env file
-          echo "REACT_APP_API_URL=http://${{ secrets.SERVER_USERNAME }}:8000" > .env
           
           echo "Stopping existing containers..."
           sudo docker-compose down
 
           echo "Building containers..."
-          sudo docker-compose build --build-arg REACT_APP_API_URL=http://${{ secrets.SERVER_USERNAME }}:8000
+          sudo docker-compose build --build-arg REACT_APP_API_URL=http://${{ secrets.SERVER_IP }}:8000
 
           echo "Starting containers..."
           sudo docker-compose up -d
