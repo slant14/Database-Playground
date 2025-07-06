@@ -108,12 +108,12 @@ This workflow deploys the project to the production server over SSH. It includes
 ---
 ### Manual deployment
 
-To deploy the project locally:
+To deploy the project locally:  
 docker-compose up --build
 
-To deploy the project on the server:<br>
-docker-compose build --build-arg REACT_APP_API_URL=http://your-server-ip:8000
-docker-compose up
+To deploy the project on the server:  
+docker-compose build --build-arg REACT_APP_API_URL=http://your-server-ip:8000  
+docker-compose up  
 
 ---
 
