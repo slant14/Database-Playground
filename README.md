@@ -198,5 +198,19 @@ Then go to
 
 ---
 ### NEW USER - admin usage
-- The user enters the main page of the application -> then he selects the sign in button, after which a modal window opens for login, if you enter the data of an unregistered user, an error will be displayed. Therefore, the next step is to select the registration option on the model window and enter the requested data (name and email are unique for each user, the email must correspond to the standard form and the passwords must match). Next, the user can go to the account tab, where his name will be displayed. The following steps are required to verify registration: 1. In the account tab, click on LogOut and then on the main page of the message with the previously entered name and password.  2. Log in to the admin panel at http://89.169.178.180:8000/admin / enter name: admin, password: admin. Next, go to the Users field in the db structure, where you can see the newly registered user.
-- Without leaving the admin page, the user must go to the Classrooms field and click on the add classroom button. Next, by filling in all the necessary fields, create a class by clicking on the Save button (TA (Teacher Assistant) can only be the user who has the TA role set in the user settings. In order to set it, you need to go to the users field, select the user, and select Teacher Assistant in the role field). After successfully creating the class, open the Enrollment field and create a new Enrollment, where you need to select the user you want to add (for example, add yourself), the class you want to add the user to, and the rating you want to assign to the user. After successfully creating an Enrollment, you can log back in to http://89.169.178.180:3000 / where by updating (or visiting) the class page, you can see the class you just added yourself to.
+#### Registration usability
+- Enter the main page of the application ->
+	- -> select the ``Sign in`` button -> after which a modal window opens for login (if you enter the data of an unregistered user, an error will be displayed). Therefore, the next step:
+		- -> select the registration option on the model window  -> enter the requested data (name and email are unique for each user, the email must correspond to the standard form and the passwords must match). 
+- Next -> go to the account tab, where your name will be displayed. The following steps are required to verify registration: 
+	1. In the account tab, click on ``Log Out`` then -> on the main page of the message with the previously entered name and password.  
+	2. Log in to the admin panel at http://89.169.178.180:8000/admin/ -> enter name: **admin**, password: **admin**. Next -> go to the Users field in the db structure -> you will see the newly registered user.
+#### Classroom usability
+- Without leaving the admin page -> go to the Classrooms field then -> click on the add classroom button. 
+- Next -> fill all the necessary fields -> create a class by clicking on the ``Save button`` **!(TA (Teacher Assistant) can only be the user who has the TA role set in the user settings!**
+- In order to set the role -> go to the users field -> select the user -> select Teacher Assistant in the role field). 
+- After successfully creating the class -> open the Enrollment field -> create a new Enrollment -> you need to select: 
+	- the user you want to add (for example, add yourself)
+	- the class you want to add the user to
+	- the rating you want to assign to the user.
+- After successfully creating an Enrollment -> log back in to http://89.169.178.180:3000/ -> update (or chose) the class page -> you will see the class you just added yourself to.
