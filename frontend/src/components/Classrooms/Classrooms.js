@@ -10,6 +10,9 @@ class ClassRooms extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      id: 1,
+      selectedClassroom: null,
+      //studentId: 1,
       classrooms: []
     }
   }
@@ -57,7 +60,8 @@ class ClassRooms extends React.Component {
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
           marginBottom: 10
-        }}>Class<Text style={{
+        }}>Class
+        <Text style={{
           color: "#fff",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
@@ -66,7 +70,7 @@ class ClassRooms extends React.Component {
         }}>rooms</Text>
         </Title>
         
-        <div className="courses">
+        <div className="classrooms">
           {this.state.classrooms.map((el, idx) => (
             <div className="card" key={idx} >
                <img
@@ -92,7 +96,7 @@ class ClassRooms extends React.Component {
                   </li>
                     <li>
                     <span className="Created-Button">
-                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {el.created_date.slice(0, 10).replace(/-/g, "/")}
+                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {el.created_date}
                       <Button className="view" onClick={() => this.props.selectClassroom(el)}>
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                         <span style={{ position: "relative", top: "-1px" }}>View</span>

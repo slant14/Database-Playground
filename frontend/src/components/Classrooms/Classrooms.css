@@ -24,6 +24,8 @@
     margin-bottom: 25px;
     margin-left: 20px;
     text-align: left;
+
+
 }
 
 .card {
@@ -53,7 +55,7 @@
 }
 
 .plain-description ul li:nth-child(2) {
-    margin-bottom: 4px;
+    margin-bottom: 4px; /* or any small value you prefer */
 }
 
 .view { 
@@ -61,7 +63,7 @@
     color: #51CB63 !important;
     border-color: #51CB63 !important;
     border: 1.5px solid;
-    border-radius: 8px !important;
+    border-radius: 7px !important;
     font-size: 18px !important;    
     padding: 14px 40px !important; 
     height: 48px !important;  
@@ -71,7 +73,7 @@
     max-width: 120px;
     width: auto;
     align-self: flex-end;
-    margin-left: 110px;
+    margin-left: 200px;
 }
 
 .view:hover {
@@ -79,7 +81,7 @@
     color: #ffffff !important;
     border-color: #51CB63 !important;
     border: 1.5px solid;
-    border-radius: 8px !important;
+    border-radius: 7px !important;
 }
 
 .Created-Button {
