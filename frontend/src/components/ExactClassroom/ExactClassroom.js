@@ -338,11 +338,6 @@ class ExactClassroom extends React.Component {
                   <Text className="article-description">
                     {el.description}
                   </Text>
-                  <Button className="view-article">
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ position: "relative", top: "-1px" }}>View</span>
-                    </span>
-                  </Button>
                 </div>  
               ))}
             </div>
