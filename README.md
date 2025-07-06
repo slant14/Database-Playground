@@ -37,6 +37,7 @@ Our frontend architecture uses many small single responsibility components combi
 
 ### Dynamic View
 #### Sequence Diagram of Main Backend Workflows
+These scenarios executes almost instantly, as each of them is mostly IO bound tasks
 <img src="docs/architecture/dynamic-view/sequence_diagram.png">
 
 ### Deployment View
