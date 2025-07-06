@@ -14,9 +14,11 @@ jobs:
     - name: Deploy to server
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: 89.169.178.180
+        host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
+        timeout: 3600s
+        command_timeout: 3600s
         script: |
           echo "Checking and installing Docker if needed..."
           if ! command -v docker &> /dev/null; then
@@ -55,8 +57,11 @@ jobs:
           
           echo "Stopping existing containers..."
           sudo docker-compose down
-          
-          echo "Building and starting containers..."
-          sudo docker-compose up --build -d
+
+          echo "Building containers..."
+          sudo docker-compose build --build-arg REACT_APP_API_URL=http://${{ secrets.SERVER_IP }}:8000
+
+          echo "Starting containers..."
+          sudo docker-compose up -d
           
           echo "Deployment completed!"
