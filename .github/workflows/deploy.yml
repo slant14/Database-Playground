@@ -49,13 +49,14 @@ jobs:
             cd DP-fork
           }
           
-          echo "Pulling latest changes..."
-          git pull origin main
+          echo "Resetting any local changes and pulling latest changes..."
+          git fetch origin main
+          git reset --hard origin/main
           
           echo "Stopping existing containers..."
-          docker-compose down
+          sudo docker-compose down
           
           echo "Building and starting containers..."
-          docker-compose up --build -d
+          sudo docker-compose up --build -d
           
           echo "Deployment completed!"
