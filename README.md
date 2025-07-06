@@ -20,6 +20,28 @@ $ docker compose up --build
 ```
 4. Working version should be available at http://localhost:5173
 
+### Static View
+#### Components of backend
+<img src="docs/architecture/static-view/backend.png" style="height: 20em">
+
+#### Components of Frontend:
+Our frontend architecture uses many small single responsibility components combined togheter. This ensures modularity and reusability in the application. 
+- Playground Page
+<img src="docs/architecture/static-view/frontend_playground.png" style="height: 20em">
+
+- Template Choice Page
+<img src="docs/architecture/static-view/frontend_template.png" style="height: 20em">
+
+- Dashboard Page
+<img src="docs/architecture/static-view/frontend_topbar.png" style="height: 20em">
+
+### Dynamic View
+#### Sequence Diagram of Main Backend Workflows
+<img src="docs/architecture/dynamic-view/sequence_diagram.png">
+
+### Deployment View
+<img src="docs/architecture/deployment-view/deployment_diagram.png">
+
 ## Build and deployment
 ### Continuous Integration
 - [backend.yml](https://github.com/Delta-Software-Innopolis/Database-Playground/blob/pre-chroma/.github/workflows/backend.yml):
@@ -37,22 +59,3 @@ $ docker compose up --build
   - [All workflow runs](https://github.com/Delta-Software-Innopolis/Database-Playground/actions)
 
 ## Architecture
-### Static View
-#### Components of backend
-<img src="docs/architecture/static-view/backend.png" style="height: 20em">
-
-#### Components of Frontend Playground Page
-<img src="docs/architecture/static-view/frontend_playground.png" style="height: 20em">
-
-#### Components of Frontend Template Choice Page
-<img src="docs/architecture/static-view/frontend_template.png" style="height: 20em">
-
-#### Components of Frontend TopBar
-<img src="docs/architecture/static-view/frontend_topbar.png" style="height: 20em">
-
-### Dynamic View
-#### Sequence Diagram of Main Backend Workflows
-<img src="docs/architecture/dynamic-view/sequence_diagram.png">
-
-### Deployment View
-<img src="docs/architecture/deployment-view/deployment_diagram.png">
