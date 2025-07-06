@@ -2,7 +2,7 @@
 name: User story
 about: User story in GIVEN/WHEN/THEN format
 title: "[USER STORY]"
-labels: ''
+labels: User Story
 assignees: ''
 
 ---
