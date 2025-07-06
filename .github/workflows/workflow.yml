@@ -59,7 +59,7 @@ jobs:
         run: cd .. && ./scripts/run_unit_tests.sh
 
   deploy:
-    if: github.repository == 'slant14/Database-Playground'
+    if: github.repository == 'Delta-Software-Innopolis/Database-Playground'
     runs-on: ubuntu-latest
 
     steps:
