@@ -7,6 +7,7 @@ COPY . /app
 
 RUN echo "REACT_APP_API_URL=${REACT_APP_API_URL}" > .env
 
+COPY package*.json ./
 RUN npm install --force && \
     npm run build
 
