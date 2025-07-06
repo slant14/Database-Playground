@@ -21,7 +21,7 @@ and labels:
 	- `bug` — defect reports  
 	- `wontfix` — suggestions to improvement
 	- `release` — end point of some functionality or task
-	- `good first issue` - if it is necessary to start do some actions, but PM do not knows which exactly, because of it is not his own area of knowledges
+	- `good first issue` - if it is necessary to start do some actions, but PM do not knows which exactly, because of it is not his own area of knowledges  
 	Assignment policy:
 		The issue author assigns the issue to the developer responsible, or to the team lead if unassigned. Assigns must acknowledge ownership by leaving a comment within 24 hours.
 - Commit messages must be clear and reference issues if needed.
