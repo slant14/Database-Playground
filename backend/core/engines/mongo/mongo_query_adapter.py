@@ -93,7 +93,7 @@ def _wrap_result(
 
 def _fix_types(item):
     if isinstance(item, dict):
-        return {k: _fix_types(v) for k,v in item.items()}
+        return {k: _fix_types(v) for k, v in item.items()}
     if isinstance(item, list):
         return [_fix_types(v) for v in item]
     return str(item)

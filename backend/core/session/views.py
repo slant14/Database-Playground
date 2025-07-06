@@ -92,9 +92,9 @@ class SessionValidView(APIView):
 
         valid = True
         try:
-            session = Session.objects.get(id=session_id)
+            Session.objects.get(id=session_id)
         except Exception as e:
             print(e)
             valid = False
-        
+
         return Response({"valid": valid}, status=200)
