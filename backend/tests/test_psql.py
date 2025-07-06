@@ -30,7 +30,7 @@ def mock_engine() -> PostgresEngine:
     return engine
 
 
-@patch('core.engines.PostgresEngine.psycopg2.connect')
+@patch('psycopg2.connect')
 def test_1(mock_connect, mock_engine: PostgresEngine):
     """Test database operations with mocked connections"""
     # Mock the connection for the first get_db call that should raise DBNotExists
@@ -85,7 +85,7 @@ def test_1(mock_connect, mock_engine: PostgresEngine):
         mock_drop.assert_called_once_with("test_2_db")
 
 
-@patch('core.engines.PostgresEngine.psycopg2.connect')
+@patch('psycopg2.connect')
 def test_2(mock_connect, mock_engine: PostgresEngine):
     """Test query execution with mocked connections"""
     mock_conn = MagicMock()
@@ -125,7 +125,7 @@ def test_2(mock_connect, mock_engine: PostgresEngine):
         assert results[1].data == [(1,)]
 
 
-@patch('core.engines.PostgresEngine.psycopg2.connect')
+@patch('psycopg2.connect')
 def test_3(mock_connect, mock_engine: PostgresEngine):
     """Test error handling with mocked connections"""
     mock_conn = MagicMock()
