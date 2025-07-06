@@ -16,6 +16,7 @@ We use a simplified workflow inspired by GitHub Flow:
   - Create a Pull Request to `main` using the template: 
   - [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md)
   - Request a review.
+- Review poolicy: global merge requests approving by customer's review
 - Merge only after approvals and passing tests in `main`.
 - Close related issues after merging and delete branch.
 
