@@ -1,23 +1,52 @@
 # Database-Playground
 ## Development
 ### Kanban board
-[The board](https://github.com/orgs/S25-SWP-Team46/projects/1/views/3) shows the current iteration.
+[The board ](https://github.com/orgs/S25-SWP-Team46/projects/1/views/3)shows the current iteration.
 ### Git workflow
 
-Base workflow:  
-We are developing the project on Github with following branches structure:
-- `main` — always contains production-ready code  
-- `develop` — integration branch for completed features and fixes  
+We use a simplified workflow inspired by GitHub Flow:
+
+- All work happens in separate branches created from `main`.
+- Branch names are chosen freely (`front`, `back`, `db`, etc.).
+- Issues are created using templates (and labels):  
+  [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE)
+- Commit messages must be clear and reference issues if needed.
+- When work is done:
+  - Push your branch.
+  - Create a Pull Request to `main` using the template: 
+  - [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md)
+  - Request a review.
+- Merge only after approvals and passing tests in `main`.
+- Close related issues after merging and delete branch.
 
 ---
-
-#### 1. Creating issues  
-All issues must be created using one of our issue templates, located in [`.github/ISSUE_TEMPLATE/`](https://github.com/S25-SWP-Team46/DP-fork/tree/main/.github/ISSUE_TEMPLATE):  
-- [User Story](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/backlog-bug-report.yml)
+#### Creating issues  
+All issues may be created using one of our issue templates, located in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE):  
+- [User Story  ](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/backlog-bug-report.yml)
 - [Bug Report](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/backlog-user-story.yml)
 - [Technical Task](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/task.yml)
 
 Each template enforces the required fields (e.g., GIVEN/WHEN/THEN for user stories; steps, expected & actual behavior for bugs; subtasks checklist for technical tasks).
+
+---
+#### Labelling issues  
+We use these labels to organize work and trigger workflows:  
+- `enhancement` — new functionality 
+- `User Story` — new functionality from the customers view
+- `bug` — defect reports  
+- `wontfix` — suggestions to improvement
+- `release` — end point of some functionality or task
+- `good first issue` - if it is necessary to start do some actions, but PM do not knows which exactly, because of it is not his own area of knowledges
+
+---
+#### Assigning issues  
+The issue author assigns the issue to the developer responsible, or to the team lead if unassigned. Assigns must acknowledge ownership by leaving a comment within 24 hours.
+
+---
+### Secrets management
+The Django secret key, necessary to run Django app and the SSH key, server IP, USER name, necessary to connect the remote server are handling in the Secrets space.
+
+---
 
 ## Quality assurance
 ### Quality attribute scenarios
@@ -40,15 +69,43 @@ Test locations:
 - [`./backend/core/tests`](https://github.com/S25-SWP-Team46/DP-fork/blob/main/backend/core/tests/) — integration test 
 - [`./.flake8`](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.flake8) — linting configuration
 
-## Build and Deployment
+## Build and deployment
+[Pull request](https://github.com/S25-SWP-Team46/DP-fork/pull/147), where CI/CD can be seen
+
+### Continuous Integration
+- `pytest` — runs backend unit tests for `PostgresEngine` methods using mocks to verify correctness in isolation.
+[Unit tests workflow file](.github/workflows/db-tests.yml)
+- `Django Tests framework` — runs integration tests to check Django app functionality end-to-end.
+[Integration tests workflow file](.github/workflows/django-tests.yml)
+- `flake8` — performs static analysis to enforce code style and detect potential errors.
+[Linting workflow file](.github/workflows/lint-and-test.yml)
+[Quick linting workflow file](.github/workflows/quick-lint.yml)
+
+---
 ### Continuous Deployment
-CD `deploy.yml` file - https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/workflows/deploy.yml
 
-Used tools:
-- **Docker** is the containerization platform that runs our applications on the server. Our script ensures it's installed and builds the project with docker-compose on the server
-- **GitHub Actions** lets to run a script to automatically clone the repository to our server and run docker-compose after a push to the main branch or by clicking a button. GitHub allows for additional criteria to be configured, such as passing CI tests.
+**Workflow file:**
+- [Deploy workflow](.github/workflows/deploy.yml)
 
-All CD workflow runs can be seen here - https://github.com/S25-SWP-Team46/DP-fork/actions/workflows/deploy.yml
+**Description:**
+This workflow deploys the project to the production server over SSH. It includes:
+
+- Checking and installing Docker if it is not present.
+- Checking and installing Docker Compose if it is not present.
+- Cloning the repository or updating it to the latest `main` branch.
+- Stopping existing containers.
+- Rebuilding Docker images with environment arguments.
+- Starting the updated containers in detached mode.
+
+**Trigger:**
+- Manual trigger via `workflow_dispatch`.
+
+**Secrets used:**
+- `SERVER_IP` — target server IP address.
+- `SERVER_USERNAME` — SSH user.
+- `SERVER_SSH_KEY` — SSH private key for authentication.
+
+---
 
 ## Architecture
 
