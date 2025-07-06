@@ -1,0 +1,15 @@
+@startuml
+[TemplateChoice] -right-( interface
+[TemplateChoice] -left-( interface0
+[TemplateChoiceBar] -right- interface0
+[TemplateList] -left- interface
+
+[TemplateChoiceBar] -left-( interface1
+[TopBar] -right- interface1
+
+[TemplateChoiceBar] -down-( interface2
+[Button] -up- interface2
+
+[TemplateChoiceBar] -up-( interface3
+[TopBarElement] -down- interface3
+@enduml

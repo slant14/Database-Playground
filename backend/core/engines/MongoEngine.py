@@ -9,8 +9,7 @@ from pymongo.database import Database
 from .DBEngine import DBEngine
 from .exceptions import DBExists, DBNotExists
 from .models import DBInfo, QueryResult
-from .mongo.mongo_parsing import parse_mql
-from .mongo.mongo_query_adapter import execute_queries
+from .mongo.query_adapter import execute_full_query
 
 # needed because db cannot be created without data in it
 DEFAULT_DUMP = '{ "db": { "collection": [ { "hello": "world" } ] } }'
@@ -53,10 +52,9 @@ class MongoEngine(DBEngine):
 
     def send_query(
             self, db_name: str, full_query: str) -> Sequence[QueryResult]:
-        mongo_queries = parse_mql(full_query)
         with self._connect() as client:
             db = client.get_database(db_name)
-            return execute_queries(mongo_queries, db)
+            return execute_full_query(full_query, db)
 
     def get_dump(self, db_name: str) -> str:
         with self._connect() as client:

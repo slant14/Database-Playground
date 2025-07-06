@@ -13,15 +13,17 @@ function Table({ results }) {
           <thead>
             <tr>
               {results.columns.map((col) => (
-                <td>{col}</td>
+                <td key={col}>{col}</td>
               ))}
             </tr>
           </thead>
           <tbody>
             {nums.map((index) => (
-              <tr>
+              <tr key={index}>
                 {results.columns.map((key) => (
-                  <td>{results.data[key][index]}</td>
+                  <td key={results.data[key][index]}>
+                    {results.data[key][index]}
+                  </td>
                 ))}
               </tr>
             ))}

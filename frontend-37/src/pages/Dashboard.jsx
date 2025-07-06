@@ -19,6 +19,16 @@ export default function Dashboard() {
         });
         const { session_id } = await res.json();
         localStorage.setItem("session_id", session_id);
+      } else {
+        const res = await fetch(API_URL + "/session/valid", {
+          credentials: "include",
+        });
+        const { valid } = await res.json();
+        console.log(valid);
+        if (!valid) {
+          localStorage.removeItem("session_id");
+          run();
+        }
       }
     };
 

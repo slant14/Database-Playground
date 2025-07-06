@@ -1,3 +1,4 @@
+import inspect
 from typing import Sequence
 
 from pymongo.command_cursor import CommandCursor
@@ -6,11 +7,55 @@ from pymongo.database import Database as MongoDatabase
 from pymongo.results import InsertManyResult, InsertOneResult
 
 from ..exceptions import QueryError
-from ..models import MQT, MongoQuery, MongoQueryResult
+from ..models import MQT, OldMongoQuery, MongoQueryResult
+from .parsing import fix_types_to_str
+
+from . import queries
+from .queries import MongoQuery
+
+
+def collect_mongo_queries() -> list[type[MongoQuery]]:
+    return [
+        cls for _, cls in inspect.getmembers(queries, inspect.isclass)
+        if issubclass(cls, MongoQuery) and cls is not MongoQuery
+    ]
+
+
+QUERIES = collect_mongo_queries()
+
+
+def execute_full_query(
+        full_query: str,
+        db: MongoDatabase
+) -> Sequence[MongoQueryResult]:
+    return [
+        get_matching_query(str_query).parse_and_execute(db)
+        for str_query in split_full_query(full_query)
+    ]
+
+
+def split_full_query(full_query: str) -> list[str]:
+    return [escape_query(q) for q in full_query.split(';') if q]
+
+
+def escape_query(str_query: str) -> str:
+    # the following shit is done to remove \n
+    # while keeping \\n that is likely needed by user
+    return str_query.strip() \
+        .replace("\\n", "&&nkdk") \
+        .replace("\n", "") \
+        .replace("&&nkdk", "\\n")
+
+
+def get_matching_query(str_query: str) -> MongoQuery:
+    for Query in QUERIES:
+        if Query.matches(str_query):
+            return Query(str_query)
+    raise QueryError(f"Unknown Query: '{str_query}'")
 
 
 def execute_queries(
-        queries: list[MongoQuery],
+        queries: list[OldMongoQuery],
         db: MongoDatabase
 ) -> Sequence[MongoQueryResult]:
     try:
@@ -19,7 +64,7 @@ def execute_queries(
         raise QueryError(str(e))
 
 
-def _execute_query(query: MongoQuery, db: MongoDatabase):
+def _execute_query(query: OldMongoQuery, db: MongoDatabase):
     match (query.type):
         case MQT.GET_COLLECTION_NAMES:
             return db.list_collection_names()
@@ -53,7 +98,7 @@ def _execute_query(query: MongoQuery, db: MongoDatabase):
 
 
 def _wrap_result(
-        q: MongoQuery,
+        q: OldMongoQuery,
         raw_result
 ) -> MongoQueryResult:  # type: ignore
     match (q.type):
@@ -79,21 +124,13 @@ def _wrap_result(
 
         case MQT.FIND:
             c: Cursor = raw_result
-            items = [_fix_types(i) for i in c]
+            items = [fix_types_to_str(i) for i in c]
             return MongoQueryResult(q.query, items, 0)
 
         case MQT.AGGREGATE:
             cc: CommandCursor = raw_result
-            items = [_fix_types(i) for i in cc]
+            items = [fix_types_to_str(i) for i in cc]
             return MongoQueryResult(q.query, items, 0)
 
         case _:
             raise Exception("Unknown raw_result", raw_result)
-
-
-def _fix_types(item):
-    if isinstance(item, dict):
-        return {k: _fix_types(v) for k,v in item.items()}
-    if isinstance(item, list):
-        return [_fix_types(v) for v in item]
-    return str(item)

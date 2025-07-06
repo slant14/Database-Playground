@@ -19,6 +19,9 @@ services:
       - "5173:5173"
     volumes:
       - ./frontend-37:/app
+      - /app/node_modules
+    environment:
+      VITE_PROD: ${PROD}
 
   postgres:
     image: postgres

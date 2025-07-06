@@ -94,7 +94,7 @@ function takeLine(str) {
 
 export default function ResultsTableWrapper() {
   const { results } = useResults();
-  if (!results) return <></>;
+  if (!results) return;
   if (results.detail) {
     return (
       <div className={styles.errors}>
@@ -111,7 +111,7 @@ export default function ResultsTableWrapper() {
   return (
     <div>
       {results.map((item) => (
-        <ResultsTable results={item} queryNum={1} />
+        <ResultsTable results={item} queryNum={1} key={item} />
       ))}
     </div>
   );

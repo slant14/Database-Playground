@@ -1,11 +1,12 @@
 import uuid
 
-from engines import postgres_engine
-from engines.shortcuts import db_exists
 from rest_framework.parsers import JSONParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from engines import postgres_engine
+from engines.shortcuts import db_exists
 
 from .docs import (
     get_db_schema_info_doc,
@@ -92,9 +93,9 @@ class SessionValidView(APIView):
 
         valid = True
         try:
-            session = Session.objects.get(id=session_id)
+            Session.objects.get(id=session_id)
         except Exception as e:
             print(e)
             valid = False
-        
+
         return Response({"valid": valid}, status=200)

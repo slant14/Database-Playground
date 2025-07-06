@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from .models import MongoQueryResult
+
 
 class MongoQueryResultSerializer(serializers.ModelSerializer):
     class Meta:

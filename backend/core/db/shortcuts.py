@@ -1,4 +1,4 @@
-from engines import postgres_engine, mongo_engine, DBEngine
+from engines import DBEngine, mongo_engine, postgres_engine
 from templates.models import DBType
 
 
