@@ -35,3 +35,24 @@ $ docker compose up --build
   - SSH - to connect to the server and deploy
   - Docker Compose - to easily build and run code
   - [All workflow runs](https://github.com/Delta-Software-Innopolis/Database-Playground/actions)
+
+## Architecture
+### Static View
+#### Components of backend
+<img src="docs/architecture/static-view/backend.png" style="height: 20em">
+
+#### Components of Frontend Playground Page
+<img src="docs/architecture/static-view/frontend_playground.png" style="height: 20em">
+
+#### Components of Frontend Template Choice Page
+<img src="docs/architecture/static-view/frontend_template.png" style="height: 20em">
+
+#### Components of Frontend TopBar
+<img src="docs/architecture/static-view/frontend_topbar.png" style="height: 20em">
+
+### Dynamic View
+#### Sequence Diagram of Main Backend Workflows
+<img src="docs/architecture/dynamic-view/sequence_diagram.png">
+
+### Deployment View
+<img src="docs/architecture/deployment-view/deployment_diagram.png">
