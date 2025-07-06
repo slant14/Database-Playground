@@ -50,7 +50,7 @@ The Django secret key, necessary to run Django app and the SSH key, server IP, U
 
 ## Quality assurance
 ### Quality attribute scenarios
-`quality-attribute-scenarios.md` https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/quality-attribute-scenarios.md
+[`quality-attribute-scenarios.md`] (https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/quality-attribute-scenarios.md)
 
 ### Automated tests
 
@@ -71,7 +71,7 @@ Test locations:
 
 ### User acceptance tests
 
-[`user-acceptance-tests`]([### ](https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/user-acceptance-tests.md))
+[`user-acceptance-tests`](https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/user-acceptance-tests.md)
 
 ## Build and deployment
 [Pull request](https://github.com/S25-SWP-Team46/DP-fork/pull/147), where CI/CD can be seen
