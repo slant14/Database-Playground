@@ -14,7 +14,7 @@ jobs:
     - name: Deploy to server
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: 89.169.178.180
+        host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         timeout: 3600s
@@ -54,6 +54,9 @@ jobs:
           echo "Resetting any local changes and pulling latest changes..."
           git fetch origin main
           git reset --hard origin/main
+
+          # Set React API URL in .env file
+          echo "REACT_APP_API_URL=http://${{ secrets.SERVER_USERNAME }}:8000" > .env
           
           echo "Stopping existing containers..."
           sudo docker-compose down
