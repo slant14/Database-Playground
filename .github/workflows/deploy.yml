@@ -17,7 +17,7 @@ jobs:
         host: 89.169.178.180
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
-        timeout: 3600
+        timeout: 3600s
         script: |
           echo "Checking and installing Docker if needed..."
           if ! command -v docker &> /dev/null; then
