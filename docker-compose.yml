@@ -10,7 +10,6 @@ services:
       POSTGRES_PASSWORD: backend_pass
     ports:
       - "7000:5432"
-      - "7000:5432"
     volumes:
       - backend_pgdata:/var/lib/postgresql/data
 
