@@ -113,6 +113,14 @@ class RegisterModal extends React.Component {
               duration: 3,
             });
             break;
+          case "303":
+            notification.error({
+              message: 'Registration failed',
+              description: 'You cannot create user with such email',
+              placement: 'bottomRight',
+              duration: 3,
+            });
+            break;
           default:
             notification.error({
               message: 'Registration failed',

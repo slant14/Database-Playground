@@ -55,15 +55,20 @@ class UserViewSet(viewsets.ModelViewSet):
                 "error": "302"
             }, status=status.HTTP_302_FOUND)
         else:
-            serializer = UserSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            user = serializer.save()
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                "user": serializer.data,
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
-            }, status=status.HTTP_201_CREATED)
+            try:
+                serializer = UserSerializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                user = serializer.save()
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    "user": serializer.data,
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token),
+                }, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({
+                    "error": "303"
+                }, status=303)
         #role = self.request.data.get('role')
         #if role == User.Role.ADMIN and not self.request.user.is_staff:
         #    from rest_framework.exceptions import PermissionDenied
