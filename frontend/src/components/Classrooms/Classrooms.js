@@ -92,7 +92,7 @@ class ClassRooms extends React.Component {
                   </li>
                     <li>
                     <span className="Created-Button">
-                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {el.created_date ? el.created_date.slice(0, 10).replace(/-/g, "/") : ""}
+                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {el.created_date.slice(0, 10).replace(/-/g, "/")}
                       <Button className="view" onClick={() => this.props.selectClassroom(el)}>
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                         <span style={{ position: "relative", top: "-1px" }}>View</span>
