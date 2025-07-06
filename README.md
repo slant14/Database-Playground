@@ -20,6 +20,7 @@ $ docker compose up --build
 ```
 4. Working version should be available at http://localhost:5173
 
+## Architecture
 ### Static View
 #### Components of backend
 <img src="docs/architecture/static-view/backend.png" style="height: 20em">
@@ -58,5 +59,3 @@ These scenarios executes almost instantly, as each of them is mostly IO bound ta
   - SSH - to connect to the server and deploy
   - Docker Compose - to easily build and run code
   - [All workflow runs](https://github.com/Delta-Software-Innopolis/Database-Playground/actions)
-
-## Architecture
