@@ -69,6 +69,10 @@ Test locations:
 - [`./backend/core/tests`](https://github.com/S25-SWP-Team46/DP-fork/blob/main/backend/core/tests/) — integration test 
 - [`./.flake8`](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.flake8) — linting configuration
 
+### User acceptance tests
+
+[`user-acceptance-tests`]([### ](https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/quality-assurance/user-acceptance-tests.md))
+
 ## Build and deployment
 [Pull request](https://github.com/S25-SWP-Team46/DP-fork/pull/147), where CI/CD can be seen
 
