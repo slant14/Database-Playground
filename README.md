@@ -69,7 +69,7 @@ All CD workflow runs can be seen here - https://github.com/S25-SWP-Team46/DP-for
 
 ### Static view
 
-`static-view` docs/architecture/static-view
+[`static-view`](./docs/architecture/static-view/)
 
 Database Playground is an educational platform for interactive database learning, featuring a **React**frontend and **Django** backend. It supports **PostgreSQL**, **ChromaDB**, and **SQLite**, and is deployed via **Docker Compose** with CI/CD automated by **GitHub Actions**.
 
