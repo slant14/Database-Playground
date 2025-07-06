@@ -27,7 +27,7 @@ We are developing the project on Github with following branches structure:
 ---
 
 #### 1. Creating issues  
-All issues must be created using one of our issue templates, located in [`.github/ISSUE_TEMPLATE/`]((https://github.com/S25-SWP-Team46/DP-fork/tree/main/.github/ISSUE_TEMPLATE):  
+All issues must be created using one of our issue templates, located in [.github/ISSUE_TEMPLATE/]((https://github.com/S25-SWP-Team46/DP-fork/tree/main/.github/ISSUE_TEMPLATE):  
 - [User Story](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/backlog-bug-report.yml)
 - [Bug Report](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/backlog-user-story.yml)
 - [Technical Task](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/task.yml)
