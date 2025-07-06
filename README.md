@@ -79,37 +79,29 @@ Test locations:
 [Pull request](https://github.com/S25-SWP-Team46/DP-fork/pull/147), where CI/CD can be seen
 
 ### Continuous Integration
-- `pytest` — runs backend unit tests for `PostgresEngine` methods using mocks to verify correctness in isolation.
-[Unit tests workflow file](.github/workflows/db-tests.yml)
-- `Django Tests framework` — runs integration tests to check Django app functionality end-to-end.
-[Integration tests workflow file](.github/workflows/django-tests.yml)
-- `flake8` — performs static analysis to enforce code style and detect potential errors.
-[Linting workflow file](.github/workflows/lint-and-test.yml)
-[Quick linting workflow file](.github/workflows/quick-lint.yml)
+[lint-and-test.yml](.github/workflows/lint-and-test.yml)
+This workflow performs static analysis and testing. The lint job uses flake8 with plugins (flake8-import-order, flake8-docstrings, flake8-bugbear) for code style, errors, and complexity. The test job uses pytest for unit tests, pytest-cov for code coverage, and actions/upload-artifact to save reports.
+
+[django-tests.yml](.github/workflows/django-tests.yml)
+This workflow tests the Django application. It uses Django's manage.py test to run tests against a PostgreSQL service container. actions/cache caches Python dependencies for faster runs.
+
+[db-tests.yml](.github/workflows/db-tests.yml)
+This workflow focuses on database engine unit tests. pytest runs unit tests from test_postgres_engine.py, specifically excluding integration tests. A PostgreSQL service is available, and actions/cache speeds up dependency setup.
+
+[quick-lint.yml](.github/workflows/quick-lint.yml)
+This lightweight workflow is solely for static analysis. flake8 checks for critical syntax errors (failing the workflow) and reports other style issues as warnings.
 
 ---
 ### Continuous Deployment
 
-**Workflow file:**
-- [Deploy workflow](.github/workflows/deploy.yml)
+### Continuous Deployment
+[`deploy.yml`](.github/workflows/deploy.yml)
 
-**Description:**
-This workflow deploys the project to the production server over SSH. It includes:
+Used tools:
+- **Docker** is the containerization platform that runs our applications on the server. Our script ensures it's installed and builds the project with docker-compose on the server
+- **GitHub Actions** lets to run a script to automatically clone the repository to our server and run docker-compose after a push to the main branch or by clicking a button. GitHub allows for additional criteria to be configured, such as passing CI tests.
 
-- Checking and installing Docker if it is not present.
-- Checking and installing Docker Compose if it is not present.
-- Cloning the repository or updating it to the latest `main` branch.
-- Stopping existing containers.
-- Rebuilding Docker images with environment arguments.
-- Starting the updated containers in detached mode.
-
-**Trigger:**
-- Manual trigger via `workflow_dispatch`.
-
-**Secrets used:**
-- `SERVER_IP` — target server IP address.
-- `SERVER_USERNAME` — SSH user.
-- `SERVER_SSH_KEY` — SSH private key for authentication.
+All CD workflow runs can be seen [here](https://github.com/S25-SWP-Team46/DP-fork/actions/workflows/deploy.yml)
 
 ---
 ### Manual deployment
