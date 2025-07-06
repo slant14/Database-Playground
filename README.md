@@ -35,4 +35,4 @@ All issues must be created using one of our issue templates, located in [`.githu
 Each template enforces the required fields (e.g., GIVEN/WHEN/THEN for user stories; steps, expected & actual behavior for bugs; subtasks checklist for technical tasks).
 
 ### TESTING 
-`.github/ISSUE_TEMPLATE/`
+.github/ISSUE_TEMPLATE/
