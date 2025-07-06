@@ -108,7 +108,7 @@ class TestPostgresEngineInit:
 class TestGetDb:
     """Test the get_db method."""
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_get_db_success(self, mock_connect, engine, mock_connection, mock_cursor):
         """Test successful database schema retrieval."""
         mock_connect.return_value.__enter__.return_value = mock_connection
@@ -133,7 +133,7 @@ class TestGetDb:
         mock_cursor.execute.assert_called_once()
         mock_cursor.fetchall.assert_called_once()
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_get_db_not_exists(self, mock_connect, engine):
         """Test get_db raises DBNotExists when database doesn't exist."""
         mock_connect.side_effect = psycopg2.OperationalError("database \"nonexistent\" does not exist")
@@ -141,7 +141,7 @@ class TestGetDb:
         with pytest.raises(DBNotExists):
             engine.get_db("nonexistent")
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_get_db_other_error(self, mock_connect, engine):
         """Test get_db raises QueryError for other psycopg2 errors."""
         mock_connect.side_effect = psycopg2.Error("Connection failed")
@@ -153,7 +153,7 @@ class TestGetDb:
 class TestCreateDb:
     """Test the create_db method."""
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_create_db_success(self, mock_connect, engine):
         """Test successful database creation."""
         # Setup mock for autocommit connection (for CREATE DATABASE)
@@ -186,7 +186,7 @@ class TestCreateDb:
         assert mock_regular_cursor.execute.call_count >= 2  # CREATE TABLE + INSERT
         mock_regular_conn.commit.assert_called()
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_create_db_already_exists(self, mock_connect, engine):
         """Test create_db raises DBExists when database already exists."""
         mock_connect.side_effect = psycopg2.errors.DuplicateDatabase()
@@ -194,7 +194,7 @@ class TestCreateDb:
         with pytest.raises(DBExists):
             engine.create_db("existing_db", SIMPLE_DUMP)
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_create_db_query_error(self, mock_connect, engine):
         """Test create_db raises QueryError for invalid SQL."""
         # Make the initial connection (for CREATE DATABASE) fail with a psycopg2.Error
@@ -207,7 +207,7 @@ class TestCreateDb:
 class TestDropDb:
     """Test the drop_db method."""
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_drop_db_success(self, mock_connect, engine):
         """Test successful database deletion."""
         mock_connection = Mock()
@@ -222,7 +222,7 @@ class TestDropDb:
         # Verify that execute was called (we don't need to check the exact SQL structure)
         mock_cursor.execute.assert_called_once()
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_drop_db_not_exists(self, mock_connect, engine):
         """Test drop_db raises DBNotExists when database doesn't exist."""
         mock_connect.side_effect = psycopg2.OperationalError("database \"nonexistent\" does not exist")
@@ -234,7 +234,7 @@ class TestDropDb:
 class TestSendQuery:
     """Test the send_query method."""
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_send_query_select(self, mock_connect, engine, mock_connection, mock_cursor):
         """Test send_query with SELECT statement."""
         mock_connect.return_value.__enter__.return_value = mock_connection
@@ -252,7 +252,7 @@ class TestSendQuery:
         assert result.data == [("Alice", 25), ("Bob", 30)]
         assert isinstance(result.execution_time, float)
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_send_query_insert(self, mock_connect, engine, mock_connection, mock_cursor):
         """Test send_query with INSERT statement."""
         mock_connect.return_value.__enter__.return_value = mock_connection
@@ -268,7 +268,7 @@ class TestSendQuery:
         assert result.rowcount == 1
         assert result.data is None
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_send_query_multiple(self, mock_connect, engine, mock_connection, mock_cursor):
         """Test send_query with multiple statements."""
         mock_connect.return_value.__enter__.return_value = mock_connection
@@ -290,7 +290,7 @@ class TestSendQuery:
         assert results[1].data is None
         assert results[2].data == [(2,)]
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_send_query_invalid_sql(self, mock_connect, engine):
         """Test send_query raises QueryError for invalid SQL."""
         mock_connect.return_value.__enter__.return_value.cursor.return_value.__enter__.return_value.execute.side_effect = psycopg2.Error("syntax error")
@@ -298,7 +298,7 @@ class TestSendQuery:
         with pytest.raises(QueryError):
             engine.send_query("test_db", "INVALID SQL QUERY;")
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_send_query_db_not_exists(self, mock_connect, engine):
         """Test send_query raises DBNotExists when database doesn't exist."""
         mock_connect.side_effect = psycopg2.OperationalError("database \"nonexistent\" does not exist")
@@ -399,7 +399,7 @@ class TestSplitQueries:
 class TestConnect:
     """Test the _connect private method."""
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_connect_success(self, mock_connect, engine):
         """Test successful database connection."""
         mock_connection = Mock()
@@ -416,7 +416,7 @@ class TestConnect:
             port=5432
         )
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_connect_failure(self, mock_connect, engine):
         """Test connection failure handling."""
         mock_connect.side_effect = psycopg2.OperationalError("Connection failed")
@@ -429,7 +429,7 @@ class TestConnect:
 class TestConnectAutocommit:
     """Test the _connect_autocommit private method."""
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_connect_autocommit_success(self, mock_connect, engine):
         """Test successful autocommit connection."""
         mock_connection = Mock()
@@ -448,7 +448,7 @@ class TestConnectAutocommit:
         )
         mock_connection.close.assert_called_once()
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_connect_autocommit_failure(self, mock_connect, engine):
         """Test autocommit connection failure handling."""
         mock_connect.side_effect = psycopg2.OperationalError("Connection failed")
@@ -457,7 +457,7 @@ class TestConnectAutocommit:
             with engine._connect_autocommit("test_db"):
                 pass
     
-    @patch('core.engines.PostgresEngine.psycopg2.connect')
+    @patch('psycopg2.connect')
     def test_connect_autocommit_cleanup_on_exception(self, mock_connect, engine):
         """Test that connection is properly closed even if exception occurs."""
         mock_connection = Mock()
