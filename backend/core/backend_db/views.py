@@ -43,7 +43,7 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response({
                 "error": "406"
-            }, status=status.HTTP_406_NOT_ACCEPTABLE)
+            })
 
     @action(detail=False, methods=['post'], url_path='register', permission_classes=[AllowAny])
     def register(self, request, *args, **kwargs):
