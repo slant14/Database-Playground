@@ -34,11 +34,11 @@ class MyModal extends React.Component {
             <input type="checkbox" id="isHappy" onChange={(data) => this.setState({ needMemorizing: data.target.checked })} />
             <span>Remember me</span>
           </label>
-          
+
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
             <div>
               <span>No account? </span>
-              <span 
+              <span
                 style={{ color: '#51CB63', cursor: 'pointer' }}
                 onClick={() => {
                   if (this.props.onSwitchToRegister) {
@@ -49,7 +49,7 @@ class MyModal extends React.Component {
                 Registration
               </span>
             </div>
-            
+
             <div style={{ display: "flex", gap: "10px" }}>
               <Button onClick={() => {
                 this.myForm.reset()
@@ -58,23 +58,48 @@ class MyModal extends React.Component {
                 Cancel
               </Button>
               <Button type="primary" onClick={async () => {
-                this.myForm.reset()
                 if (this.state.login === "" || this.state.password === "") {
                   notification.warning({
                     message: 'Incomplete data',
                     description: 'Please fill in all fields',
                     placement: 'bottomRight',
-                    duration: 2,                  });
+                    duration: 4
+                  });
                 } else {
                   const data = await loginUser(this.state.login, this.state.password);
-                  this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing, data.access, data.refresh)
-                  notification.success({
-                    message: 'Login successful',
-                    description: 'Welcome to the system!',
-                    placement: 'bottomRight',
-                    duration: 2,
-                  });
-                  this.props.onCancel()
+                  if (data.error) {
+                    switch (data.error) {
+                      case "406":
+                        notification.error({
+                          message: 'Login failed',
+                          description: 'User not found',
+                          placement: 'bottomRight',
+                          duration: 4,
+                        });
+                        break;
+                      default:
+                        notification.error({
+                          message: 'Login failed',
+                          description: 'An unexpected error occurred',
+                          placement: 'bottomRight',
+                          duration: 4,
+                        });
+                    }
+                  } else {
+                    this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing, data.access, data.refresh)
+                    notification.success({
+                      message: 'Login successful',
+                      description: 'Welcome to the system!',
+                      placement: 'bottomRight',
+                      duration: 4,
+                    });
+                    this.props.onCancel()
+                    this.setState({
+                      login: "",
+                      password: "",
+                      needMemorizing: false,
+                    })
+                  }
                 }
               }} className="my-orange-button-solid">
                 Sign In
@@ -87,7 +112,7 @@ class MyModal extends React.Component {
     )
   }
 
-  
+
 }
 
 export default MyModal

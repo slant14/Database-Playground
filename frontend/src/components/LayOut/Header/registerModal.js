@@ -27,29 +27,29 @@ class RegisterModal extends React.Component {
         className="my-modal"
       >
         <form ref={el => this.myForm = el}>
-          <p>Your login: </p> 
+          <p>Your login: </p>
           <Input placeholder="Login" className="login" onChange={(data) => this.setState({ login: data.target.value })} />
-          
-          <p>Your email: </p> 
+
+          <p>Your email: </p>
           <Input placeholder="Email" className="login" onChange={(data) => this.setState({ email: data.target.value })} />
-          
-          <p>Your password: </p> 
+
+          <p>Your password: </p>
           <Input.Password placeholder="Password" className="damn" onChange={(data) => this.setState({ password: data.target.value })} />
-          
-          <p>Confirm password: </p> 
+
+          <p>Confirm password: </p>
           <Input.Password placeholder="Confirm Password" className="damn" onChange={(data) => this.setState({ confirmPassword: data.target.value })} />
-          
+
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
             <div>
               <span>Already have an account? </span>
-              <span 
+              <span
                 style={{ color: '#51CB63', cursor: 'pointer' }}
                 onClick={this.props.onSwitchToLogin}
               >
                 Sign In
               </span>
             </div>
-            
+
             <div style={{ display: "flex", gap: "10px" }}>
               <Button onClick={() => {
                 this.myForm.reset()
@@ -71,7 +71,7 @@ class RegisterModal extends React.Component {
 
   handleRegister = async () => {
     const { login, email, password, confirmPassword } = this.state;
-    
+
     if (login === "" || email === "" || password === "" || confirmPassword === "") {
       notification.warning({
         message: 'Incomplete data',
@@ -81,7 +81,7 @@ class RegisterModal extends React.Component {
       });
       return;
     }
-    
+
     if (password !== confirmPassword) {
       notification.error({
         message: 'Passwords do not match',
@@ -91,10 +91,10 @@ class RegisterModal extends React.Component {
       });
       return;
     }
-    
+
     if (password.length < 6) {
       notification.warning({
-        message: 'Weak password', 
+        message: 'Weak password',
         description: 'Password must contain at least 6 characters',
         placement: 'bottomRight',
         duration: 2,
@@ -103,26 +103,50 @@ class RegisterModal extends React.Component {
     }
     try {
       const data = await registerUser(this.state.login, this.state.email, this.state.password);
-      
-      this.myForm.reset();
-      this.setState({
-        login: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-      
-      notification.success({
-        message: 'Registration successful!',
-        description: 'Your account has been created. You can now log in to the system.',
-        placement: 'bottomRight',
-        duration: 3,
-      });
-      
-      this.props.onCancel();
-      setTimeout(() => {
-        this.props.onSwitchToLogin();
-      }, 500);
+      if (data.error) {
+        switch (data.error) {
+          case "302":
+            notification.error({
+              message: 'Registration failed',
+              description: 'User with this data already exists',
+              placement: 'bottomRight',
+              duration: 3,
+            });
+            break;
+          case "303":
+            notification.error({
+              message: 'Registration failed',
+              description: 'You cannot create user with such email',
+              placement: 'bottomRight',
+              duration: 3,
+            });
+            break;
+          default:
+            notification.error({
+              message: 'Registration failed',
+              description: 'An unexpected error occurred',
+              placement: 'bottomRight',
+              duration: 3,
+            });
+        }
+      } else {
+        this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing, data.access, data.refresh)
+        notification.success({
+          message: 'Registration successful!',
+          description: 'Your account has been created. You can now log in to the system.',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+
+        this.props.onCancel();
+        this.myForm.reset();
+        this.setState({
+          login: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+      }
     } catch (error) {
       notification.error({
         message: 'Registration failed',
@@ -132,8 +156,8 @@ class RegisterModal extends React.Component {
       });
     }
 
-    
-    
+
+
   }
 }
 
