@@ -5,74 +5,144 @@ import SchemaWrapper from "../components/SchemaWrapper";
 import ResultsTableWrapper from "../components/ResultsTableWrapper";
 import { API_URL } from "../const";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { useSchemas } from "../hooks/useSchemas";
 
 export default function Playground() {
-  const [query, setQuery] = useState("");
-  const [schemas, setSchemas] = useState([]);
-  const [results, setResults] = useState({ results: [] });
   const session_id = localStorage.getItem("session_id");
+  const { updateSchemas } = useSchemas();
+  const [templateType, setTemplateType] = useState("");
 
   useEffect(() => {
     const run = async () => {
-      const res = await fetch(
+      const res1 = await fetch(
         `${API_URL}/db/schema/?session_id=${session_id}`,
         {
           credentials: "include",
         }
       );
-      const json = await res.json();
-      setSchemas(json);
+      const json1 = await res1.json();
+      console.log(json1, "SCHEMA!!!");
+      updateSchemas(json1.tables);
+
+      const res2 = await fetch(
+        `${API_URL}/session/info/?session_id=${session_id}`
+      );
+      const json2 = await res2.json();
+
+      const res3 = await fetch(`${API_URL}/template/${json2.template}`);
+      const json3 = await res3.json();
+      setTemplateType(json3.type);
     };
     run();
   }, []);
 
-  const sendQuery = async () => {
-    const res = await fetch(`${API_URL}/db/query/?session_id=${session_id}`, {
-      method: "POST",
-      body: query,
-      credentials: "include",
-    });
-
-    const json = await res.json();
-    setResults(json);
-    if (json.schema) setSchemas(json.schema);
-  };
-
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-      }}
-    >
-      <PlaygroundBar style={{ margin: 0 }} />
-
-      <div
-        className="mono"
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          marginTop: "10px",
-          marginLeft: "15px",
-          marginRight: "15px",
-          overflow: "hidden",
-        }}
-      >
-        <PanelGroup
-          direction="vertical"
+    <>
+      {templateType == "PSQL" ? (
+        <div
           style={{
-            flex: 1,
+            height: "100vh",
             display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
           }}
         >
-          <Panel style={{ overflow: "hidden", minHeight: 200 }}>
+          PSQL
+          <PlaygroundBar style={{ margin: 0 }} />
+          <div
+            className="mono"
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              marginTop: "10px",
+              marginLeft: "15px",
+              marginRight: "15px",
+              overflow: "hidden",
+            }}
+          >
+            <PanelGroup
+              direction="vertical"
+              style={{
+                flex: 1,
+                display: "flex",
+              }}
+            >
+              <Panel style={{ overflow: "hidden", minHeight: 200 }}>
+                <PanelGroup
+                  direction="horizontal"
+                  style={{
+                    display: "flex",
+                  }}
+                >
+                  <Panel
+                    style={{
+                      overflow: "hidden",
+                      border: "1px solid #c1c1c1",
+                      borderBottomRightRadius: 10,
+                      minWidth: 300,
+                    }}
+                  >
+                    <QueryInput />
+                  </Panel>
+
+                  <PanelResizeHandle style={{ width: "10px" }} />
+
+                  <Panel
+                    style={{
+                      overflow: "hidden",
+                      border: "1px solid #c1c1c1",
+                      borderBottomLeftRadius: 10,
+                      minWidth: 300,
+                    }}
+                  >
+                    <SchemaWrapper />
+                  </Panel>
+                </PanelGroup>
+              </Panel>
+
+              <PanelResizeHandle style={{ height: "10px" }} />
+
+              <Panel
+                style={{
+                  overflow: "hidden",
+                  border: "1px solid #c1c1c1",
+                  marginBottom: 10,
+                }}
+              >
+                <ResultsTableWrapper />
+              </Panel>
+            </PanelGroup>
+          </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
+        >
+          MONGO
+          <PlaygroundBar style={{ margin: 0 }} />
+          <div
+            className="mono"
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              marginTop: "10px",
+              marginLeft: "15px",
+              marginRight: "15px",
+              overflow: "hidden",
+            }}
+          >
             <PanelGroup
               direction="horizontal"
               style={{
                 display: "flex",
+                marginBottom: 15,
               }}
             >
               <Panel
@@ -83,12 +153,7 @@ export default function Playground() {
                   minWidth: 300,
                 }}
               >
-                {schemas.length !== 0 && (
-                  <QueryInput
-                    onQueryChange={setQuery}
-                    onRunClicked={sendQuery}
-                  />
-                )}
+                <QueryInput />
               </Panel>
 
               <PanelResizeHandle style={{ width: "10px" }} />
@@ -101,26 +166,12 @@ export default function Playground() {
                   minWidth: 300,
                 }}
               >
-                {schemas.length !== 0 && (
-                  <SchemaWrapper schemas={schemas.tables} />
-                )}
+                <ResultsTableWrapper />
               </Panel>
             </PanelGroup>
-          </Panel>
-
-          <PanelResizeHandle style={{ height: "10px" }} />
-
-          <Panel
-            style={{
-              overflow: "hidden",
-              border: "1px solid #c1c1c1",
-              marginBottom: 10,
-            }}
-          >
-            <ResultsTableWrapper jason={results} />
-          </Panel>
-        </PanelGroup>
-      </div>
-    </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

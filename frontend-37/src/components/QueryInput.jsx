@@ -1,11 +1,18 @@
 import { useRef, useState, useEffect } from "react";
 import styles from "./QueryInput.module.css";
 import RunButton from "./RunButton";
+import { useResults } from "../hooks/useResults";
+import { useSchemas } from "../hooks/useSchemas";
+import { API_URL } from "../const";
 
-export default function QueryInput({ onQueryChange, onRunClicked }) {
+export default function QueryInput() {
   let textareaRef = useRef(null);
   let numbersColumnRef = useRef(null);
   let containerRef = useRef(null);
+  const [query, setQuery] = useState("");
+  const { updateResults } = useResults();
+  const { updateSchemas } = useSchemas();
+  const session_id = localStorage.getItem("session_id");
 
   let shiftDown = useRef(false);
 
@@ -31,6 +38,23 @@ export default function QueryInput({ onQueryChange, onRunClicked }) {
         : e.target.value
     );
   }
+
+  const onRunClicked = async () => {
+    const res = await fetch(`${API_URL}/db/query/?session_id=${session_id}`, {
+      method: "POST",
+      body: query,
+      credentials: "include",
+    });
+
+    console.log(res, "res mongo");
+    const json = await res.json();
+    console.log(json, "json mongo");
+    if (json.results) updateResults(json.results);
+    else updateResults(json);
+    if (json.schema) updateSchemas(json.schema.tables);
+  };
+
+  const onQueryChange = setQuery;
 
   let isSelectionChangeHandlerAdded = useRef(false);
 

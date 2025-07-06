@@ -13,16 +13,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     const run = async () => {
-      console.log(localStorage.getItem("session_id"), "!!!!");
       if (!localStorage.getItem("session_id")) {
         const res = await fetch(API_URL + "/session", {
           credentials: "include",
         });
         const { session_id } = await res.json();
         localStorage.setItem("session_id", session_id);
-        console.log(session_id);
-      } else {
-        console.log(localStorage.getItem("session_id"));
       }
     };
 
@@ -46,7 +42,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <MainBar onClick={onClick} con/>
+      <MainBar onClick={onClick} con />
       <div className={styles.mainDiv}>
         <div>
           <h1 className={styles.bigTitle}>Learn databases</h1>
@@ -69,14 +65,22 @@ export default function Dashboard() {
           </div>
         </div>
         <div className={styles.rectangle}>
-          <img className={styles.assignmentsImg} src={assignmentsImg} alt="Assignments" />
+          <img
+            className={styles.assignmentsImg}
+            src={assignmentsImg}
+            alt="Assignments"
+          />
           <div>
             <p className={styles.pAboutClassrooms}>Automatic grading</p>
             <p className={styles.pAboutAdding}>For assignments</p>
           </div>
         </div>
         <div className={styles.rectangle}>
-          <img className={styles.humanWithDeskImg} src={humanWithDeskImg} alt="HumanWithDesk" />
+          <img
+            className={styles.humanWithDeskImg}
+            src={humanWithDeskImg}
+            alt="HumanWithDesk"
+          />
           <div>
             <p className={styles.pAboutClassrooms}>Add TA's</p>
             <p className={styles.pAboutAdding}>To help you manage classrooms</p>
