@@ -21,10 +21,12 @@ def test_send_query_executes_all_queries_and_collects_results(
 
     mock_connect.return_value.__enter__.return_value = conn_mock
     conn_mock.cursor.return_value.__enter__.return_value = cursor_mock
+    
 
     # Simulate result of SELECT query
     cursor_mock.fetchall.return_value = [("row1",), ("row2",)]
     cursor_mock.rowcount = 2
+    cursor_mock.description = [["col"]]
 
     queries = "SELECT 1; SELECT 2;"
     results = engine.send_query("test_db", queries)
@@ -40,7 +42,12 @@ def test_send_query_executes_all_queries_and_collects_results(
     for result, expected_query in zip(results, ["SELECT 1", "SELECT 2"]):
         assert isinstance(result, SQLQueryResult)
         assert result.query == expected_query
-        assert result.data == [("row1",), ("row2",)]
+        assert result.data == {
+            "columns": ['col'],
+            "data": {
+                "col": ["row1", "row2",]
+            }
+        }
         assert result.rowcount == 2
         assert result.execution_time >= 0.0
 

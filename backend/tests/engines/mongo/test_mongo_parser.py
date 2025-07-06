@@ -1,8 +1,8 @@
 from collections import OrderedDict as OD
 from datetime import datetime
 
-from core.engines.mongo import mongo_parsing as parsing
-from core.engines.mongo.mongo_parsing import MQT
+from core.engines.mongo import parsing as parsing
+from core.engines.mongo.parsing import MQT
 
 AGGREGATE_RJSON = """
 [
@@ -59,7 +59,7 @@ def test_dict_ordered_dict():
 
 
 def test_parse_aggregate():
-    data = parsing._parse_rjson(AGGREGATE_RJSON)
+    data = parsing.parse_rjson(AGGREGATE_RJSON)
     assert data == [
       {"$match": {"size": "medium"}},
       {"$group": {"_id": "$name", "totalQuantity": {"$sum": "$quantity"}}}
@@ -67,7 +67,7 @@ def test_parse_aggregate():
 
 
 def test_parse_insert():
-    data = parsing._parse_rjson(INSERT_RJSON)
+    data = parsing.parse_rjson(INSERT_RJSON)
     assert data == [
       {
         "_id": 1,
@@ -117,9 +117,9 @@ def test_determine_query_type():
 
 
 def test_extract_collection_name():
-    assert parsing._extract_collection_name(
+    assert parsing.extract_collection_name(
         "  \t db.my_collection.drop();") == "my_collection"
-    assert parsing._extract_collection_name(
+    assert parsing.extract_collection_name(
         "   \n db.nohypo.insertOne();") == "nohypo"
 
 

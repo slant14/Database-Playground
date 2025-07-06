@@ -1,8 +1,9 @@
-from engines import postgres_engine
 from rest_framework import generics, mixins
 from rest_framework.parsers import JSONParser
 from rest_framework.request import Request
 from rest_framework.response import Response
+
+from engines import postgres_engine
 from session.models import Session
 from session.shortcuts import resolve_session_id
 

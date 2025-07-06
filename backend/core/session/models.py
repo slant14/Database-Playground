@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+
 from templates.models import Template
 
 

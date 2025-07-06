@@ -1,5 +1,6 @@
-from account.models import Profile
 from django.db import models
+
+from account.models import Profile
 
 
 class Topic(models.Model):
