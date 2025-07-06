@@ -161,7 +161,7 @@ With its modular layers, strong cohesion, and loose coupling, Database Playgroun
 
 ### Dynamic view
 
-[`dynamic-view](https://github.com/S25-SWP-Team46/DP-fork/tree/main/docs/architecture/deployment-view)
+[dynamic-view](https://github.com/S25-SWP-Team46/DP-fork/tree/main/docs/architecture/deployment-view)
 
 All measurements were taken in a production‐like environment (React frontend, Dockerized Django backend, AWS RDS PostgreSQL):
 
