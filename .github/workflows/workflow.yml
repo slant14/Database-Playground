@@ -83,7 +83,7 @@ jobs:
           ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_IP }} << 'EOF'
             set -e
             cd ~/Database-Playground
-            git pull origin main
+            git pull
             docker compose build
             docker compose up -d
           EOF
