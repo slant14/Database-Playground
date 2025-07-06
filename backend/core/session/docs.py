@@ -14,6 +14,10 @@ get_db_schema_info_doc = swagger_auto_schema(
     manual_parameters=[session_id_query_param],
 )
 
+get_db_schema_valid_doc = swagger_auto_schema(
+    manual_parameters=[session_id_query_param],
+)
+
 
 def patch_session_info_doc(view_method):
     return swagger_auto_schema(
