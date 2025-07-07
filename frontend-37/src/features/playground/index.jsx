@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { PlaygroundBar } from "../components/PlaygroundBar";
-import QueryInput from "../components/QueryInput";
-import SchemaWrapper from "../components/SchemaWrapper";
-import ResultsTableWrapper from "../components/ResultsTableWrapper";
-import { API_URL } from "../const";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useSchemas } from "../hooks/useSchemas";
-import { useTemplate } from "../hooks/useTemplate";
-import MongoSchema from "../components/MongoSchema";
+import { API_URL } from "../../config/env";
+import { templateStore } from "../../shared/store/templateStore";
+import { schemasStore } from "./schemasStore";
+import { MongoSchema } from "./schema-panel/MongoSchema";
+import { QueryResultList } from "./query-result-list";
+import { PlaygroundTopBar } from "./TopBar";
+import { SchemaPanel } from "./schema-panel/SchemaPanel";
+import { QueryInput } from "./query-input";
 
-export default function Playground() {
+export function Playground() {
   const session_id = localStorage.getItem("session_id");
-  const { updateSchemas } = useSchemas();
+  const { updateSchemas } = schemasStore();
   const [templateType, setTemplateType] = useState("");
-  const { updateTemplate } = useTemplate();
+  const { updateTemplate } = templateStore();
 
   useEffect(() => {
     const run = async () => {
@@ -50,7 +50,7 @@ export default function Playground() {
             overflow: "hidden",
           }}
         >
-          <PlaygroundBar style={{ margin: 0 }} />
+          <PlaygroundTopBar style={{ margin: 0 }} />
 
           <div
             className="mono"
@@ -99,7 +99,7 @@ export default function Playground() {
                       minWidth: 300,
                     }}
                   >
-                    <SchemaWrapper />
+                    <SchemaPanel />
                   </Panel>
                 </PanelGroup>
               </Panel>
@@ -113,7 +113,7 @@ export default function Playground() {
                   marginBottom: 10,
                 }}
               >
-                <ResultsTableWrapper />
+                <QueryResultList />
               </Panel>
             </PanelGroup>
           </div>
@@ -128,7 +128,7 @@ export default function Playground() {
           }}
         >
           <div>
-            <PlaygroundBar style={{ margin: 0 }} />
+            <PlaygroundTopBar style={{ margin: 0 }} />
             <div style={{ marginLeft: 15, marginTop: 10 }}>
               <MongoSchema />
             </div>
@@ -173,7 +173,7 @@ export default function Playground() {
                   minWidth: 300,
                 }}
               >
-                <ResultsTableWrapper />
+                <QueryResultList />
               </Panel>
             </PanelGroup>
           </div>

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import Schema from "./Schema";
-import Tab from "./Tab";
-import styles from "./SchemaWrapper.module.css";
-import { useSchemas } from "../hooks/useSchemas";
+import { Schema } from "./Schema";
+import { SchemaTab } from "./SchemaTab";
+import styles from "./SchemaPanel.module.css";
+import { schemasStore } from "../schemasStore";
 
-export default function SchemaWrapper() {
-  const { schemas } = useSchemas();
+export function SchemaPanel() {
+  const { schemas } = schemasStore();
   if (!schemas) return;
   const [activeSchema, setActiveSchema] = useState(schemas[0] || null);
 
@@ -31,7 +31,7 @@ export default function SchemaWrapper() {
     <div className={styles.wrapper}>
       <div className={styles.tabs}>
         {schemas.map((schema) => (
-          <Tab
+          <SchemaTab
             schema={schema}
             key={schema.name}
             selected={schema === activeSchema}

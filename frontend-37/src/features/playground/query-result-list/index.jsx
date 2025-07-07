@@ -79,9 +79,9 @@
 //   }
 // }
 
-import { useResults } from "../hooks/useResults";
-import ResultsTable from "./ResultsTable";
-import styles from "./ResultsTableWrapper.module.css";
+import { queryResultsStore } from "../queryResultsStore";
+import { QueryResultItem } from "./QueryResultItem";
+import styles from "./QueryResultList.module.css";
 
 function takeLine(str) {
   let a = str.indexOf('"LINE"');
@@ -92,8 +92,8 @@ function takeLine(str) {
   return [c, d];
 }
 
-export default function ResultsTableWrapper() {
-  const { results } = useResults();
+export function QueryResultList() {
+  const { results } = queryResultsStore();
   if (!results) return;
   if (results.detail) {
     return (
@@ -111,7 +111,7 @@ export default function ResultsTableWrapper() {
   return (
     <div>
       {results.map((item) => (
-        <ResultsTable results={item} queryNum={1} key={item} />
+        <QueryResultItem results={item} queryNum={1} key={item} />
       ))}
     </div>
   );

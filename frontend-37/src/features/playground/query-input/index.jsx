@@ -1,17 +1,17 @@
 import { useRef, useState, useEffect } from "react";
 import styles from "./QueryInput.module.css";
-import RunButton from "./RunButton";
-import { useResults } from "../hooks/useResults";
-import { useSchemas } from "../hooks/useSchemas";
-import { API_URL } from "../const";
+import { RunButton } from "./RunButton";
+import { queryResultsStore } from "../queryResultsStore";
+import { schemasStore } from "../schemasStore";
+import { API_URL } from "../../../config/env";
 
-export default function QueryInput() {
+export function QueryInput() {
   let textareaRef = useRef(null);
   let numbersColumnRef = useRef(null);
   let containerRef = useRef(null);
   const [query, setQuery] = useState("");
-  const { updateResults } = useResults();
-  const { updateSchemas } = useSchemas();
+  const { updateResults } = queryResultsStore();
+  const { updateSchemas } = schemasStore();
   const session_id = localStorage.getItem("session_id");
 
   let shiftDown = useRef(false);

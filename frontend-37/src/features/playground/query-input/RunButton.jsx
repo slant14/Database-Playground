@@ -1,7 +1,7 @@
 import styles from "./RunButton.module.css";
-import triangleJpg from "../assets/triangle.jpg";
+import triangleJpg from "../../../assets/triangle.jpg";
 
-export default function RunButton({ handleClick }) {
+export function RunButton({ handleClick }) {
   return (
     <>
       <button className={styles.runButton} onClick={handleClick}>
@@ -11,4 +11,3 @@ export default function RunButton({ handleClick }) {
     </>
   );
 }
-

@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/ ??? wtf
 lib64/
 parts/
 sdist/
@@ -184,6 +184,6 @@ mysql_data
 mongo_data
 
 # Playground
-playground/
+# playground/ ??? wtf
 .DS_Store
 .idea

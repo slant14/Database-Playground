@@ -1,9 +1,9 @@
-import { TopBar } from "./ui/TopBar";
-import { Button } from "./ui/Button";
-import { TopBarElement } from "./ui/TopBarElement";
 import { NavLink } from "react-router";
+import { TopBar } from "../../shared/ui/TopBar";
+import { TopBarElement } from "../../shared/ui/TopBarElement";
+import { Button } from "../../shared/ui/Button";
 
-export function MainBar({ onClick }) {
+export function MainTopBar({ onClick }) {
   return (
     <TopBar contentStyle={{ flexBasis: "500px" }}>
       <TopBarElement>

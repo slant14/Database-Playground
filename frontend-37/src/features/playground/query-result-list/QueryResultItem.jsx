@@ -1,42 +1,8 @@
-import styles from "./ResultsTable.module.css";
-import clockImg from "../assets/clock.jpg";
+import styles from "./QueryResultItem.module.css";
+import clockImg from "../../../assets/clock.jpg";
+import { SelectQueryResult } from "./SelectQueryResult";
 
-function Table({ results }) {
-  if (!results) return;
-  const nums = [];
-  if (results.columns) {
-    for (let i = 0; i < results.columns[0].length; i++) nums.push(i);
-
-    return (
-      <div>
-        <table>
-          <thead>
-            <tr>
-              {results.columns.map((col) => (
-                <td key={col}>{col}</td>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {nums.map((index) => (
-              <tr key={index}>
-                {results.columns.map((key) => (
-                  <td key={results.data[key][index]}>
-                    {results.data[key][index]}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-
-  return <pre>{JSON.stringify(results, null, 2)}</pre>;
-}
-
-export default function ResultsTable({ results, queryNum }) {
+export function QueryResultItem({ results, queryNum }) {
   if (results === null) {
     const rowsAffected = Math.max(0, results.rowcount);
     return (
@@ -84,7 +50,7 @@ export default function ResultsTable({ results, queryNum }) {
             </span>
           </summary>
           <div className={styles.beautiful}>
-            <Table results={data} />
+            <SelectQueryResult results={data} />
           </div>
         </details>
       </div>

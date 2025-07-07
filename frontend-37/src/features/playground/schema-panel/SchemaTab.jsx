@@ -1,6 +1,6 @@
-import styles from "./Tab.module.css";
+import styles from "./SchemaTab.module.css";
 
-export default function Tab({ schema, selected, onClick }) {
+export function SchemaTab({ schema, selected, onClick }) {
   return (
     <div
       className={[styles.tab, selected && styles.selected].join(" ")}

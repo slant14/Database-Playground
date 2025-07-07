@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { TemplateChoiceBar } from "../components/TemplateChoiceBar";
-import { TemplateList } from "../components/TemplateList";
 import { useNavigate } from "react-router";
-import { API_URL } from "../const";
-import { useTemplate } from "../hooks/useTemplate";
+import { templateStore } from "../../shared/store/templateStore";
+import { TemplateChoiceTopBar } from "./TopBar";
+import { TemplateList } from "./TemplateList";
+import { API_URL } from "../../config/env";
 
-export default function TemplateChoice() {
+export function TemplateChoice() {
   const [choice, setChoice] = useState(-1);
   const [templates, setTemplates] = useState([]);
   const session_id = localStorage.getItem("session_id");
   const navigate = useNavigate();
-  const { updateTemplate } = useTemplate();
+  const { updateTemplate } = templateStore();
 
   useEffect(() => {
     const run = async () => {
@@ -44,7 +44,7 @@ export default function TemplateChoice() {
 
   return (
     <div>
-      <TemplateChoiceBar
+      <TemplateChoiceTopBar
         onTemplateChoose={async (e) => {
           if (choice < 0) return e.preventDefault();
           await onChoice(choice);

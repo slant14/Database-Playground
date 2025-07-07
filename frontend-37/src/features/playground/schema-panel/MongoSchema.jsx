@@ -1,7 +1,7 @@
-import { useSchemas } from "../hooks/useSchemas";
+import { schemasStore } from "../schemasStore";
 
-export default function MongoSchema() {
-  const { schemas } = useSchemas();
+export function MongoSchema() {
+  const { schemas } = schemasStore();
   if (!schemas) return;
 
   return (

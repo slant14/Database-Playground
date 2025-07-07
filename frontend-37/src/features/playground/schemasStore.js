@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const useSchemas = create((set) => ({
+export const schemasStore = create((set) => ({
   schemas: [],
   updateSchemas: (newSchemas) => set({ schemas: newSchemas }),
 }));

@@ -4,9 +4,10 @@ table {
   width: 100%;
 }
 
-
-
-table, tr, td, th {
+table,
+tr,
+td,
+th {
   box-sizing: border-box;
 }
 
@@ -24,7 +25,7 @@ th {
   height: auto;
   margin-left: auto;
   margin-right: auto;
-  background-color: #E9E9FF;
+  background-color: #e9e9ff;
 }
 
 .clocksImg {
@@ -32,7 +33,6 @@ th {
   height: 28px;
   margin-right: 5px;
 }
-
 
 .rowAffect {
   margin-top: 10px;
@@ -48,8 +48,8 @@ th {
 summary {
   display: flex;
   justify-content: space-between;
-  align-items: center;           
-  padding: 4px 0;                
+  align-items: center;
+  padding: 4px 0;
   cursor: pointer;
   margin-bottom: 16px;
 }

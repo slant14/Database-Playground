@@ -1,14 +1,14 @@
-import dashboardImg from "../assets/people.png";
-import humansImg from "../assets/humans.jpg";
-import assignmentsImg from "../assets/taska.jpg";
-import humanWithDeskImg from "../assets/rectangleAndHuman.jpg";
-import styles from "./Dashboard.module.css";
-import { MainBar } from "../components/MainBar";
+import mainImg from "../../assets/people.png";
+import humansImg from "../../assets/humans.jpg";
+import assignmentsImg from "../../assets/taska.jpg";
+import humanWithDeskImg from "../../assets/rectangleAndHuman.jpg";
+import styles from "./Main.module.css";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { API_URL } from "../const";
+import { MainTopBar } from "./TopBar";
+import { API_URL } from "../../config/env";
 
-export default function Dashboard() {
+export function Main() {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <MainBar onClick={onClick} con />
+      <MainTopBar onClick={onClick} con />
       <div className={styles.mainDiv}>
         <div>
           <h1 className={styles.bigTitle}>Learn databases</h1>
@@ -55,11 +55,7 @@ export default function Dashboard() {
             Complete assignments, experiment in playground and become expert!
           </p>
         </div>
-        <img
-          className={styles.dashboardImg}
-          src={dashboardImg}
-          alt="dashboard image"
-        />
+        <img className={styles.mainImg} src={mainImg} alt="main image" />
       </div>
       <div className={styles.rectangleContainer}>
         <div className={styles.rectangle}>
