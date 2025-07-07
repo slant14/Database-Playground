@@ -1,7 +1,7 @@
 # Database-Playground
 This is free web-service for learning and testing different types of databases  
-http://89.169.178.180:3000/  
-https://disk.yandex.com.am/i/3592sfysVX_rSA  
+Available on http://89.169.178.180:3000/  
+[Demo video](https://disk.yandex.com.am/i/3592sfysVX_rSA)  
 
 ## Development
 ### Kanban board
