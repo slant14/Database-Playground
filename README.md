@@ -1,4 +1,8 @@
-# Database-Playground
+<div align="center">
+    <img src="frontend-37/src/assets/database.svg" width=200 height=200>
+    <h1>Database Playground</h1>
+    <p>Online platform for learning databases</p>
+</div>
 
 ## Launch/Access instructions
 ### You can visit [deployed version](https://dbpg.ru)
