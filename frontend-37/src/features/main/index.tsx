@@ -47,7 +47,7 @@ export function Main() {
 
   return (
     <div>
-      <MainTopBar onClick={onClick} con />
+      <MainTopBar onClick={onClick} />
       <div className={styles.mainDiv}>
         <div>
           <h1 className={styles.bigTitle}>Learn databases</h1>

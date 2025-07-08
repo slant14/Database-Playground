@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { templateStore } from "../../shared/store/templateStore";
+import { templateStore } from "@/shared/store/templateStore";
 import { TemplateChoiceTopBar } from "./TopBar";
 import { TemplateList } from "./TemplateList";
-import { API_URL } from "../../config/env";
+import { API_URL } from "@/config/env";
+import { Template } from "./types";
 
 export function TemplateChoice() {
-  const [choice, setChoice] = useState(-1);
-  const [templates, setTemplates] = useState([]);
+  const [choice, setChoice] = useState<Template | undefined>(undefined);
+  const [templates, setTemplates] = useState<Template[]>([]);
   const session_id = localStorage.getItem("session_id");
   const navigate = useNavigate();
   const { updateTemplate } = templateStore();
@@ -17,14 +18,14 @@ export function TemplateChoice() {
       const res = await fetch(API_URL + "/template/", {
         credentials: "include",
       });
-      const json = await res.json();
+      const json = (await res.json()) as Template[];
       setTemplates(json);
     };
 
     run();
   }, []);
 
-  const onChoice = async (choice) => {
+  const onChoice = async (choice: Template) => {
     await fetch(`${API_URL}/session/info/?session_id=${session_id}`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -37,6 +38,7 @@ export function TemplateChoice() {
       method: "PUT",
       credentials: "include",
     });
+
     updateTemplate(choice.name);
 
     navigate("/playground");
@@ -45,8 +47,8 @@ export function TemplateChoice() {
   return (
     <div>
       <TemplateChoiceTopBar
-        onTemplateChoose={async (e) => {
-          if (choice < 0) return e.preventDefault();
+        onTemplateChoose={async (e: React.MouseEvent<HTMLElement>) => {
+          if (!choice) return e.preventDefault();
           await onChoice(choice);
         }}
       />

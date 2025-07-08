@@ -1,16 +1,22 @@
 import styles from "./QueryResultItem.module.css";
 import clockImg from "../../../assets/clock.jpg";
 import { SelectQueryResult } from "./SelectQueryResult";
+import { QueryResult } from "../types";
 
-export function QueryResultItem({ results, queryNum }) {
-  if (results === null) {
-    const rowsAffected = Math.max(0, results.rowcount);
+interface QueryResultItemProps {
+  result: QueryResult;
+  queryNum: number;
+}
+
+export function QueryResultItem({ result, queryNum }: QueryResultItemProps) {
+  if (!result.data) {
+    const rowsAffected = Math.max(0, result.rowcount);
     return (
       <div>
         <details open>
           <summary>
             <span style={{ marginRight: "auto", marginLeft: 10 }}>
-              {queryNum}. {results.query}
+              {queryNum}. {result.query}
             </span>
             <span className={styles.greatSpan}>
               <img
@@ -19,7 +25,7 @@ export function QueryResultItem({ results, queryNum }) {
                 alt="clock"
                 style={{ marginRight: 10 }}
               />
-              {(results.execution_time * 1000).toFixed(3)}ms
+              {(result.execution_time * 1000).toFixed(3)}ms
             </span>
           </summary>
           <p className={styles.rowAffect}>
@@ -31,13 +37,13 @@ export function QueryResultItem({ results, queryNum }) {
       </div>
     );
   } else {
-    let data = results.data;
+    let data = result.data;
     return (
       <div>
         <details open>
           <summary>
             <span style={{ marginRight: "auto", marginLeft: 10 }}>
-              {queryNum}. {results.query}
+              {queryNum}. {result.query}
             </span>
             <span className={styles.greatSpan}>
               <img
@@ -46,11 +52,11 @@ export function QueryResultItem({ results, queryNum }) {
                 alt="clock"
                 style={{ marginRight: 10 }}
               />
-              {(results.execution_time * 1000).toFixed(3)}ms
+              {(result.execution_time * 1000).toFixed(3)}ms
             </span>
           </summary>
           <div className={styles.beautiful}>
-            <SelectQueryResult results={data} />
+            <SelectQueryResult queryData={data} />
           </div>
         </details>
       </div>

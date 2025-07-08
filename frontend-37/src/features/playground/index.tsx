@@ -6,7 +6,7 @@ import { schemasStore } from "./schemasStore";
 import { MongoSchema } from "./schema-panel/MongoSchema";
 import { QueryResultList } from "./query-result-list";
 import { PlaygroundTopBar } from "./TopBar";
-import { SchemaPanel } from "./schema-panel/SchemaPanel";
+import { SchemaPanel } from "./schema-panel";
 import { QueryInput } from "./query-input";
 
 export function Playground() {
@@ -50,7 +50,7 @@ export function Playground() {
             overflow: "hidden",
           }}
         >
-          <PlaygroundTopBar style={{ margin: 0 }} />
+          <PlaygroundTopBar />
 
           <div
             className="mono"
@@ -128,7 +128,7 @@ export function Playground() {
           }}
         >
           <div>
-            <PlaygroundTopBar style={{ margin: 0 }} />
+            <PlaygroundTopBar />
             <div style={{ marginLeft: 15, marginTop: 10 }}>
               <MongoSchema />
             </div>

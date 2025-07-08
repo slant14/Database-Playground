@@ -3,15 +3,27 @@ import styles from "./QueryInput.module.css";
 import { RunButton } from "./RunButton";
 import { queryResultsStore } from "../queryResultsStore";
 import { schemasStore } from "../schemasStore";
-import { API_URL } from "../../../config/env";
+import { API_URL } from "@/config/env";
+import { QueryResult, Schema } from "../types";
+
+export interface QueryResultsResponse {
+  detail?: string; // error
+  results?: QueryResult[];
+  schema?: {
+    name: string;
+    tables: Schema[];
+  };
+}
 
 export function QueryInput() {
-  let textareaRef = useRef(null);
-  let numbersColumnRef = useRef(null);
-  let containerRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const numbersColumnRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   const [query, setQuery] = useState("");
-  const { updateResults } = queryResultsStore();
+  const { updateError, updateResults } = queryResultsStore();
   const { updateSchemas } = schemasStore();
+
   const session_id = localStorage.getItem("session_id");
 
   let shiftDown = useRef(false);
@@ -26,16 +38,18 @@ export function QueryInput() {
   }
 
   function adjustSizes() {
+    if (!numbersColumnRef.current || !textareaRef.current) return;
     numbersColumnRef.current.style.height = `${textareaRef.current.clientHeight}px`;
   }
 
-  function selectionChangeHandler(e) {
-    let { selectionStart, selectionEnd } = e.target;
+  function selectionChangeHandler(e: Event) {
+    const target = e.target as HTMLTextAreaElement;
+    let { selectionStart, selectionEnd } = target;
 
     onQueryChange(
       selectionEnd > selectionStart
-        ? e.target.value.substring(selectionStart, selectionEnd)
-        : e.target.value
+        ? target.value.substring(selectionStart, selectionEnd)
+        : target.value
     );
   }
 
@@ -46,9 +60,9 @@ export function QueryInput() {
       credentials: "include",
     });
 
-    const json = await res.json();
+    const json = (await res.json()) as QueryResultsResponse;
     if (json.results) updateResults(json.results);
-    else updateResults(json);
+    else updateError(json.detail!);
     if (json.schema) updateSchemas(json.schema.tables);
   };
 
@@ -65,7 +79,7 @@ export function QueryInput() {
     }
 
     return () => {
-      if (isSelectionChangeHandlerAdded.current) {
+      if (isSelectionChangeHandlerAdded.current && input) {
         input.removeEventListener("selectionchange", selectionChangeHandler);
         isSelectionChangeHandlerAdded.current = false;
       }
@@ -99,28 +113,27 @@ export function QueryInput() {
             }
           }}
           onScroll={() => {
-            if (numbersColumnRef.current) {
-              numbersColumnRef.current.scrollTop =
-                textareaRef.current.scrollTop;
-            }
+            if (!numbersColumnRef.current || !textareaRef.current) return;
+            numbersColumnRef.current.scrollTop = textareaRef.current.scrollTop;
           }}
-          onKeyDown={(e) => {
+          onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
             if (e.key == "Tab") {
               e.preventDefault();
 
-              let { selectionStart, selectionEnd } = e.target;
+              const textarea = e.currentTarget;
+              let { selectionStart, selectionEnd } = textarea;
 
               let lineStart =
-                e.target.value.lastIndexOf("\n", selectionStart - 1) + 1;
-              let lineEnd = e.target.value
+                textarea.value.lastIndexOf("\n", selectionStart - 1) + 1;
+              let lineEnd = textarea.value
                 .substring(selectionStart)
                 .indexOf("\n");
               lineEnd =
                 lineEnd == -1
-                  ? e.target.value.length
+                  ? textarea.value.length
                   : selectionStart + lineEnd;
 
-              let actualLineStart = e.target.value
+              let actualLineStart = textarea.value
                 .substring(lineStart, selectionEnd)
                 .search(/\S/);
 
@@ -134,7 +147,7 @@ export function QueryInput() {
                 );
               }
 
-              e.target.setRangeText(
+              textarea.setRangeText(
                 replacement,
                 selectionStart,
                 selectionEnd,

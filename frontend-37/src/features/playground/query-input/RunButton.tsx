@@ -1,7 +1,11 @@
 import styles from "./RunButton.module.css";
-import triangleJpg from "../../../assets/triangle.jpg";
+import triangleJpg from "@/assets/triangle.jpg";
 
-export function RunButton({ handleClick }) {
+interface RunButtonProps {
+  handleClick: () => void;
+}
+
+export function RunButton({ handleClick }: RunButtonProps) {
   return (
     <>
       <button className={styles.runButton} onClick={handleClick}>

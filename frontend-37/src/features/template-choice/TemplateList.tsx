@@ -1,6 +1,17 @@
 import styles from "./TemplateList.module.css";
+import { Template } from "./types";
 
-export function TemplateList({ data, templateChoice, onTemplateChoiceChange }) {
+interface TemplateListProps {
+  data: Template[];
+  templateChoice: Template | undefined;
+  onTemplateChoiceChange: (choice: Template) => void;
+}
+
+export function TemplateList({
+  data,
+  templateChoice,
+  onTemplateChoiceChange,
+}: TemplateListProps) {
   let list = data.map((template) => {
     return (
       <li
@@ -10,9 +21,9 @@ export function TemplateList({ data, templateChoice, onTemplateChoiceChange }) {
           onTemplateChoiceChange(template);
         }}
         style={
-          template.id == templateChoice.id
+          template.id == templateChoice?.id
             ? { backgroundColor: "#009E00" }
-            : null
+            : undefined
         }
       >
         <div className={styles["template-list-data"]}>
@@ -43,7 +54,7 @@ export function TemplateList({ data, templateChoice, onTemplateChoiceChange }) {
   );
 }
 
-function typeToName(type) {
+function typeToName(type: string) {
   let result = "";
 
   switch (type) {

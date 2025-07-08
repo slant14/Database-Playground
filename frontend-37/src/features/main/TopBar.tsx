@@ -3,7 +3,11 @@ import { TopBar } from "../../shared/ui/TopBar";
 import { TopBarElement } from "../../shared/ui/TopBarElement";
 import { Button } from "../../shared/ui/Button";
 
-export function MainTopBar({ onClick }) {
+interface MainTopBarProps {
+  onClick: () => void;
+}
+
+export function MainTopBar({ onClick }: MainTopBarProps) {
   return (
     <TopBar contentStyle={{ flexBasis: "500px" }}>
       <TopBarElement>
