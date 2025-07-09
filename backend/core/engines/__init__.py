@@ -1,17 +1,24 @@
-from decouple import config
-from .SQLEngine import SQLEngine
+from .DBEngine import DBEngine
+from .MongoEngine import MongoEngine
 from .PostgresEngine import PostgresEngine
 
 postgres_engine = PostgresEngine(
-                root_db="",
-                host="postgres",
-                port=5432,
-                user="my_pg_user",
-                password="my_pg_password",
-            )
+    user="dbpg",
+    password="dbpg_pwd",
+    host="postgres",
+)
+
+mongo_engine = MongoEngine(
+    user="dbpg",
+    password="dbpg_pwd",
+    host="mongodb",
+)
+
 
 __all__ = [
-    "SQLEngine",
+    "DBEngine",
     "PostgresEngine",
+    "MongoEngine",
     "postgres_engine",
+    "mongo_engine",
 ]

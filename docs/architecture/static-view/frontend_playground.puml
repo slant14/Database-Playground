@@ -1,0 +1,39 @@
+@startuml
+
+skinparam monochrome true
+
+[PlaygroundBar] -up-( Interface1
+[Playground] -down- Interface1
+
+[PlaygroundBar] -down-( Interface2
+[TopBar] -up- Interface2
+
+[PlaygroundBar] -down-( Interface3
+[TopBarElement] -up- Interface3
+
+[PlaygroundBar] -down-( Interface4
+[Button] -up- Interface4
+
+[Playground] -right-( Interface5
+[QueryInput] -left- Interface5
+
+[QueryInput] -right-( Interface6
+[RunButton] -left- Interface6
+
+[SchemaWrapper] -right-( Interface7
+[Playground] -left- Interface7
+
+[Schema] -down-( Interface8
+[SchemaWrapper] -up- Interface8
+
+[Tab] -right-( Interface9
+[SchemaWrapper] -left- Interface9
+
+[Playground] -up-( Interface10
+[ResultsTableWrapper] -down- Interface10
+
+
+[ResultsTableWrapper] -up-( Interface11
+[ResultsTable] -down- Interface11
+
+@enduml

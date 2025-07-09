@@ -1,0 +1,27 @@
+---
+config:
+  theme: redux-dark-color
+---
+
+gitGraph
+    commit id: "feat: old feature"
+    branch pre-chroma
+    checkout pre-chroma
+    commit id: "fix: some hotfix"
+    branch 123-issue
+    checkout 123-issue
+    commit id: "feat: new feature"
+    checkout pre-chroma
+    branch 124-issue2
+    commit id: "feat: some other feature"
+    checkout 123-issue
+    commit id: "chore: some other change"
+    checkout pre-chroma
+    merge 123-issue
+    checkout 124-issue2
+    merge pre-chroma
+    checkout pre-chroma
+    merge 124-issue2
+    commit id: "fix: another hotfix"
+    checkout main
+    merge pre-chroma
