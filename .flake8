@@ -1,0 +1,69 @@
+[flake8]
+# Configuration for flake8 linting
+
+# Maximum line length
+max-line-length = 120
+
+# Exclude directories and files from linting
+exclude = 
+    .git,
+    __pycache__,
+    .pytest_cache,
+    .venv,
+    venv,
+    env,
+    .env,
+    migrations,
+    node_modules,
+    frontend/node_modules,
+    frontend/build,
+    frontend/public,
+    postgres_data,
+    mysql_data,
+    mongo_data,
+    .docker
+
+# Ignore specific error codes
+ignore = 
+    # E203: whitespace before ':' (conflicts with black)
+    E203,
+    # W503: line break before binary operator (conflicts with black)
+    W503,
+    # E501: line too long (handled by max-line-length)
+    E501,
+    # F401: module imported but unused (common in __init__.py files)
+    F401
+
+# Enable specific checks
+select = E,W,F,C
+
+# Per-file ignores
+per-file-ignores =
+    # Allow unused imports in __init__.py files
+    __init__.py:F401,
+    # Allow longer lines in settings files
+    */settings.py:E501,
+    # Allow unused imports in test files
+    test_*.py:F401,
+    # Allow star imports in Django settings
+    */settings/*.py:F403,F405
+
+# Show source code for each error
+show-source = True
+
+# Show pep8 violation statistics
+statistics = True
+
+# Count errors and warnings
+count = True
+
+# Maximum complexity for McCabe complexity checker
+max-complexity = 10
+
+# Docstring conventions (using pep257)
+docstring-convention = pep257
+
+# Additional plugin configurations
+# For flake8-import-order
+import-order-style = google
+application-import-names = core,engines,db,chroma,tests

@@ -1,17 +1,50 @@
-version: '3.9'
-
 services:
+  backend-db:
+    image: postgres:15
+    container_name: backend-db
+    environment:
+      POSTGRES_DB: backend_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "7000:5432"
+    volumes:
+      - backend_pgdata:/var/lib/postgresql/data
 
   backend:
     build: ./backend/
-    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend/core:/app
     ports:
       - "8000:8000"
+    depends_on:
+      - backend-db
     environment:
       - SECRET_KEY=test
       - DEBUG=True
+      - ALLOWED_HOSTS=*
+      - SECRET_KEY=replace-this-in-prod
+      - POSTGRES_DB=backend_db
+      - POSTGRES_HOST=backend-db
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    command: >
+        sh -c " python manage.py makemigrations &&
+                python manage.py migrate && 
+                python manage.py create_superuser_if_none && 
+                python manage.py runserver 0.0.0.0:8000"
+
+  chroma:
+    build:
+      context: ./backend/core/chroma
+    volumes:
+      - ./backend/core/chroma:/app
+      - ./backend/playground:/app/playground
+    ports:
+      - "9000:9000"
+    environment:
+      - PYTHONPATH=/app
 
   frontend-37:
     build: ./frontend-37
@@ -31,7 +64,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - postgres_pgdata:/var/lib/postgresql/data
 
   mongodb:
     image: mongo
@@ -43,15 +76,15 @@ services:
     volumes:
       - ./mongo_data:/data/db
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #     target: build
-  #     args:
-  #       REACT_APP_API_URL: http://localhost:8000
-  #   ports:
-  #     - "3000:3000"
+  frontend-46:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: build
+      args:
+        REACT_APP_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
 
   # mysql:
   #   image: mysql:8.0
@@ -63,3 +96,7 @@ services:
   #   volumes:
   #     - ./mysql_data:/var/lib/mysql
 
+
+volumes:
+  backend_pgdata:
+  postgres_pgdata:

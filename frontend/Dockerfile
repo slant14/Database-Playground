@@ -10,4 +10,4 @@ RUN echo "REACT_APP_API_URL=${REACT_APP_API_URL}" > .env
 RUN npm install --force && \
     npm run build
 
-CMD ["npm", "start"]
+CMD ["npm", "start", "--", "--host", "0.0.0.0"]

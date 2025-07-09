@@ -1,12 +1,24 @@
 .footeree {
-    margin-top: 20px;
     margin-left: 20px;
-    margin-bottom: 15px;
-    padding: 10px;
-    background-color: #0d1117 !important;
+    background-color: transparent !important;
     color: rgba(137, 146, 155, 1) !important;
     text-align: left;
     font-family: 'Noto Sans', sans-serif;
-    font-weight: 300;
-    font-size: 18px;
+    font-weight: 400;
+    font-size: 15px;
+    opacity: 0.6;
+    position: fixed !important;
+    bottom: 0;
+    width: 30%;
+}
+
+.footeree span {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+.footeree a {
+  color: rgba(137, 146, 155, 1) !important;
+  padding-top: 5px;
 }

@@ -1,37 +1,80 @@
 import React from 'react';
-import { Divider } from 'antd';
-import { Typography } from 'antd';
-
+import ChromaState from './DB_States/chromaState';
+import PostgresState from './DB_States/postgresState';
+import { CSSTransition, SwitchTransition } from "react-transition-group";
+import './Code.css';
 
 class OutputDBState extends React.Component {
+    constructor(props) {
+        super(props);
+        this.dbStateRefs = {};
+        this.state = {
+            isPostgresModalOpen: false,
+        }
+        this.getDBStateRef = this.getDBStateRef.bind(this);
+        this.renderDBState = this.renderDBState.bind(this);
+        this.open = this.open.bind(this);
+        this.close = this.close.bind(this);
+    }
+
+    getDBStateRef = (dbType) => {
+        if (!this.dbStateRefs[dbType]) {
+            this.dbStateRefs[dbType] = React.createRef();
+        }
+        return this.dbStateRefs[dbType];
+    };
+
+    renderDBState() {
+        const { response, db_state, chosenDB } = this.props;
+
+        switch (chosenDB) {
+            case "Chroma":
+                return <ChromaState response={response} db_state={db_state} />;
+            case "PostgreSQL":
+                return <PostgresState response={response} db_state={db_state} open={this.open} close={this.close} isPostgresModalOpen={this.state.isPostgresModalOpen} postgresTableInfo={this.props.postgresTableInfo} userid={this.props.userid}/>;
+            default:
+                return null;
+        }
+    }
+
     render() {
+        const { chosenDB } = this.props;
+        const nodeRef = this.getDBStateRef(chosenDB);
+
         return (
             <div>
-                <p className="code-general-text">Current DB state:</p>
-                <div className="code-output">
-                    {Object.keys(this.props.response).length === 0 || this.props.response.message === "Please try once again, there is an error in your code" ? <Typography.Text className='code-initial-text'>Current DB state will appear here</Typography.Text> : this.props.response.db_state.map((item, index) => {
-                        return (
-                            <div className="code-output-item">
-                                <Typography.Text className='code-text'>ID: <Typography.Text className='code-text' style={{ color: '#fff' }}>{item.id}</Typography.Text></Typography.Text> <br />
-                                <Typography.Text className='code-text'>Title: <Typography.Text className='code-text' style={{ color: '#fff' }}>{item.document}</Typography.Text></Typography.Text><br />
-                                {item.metadata && (
-                                    <div className="metadata-fields">
-                                        {Object.entries(item.metadata).map(([key, value]) => (
-                                            <Typography.Text className='code-text' key={key}>
-                                                Metadata/{key}: <Typography.Text className='code-text' style={{ color: '#fff' }}>{value}</Typography.Text>
-                                                <br />
-                                            </Typography.Text>
-                                        ))}
-                                    </div>
-                                )}
-                                {index !== this.props.response.db_state.length - 1 && <Divider className="my-divider" />}
-                            </div>
-                        );
-                    })}
-
-                </div>
+                <SwitchTransition>
+                    <CSSTransition
+                        key={chosenDB}
+                        timeout={300}
+                        classNames="db-state-fade"
+                        unmountOnExit
+                        nodeRef={nodeRef}
+                    >
+                        <div ref={nodeRef}>
+                            {this.renderDBState()}
+                        </div>
+                    </CSSTransition>
+                </SwitchTransition>
             </div>
-        );
+        )
+    }
+
+    open = () => {
+        this.setState({ isPostgresModalOpen: true });
+        if (this.props.setTableModalOpen) {
+            this.props.setTableModalOpen(true);
+        }
+        window.history.pushState({ modalType: 'table', page: 'code' }, '', window.location.pathname);
+    };
+
+    close = () => {
+        const wasOpen = this.state.isPostgresModalOpen;
+        this.setState({ isPostgresModalOpen: false });
+        if (this.props.setTableModalOpen) {
+            this.props.setTableModalOpen(false);
+        }
+        return wasOpen;
     }
 }
 
