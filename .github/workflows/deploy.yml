@@ -6,7 +6,7 @@ on:
 
 jobs:
  deploy:
-    if: github.repository == 'Delta-Software-Innopolis/Database-Playground'
+    if: github.repository == 'slant14/Database-Playground'
     runs-on: ubuntu-latest
 
     steps:
