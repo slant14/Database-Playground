@@ -1,4 +1,5 @@
 import uuid
+
 from rest_framework import serializers
 
 from .models import Session, SessionInfo
@@ -9,7 +10,7 @@ class SessionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Session
-        fields = ['session_id']
+        fields = ["session_id"]
 
     def get_session_id(self, obj):
         if isinstance(obj.id, uuid.UUID):
@@ -33,4 +34,4 @@ class SessionInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SessionInfo
-        fields = '__all__'
+        fields = "__all__"

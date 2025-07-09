@@ -1,0 +1,13 @@
+@startuml
+[Dashboard] -right-(interface
+[MainBar] -left-interface
+
+[TopBar] -left-interface1
+[MainBar] -right-(interface1
+
+[MainBar] -down-(interface2
+[Button] -up-interface2
+
+[MainBar] -up-(interface3
+[TopBarElement] -down-interface3
+@enduml

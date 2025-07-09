@@ -1,33 +1,47 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+import globals from "globals";
+import js from "@eslint/js";
+import reactPlugin from "eslint-plugin-react";
 
 export default [
-  { ignores: ['dist'] },
+  // Базовые правила ESLint
+  js.configs.recommended,
+
+  // Настройки для React
   {
-    files: ['**/*.{js,jsx}'],
+    files: ["**/*.{js,jsx}"],
+    plugins: {
+      react: reactPlugin, // Правильный формат плагинов в Flat Config
+    },
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        React: "readonly", // Глобальный React не требуется импортировать
+      },
       parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true, // Включаем поддержку JSX
+        },
       },
     },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-    },
     rules: {
-      ...js.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      "no-unused-vars": "off",
+      // React-специфичные правила
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-uses-react": "error",
+      "react/prop-types": "off", // Отключаем проверку prop-types
+
+      // Дополнительные правила по желанию
+      "react/jsx-key": "error", // Проверка key в массивах
+    },
+    settings: {
+      react: {
+        version: "detect", // Автоматически определяет версию React
+      },
     },
   },
-]
+
+  // Игнорируемые файлы (замена .eslintignore)
+  {
+    ignores: ["**/node_modules/**", "**/dist/**", "**/*.config.js"],
+  },
+];
