@@ -28,9 +28,10 @@ services:
       - POSTGRES_HOST=backend-db
       - POSTGRES_PORT=5432
     command: >
-        sh -c " python core/manage.py migrate && 
-                python core/manage.py create_superuser_if_none && 
-                python core/manage.py runserver 0.0.0.0:8000"
+        sh -c " python manage.py makemigrations &&
+                python manage.py migrate && 
+                python manage.py create_superuser_if_none && 
+                python manage.py runserver 0.0.0.0:8000"
 
   chroma:
     build:
