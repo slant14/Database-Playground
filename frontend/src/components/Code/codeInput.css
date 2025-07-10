@@ -1,0 +1,105 @@
+.code-editor-container {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #191d1a;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow: hidden;
+}
+
+.code-editor-wrapper {
+    display: flex;
+    width: 600px;
+    height: 618px;
+}
+
+.line-numbers {
+    background: #2a2a2a;
+    color: #7a7979;
+    padding: 10px 8px;
+    text-align: right;
+    user-select: none;
+    border-right: 1px solid #444;
+    min-width: 10px;
+    width: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow: hidden;
+    white-space: pre;
+    flex-shrink: 0;
+}
+
+.code-textarea-with-lines {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 10px;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre;
+    word-wrap: normal;
+    overflow: auto;
+    /* Стили скролла для textarea */
+    scrollbar-color: #2a2a2a transparent;
+    scrollbar-width: thin;
+}
+
+.code-textarea-with-lines::placeholder {
+    color: #888;
+}
+
+.code-textarea-with-lines:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Синхронизация скролла */
+.code-editor-wrapper {
+    overflow: hidden;
+}
+
+/* Webkit стили скролла для textarea */
+.code-textarea-with-lines::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px !important;
+}
+
+.code-textarea-with-lines::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.code-textarea-with-lines::-webkit-scrollbar-thumb {
+    background: #51CB63;
+    border-radius: 2px;
+}
+
+.code-textarea-with-lines::-webkit-scrollbar-thumb:hover {
+    background: #5d6063; 
+}
+
+/* Убираем стрелки (кнопки) скроллбара */
+.code-textarea-with-lines::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.code-textarea-with-lines::-webkit-scrollbar-button:start:decrement,
+.code-textarea-with-lines::-webkit-scrollbar-button:end:increment {
+    display: none !important;
+}
+
+.code-textarea-with-lines::-webkit-scrollbar-button:vertical:start:increment,
+.code-textarea-with-lines::-webkit-scrollbar-button:vertical:end:decrement {
+    display: none !important;
+}
+
+/* Убираем уголок скроллбара */
+.code-textarea-with-lines::-webkit-scrollbar-corner {
+    background: transparent;
+}

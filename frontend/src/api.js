@@ -1,15 +1,15 @@
 import { act } from "react";
-import { getCookie } from './utils';
+import { getCookie, deleteCookie } from './utils';
 
 const BASE_URL = process.env.REACT_APP_API_URL || "";
 
-export async function getChromaResponse(text, id) {
-  const res = await fetch(`${BASE_URL}/db/chroma/`, {
+export async function getChromaResponse(text) {
+  const res = await tokenUpdate(`${BASE_URL}/db/chroma/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ code: text, user_id: id, action: 'execute' }),
+    body: JSON.stringify({ code: text, action: 'execute' }),
   });
   if (!res.ok) {
     return "Error";
@@ -17,50 +17,50 @@ export async function getChromaResponse(text, id) {
   return res.json();
 }
 
-export async function getChromaInitialState(id) {
-  const res = await fetch(`${BASE_URL}/db/chroma/`, {
+export async function getChromaInitialState() {
+  const res = await tokenUpdate(`${BASE_URL}/db/chroma/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ user_id: id, action: 'state' }),
+    body: JSON.stringify({ action: 'state' }),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
 
-export async function getPostgresTable(id) {
-  const res = await fetch(`${BASE_URL}/db/schema/`, {
+export async function getPostgresTable() {
+  const res = await tokenUpdate(`${BASE_URL}/db/schema/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ user_id: id }),
+    body: JSON.stringify({}),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
 
-export async function createPostgresTable(id) {
-  const res = await fetch(`${BASE_URL}/db/put/`, {
+export async function createPostgresTable() {
+  const res = await tokenUpdate(`${BASE_URL}/db/put/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ user_id: id }),
+    body: JSON.stringify({}),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
 
-export async function queryPostgres(text, id) {
+export async function queryPostgres(text) {
   try {
-    const res = await fetch(`${BASE_URL}/db/query/`, {
+    const res = await tokenUpdate(`${BASE_URL}/db/query/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ user_id: id, code: text }),
+      body: JSON.stringify({ code: text }),
     });
     
     if (!res.ok) {
@@ -188,10 +188,10 @@ async function tokenUpdate(url, options = {}) {
         console.log("Refresh response:", refreshRes);
         console.log("New access token:", data.access);
       } else {
-        document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-        document.cookie = "refresh=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-        //window.location.href = "/";
-        console.log("Refresh failed, redirecting to /");
+        deleteCookie("access");
+        deleteCookie("refresh");
+        window.dispatchEvent(new CustomEvent('logout', { detail: 'Token refresh failed' }));
+        console.log("Refresh failed, logout event dispatched");
         return;
       }
     } else {

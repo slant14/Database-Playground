@@ -69,9 +69,24 @@
     background: transparent !important;
 }
 
+.icon-copy {
+    border: 2px solid #fff;
+    border-radius: 20px;
+    padding: 24px;
+    background: transparent !important;
+}
+
+.icon:hover {
+    border-color: #51CB63;
+    color: #51CB63 !important;
+    background: transparent !important;
+    transition: all 0.2s ease-in-out;
+}
+
 .title {
     font-size: 24px;
     color: #51CB63;
+    font-family: 'Noto Sans', sans-serif;
     margin-bottom: 5px;
     display: block;
     text-decoration: none;
@@ -154,4 +169,18 @@ a.title:hover {
     width: 100%;
     margin-top: 50px;
     gap: 50px;
+}
+
+/* Database links styling */
+.db-link {
+    color: #51CB63 !important;
+    text-decoration: none;
+    font-weight: inherit;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.db-link:hover {
+    color: #42974b !important;
+    text-decoration: none;
 }

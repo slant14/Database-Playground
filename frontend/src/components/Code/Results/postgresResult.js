@@ -16,6 +16,75 @@ class PostgresResult extends React.Component {
             .trim();
     };
 
+    // Проверяем, есть ли данные в результате
+    hasResultData = (data) => {
+        if (!data) return false;
+
+        // Если это массив строк (старый формат)
+        if (Array.isArray(data)) {
+            return data.length > 0;
+        }
+
+        // Если это объект с колонками (новый формат)
+        if (typeof data === 'object' && data.columns && data.data) {
+            return data.columns.length > 0 && Object.keys(data.data).length > 0;
+        }
+
+        return false;
+    };
+
+    // Отображаем данные в зависимости от их формата
+    renderResultData = (data) => {
+        if (!data) return null;
+
+        // Если это массив строк (старый формат)
+        if (Array.isArray(data)) {
+            return data.map((row, rowIndex) => (
+                <Typography.Text key={rowIndex} className='code-text' style={{ color: '#fff', fontSize: '13px' }}>
+                    <ImPointRight style={{ color: '#51CB63' }} /> [{row.map((cell, cellIndex) => (
+                        <span key={cellIndex}>
+                            {cell !== null ? String(cell) : 'NULL'}
+                            {cellIndex < row.length - 1 ? ', ' : ''}
+                        </span>
+                    ))}]
+                    <br />
+                </Typography.Text>
+            ));
+        }
+
+        // Если это объект с колонками (новый формат)
+        if (typeof data === 'object' && data.columns && data.data) {
+            const columns = data.columns;
+            const dataObj = data.data;
+
+            // Преобразуем данные в массив строк
+            const rows = [];
+            if (columns.length > 0) {
+                const firstColumnData = dataObj[columns[0]];
+                if (firstColumnData && firstColumnData.length > 0) {
+                    for (let i = 0; i < firstColumnData.length; i++) {
+                        const row = columns.map(col => dataObj[col][i]);
+                        rows.push(row);
+                    }
+                }
+            }
+
+            return rows.map((row, rowIndex) => (
+                <Typography.Text key={rowIndex} className='code-text' style={{ color: '#fff', fontSize: '13px' }}>
+                    <ImPointRight style={{ color: '#51CB63' }} /> [{row.map((cell, cellIndex) => (
+                        <span key={cellIndex}>
+                            {cell !== null ? String(cell) : 'NULL'}
+                            {cellIndex < row.length - 1 ? ', ' : ''}
+                        </span>
+                    ))}]
+                    <br />
+                </Typography.Text>
+            ));
+        }
+
+        return null;
+    };
+
     render() {
         const { response } = this.props;
 
@@ -23,7 +92,7 @@ class PostgresResult extends React.Component {
             return (
                 <div>
                     <Typography.Text className='code-initial-text'>Request result will appear here</Typography.Text>
-                    
+
                 </div>
             );
         }
@@ -63,25 +132,14 @@ class PostgresResult extends React.Component {
                                             </Typography.Text>
                                             <br />
                                             <Typography.Text className='code-text' style={{ color: '#51CB63', fontSize: '13px' }}>
-                                                Execution time: <Typography.Text className='code-text' style={{ color: '#fff', fontSize: '13px' }}>{result.execution_time} seconds</Typography.Text>
-                                            </Typography.Text>
-                                            {result.data && result.data.length > 0 ? (
+                                                Execution time: <Typography.Text className='code-text' style={{ color: '#fff', fontSize: '13px' }}>{parseFloat(result.execution_time).toFixed(3)} seconds</Typography.Text>
+                                            </Typography.Text>                            {result.data && this.hasResultData(result.data) ? (
                                                 <div>
                                                     <Typography.Text className='code-text' style={{ color: '#51CB63', fontSize: '13px' }}>
                                                         Data:
                                                     </Typography.Text>
                                                     <br />
-                                                    {result.data.map((row, rowIndex) => (
-                                                        <Typography.Text key={rowIndex} className='code-text' style={{ color: '#fff', fontSize: '13px' }}>
-                                                            <ImPointRight style={{ color: '#51CB63' }} /> [{row.map((cell, cellIndex) => (
-                                                                <span key={cellIndex}>
-                                                                    {cell !== null ? String(cell) : 'NULL'}
-                                                                    {cellIndex < row.length - 1 ? ', ' : ''}
-                                                                </span>
-                                                            ))}]
-                                                            <br />
-                                                        </Typography.Text>
-                                                    ))}
+                                                    {this.renderResultData(result.data)}
                                                 </div>
                                             ) : (
                                                 result.rowcount === 0 && (

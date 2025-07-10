@@ -91,23 +91,25 @@ class Home extends React.Component {
         </div>
         <div className="icon-row icon-first-row">
           <div className="iconText">
-            <SiSqlite className="icon" size={130} />
+            <FaCode className="icon" size={130} onClick={() => this.props.handleButtonClick("template")}/>
             <div className="text-container">
-              <a className="title" href='https://sqlite.org/' target="_blank" rel="noopener noreferrer">SQLite</a>
+              <Text className="title">Templates</Text>
               <Text className="description">
-                SQLite is an in-process library that implements a self-contained,
-                serverless, zero-configuration, transactional SQL database engine.
+                Ready-to-use code templates and examples for different databases. 
+                Quick start with pre-written queries, schemas, and best practices 
+                to accelerate your learning and development.
               </Text>
             </div>
           </div>
 
           <div className="iconText">
-            <SiMongodb className="icon" size={130} />
+            <FaBook className="icon" size={130} onClick={() => this.props.handleButtonClick("classrooms")}/>
             <div className="text-container">
-              <a className="title" href='https://www.mongodb.com/' target="_blank" rel="noopener noreferrer">MongoBD</a>
+              <Text className="title">Classrooms</Text>
               <Text className="description">
-                MongoDB is a popular, open-source NoSQL database that stores
-                data in flexible, JSON-like documents
+                Interactive learning environment for database education. 
+                Join virtual classrooms, complete assignments, track progress, 
+                and collaborate with peers in structured learning sessions.
               </Text>
             </div>
           </div>
@@ -115,23 +117,37 @@ class Home extends React.Component {
 
         <div className="icon-row">
           <div className="iconText">
-            <BiLogoPostgresql className="icon" size={130} />
+            <MdAccountCircle className="icon" size={130} onClick={() => {this.props.isLogin ? this.props.handleButtonClick("acc") : this.props.handleButtonClick("signin")}}/>
             <div className="text-container">
-              <a className="title" href='https://www.postgresql.org/' target="_blank" rel="noopener noreferrer">PostgreSQL</a>
+              <Text className="title">Account</Text>
               <Text className="description">
-                PostgreSQL is a powerful, open source object-relational database
-                system with a strong reputation for reliability, feature robustness, and performance.
+                Manage your personal profile, track your query history, 
+                and customize your database learning experience. 
+                Secure authentication and personalized settings.
               </Text>
             </div>
           </div>
 
           <div className="iconText">
-            <FaDatabase className="icon" size={130} />
+            <FaDatabase className="icon-copy" size={130} />
             <div className="text-container">
-              <a className="title" href='https://www.trychroma.com/' target="_blank" rel="noopener noreferrer">Chroma</a>
+              <Text className="title">Databases</Text>
               <Text className="description">
-                Chroma or ChromaDB is an open-source vector database tailored
-                to applications with large language models
+                Multi-database support including{' '}
+                <a href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer" className="db-link">
+                  PostgreSQL
+                </a>,{' '}
+                <a href="https://www.trychroma.com/" target="_blank" rel="noopener noreferrer" className="db-link">
+                  Chroma
+                </a>,{' '}
+                <a href="https://www.mysql.com/" target="_blank" rel="noopener noreferrer" className="db-link">
+                  MySQL
+                </a> and{' '}
+                <a href="https://www.mongodb.com/" target="_blank" rel="noopener noreferrer" className="db-link">
+                  MongoDB
+                </a>.{' '}
+                Execute queries, manage schemas, and explore different database 
+                technologies in one unified platform.
               </Text>
             </div>
           </div>

@@ -14,12 +14,17 @@ import { getCookie } from '../../utils';
 class Code extends React.Component {
   constructor(props) {
     super(props);
+    
+    // Восстанавливаем выбранную БД из localStorage
+    const savedDb = localStorage.getItem("selectedDb");
+    const chosenDb = savedDb || "Choose DB";
+    
     this.state = {
       response: {},
       db_state: {},
       isModalOpen: false,
       isLoading: false,
-      chosenDb: "Choose DB",
+      chosenDb: chosenDb,
       postgresTableInfo: {},
       postgresResponse: {},
     }
@@ -32,6 +37,13 @@ class Code extends React.Component {
     this.close = this.close.bind(this);
     this.setLoading = this.setLoading.bind(this);
   }
+  componentDidMount() {
+    // Загружаем данные для выбранной БД при монтировании компонента
+    if (this.state.chosenDb !== "Choose DB" && this.props.isLogin) {
+      this.loadDbData(this.state.chosenDb);
+    }
+  }
+
   render() {
     return (
       <div className="code-container">
@@ -50,7 +62,6 @@ class Code extends React.Component {
             chosenDB={this.state.chosenDb} 
             postgresTableInfo={this.state.postgresTableInfo} 
             postgresResponse={this.state.postgresResponse} 
-            userid={this.getUserId()}
             setTableModalOpen={this.props.setTableModalOpen}
             outputDBStateRef={this.props.outputDBStateRef}
           />
@@ -64,27 +75,6 @@ class Code extends React.Component {
 
   setLoading = (loading) => {
     this.setState({ isLoading: loading });
-  }
-
-  getUserId = () => {
-    try {
-      const loginCookie = getCookie("login") || "";
-      const passwordCookie = getCookie("password") || "";
-      const combinedString = loginCookie + passwordCookie;
-      return combinedString.hashCode ? combinedString.hashCode() : this.generateHashCode(combinedString);
-    } catch (error) {
-      return "0";
-    }
-  }
-
-  generateHashCode = (str) => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const chr = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + chr;
-      hash |= 0;
-    }
-    return hash.toString();
   }
 
   open = () => {
@@ -109,8 +99,7 @@ class Code extends React.Component {
       return;
     }
     this.setLoading(true);
-    const userId = this.getUserId();
-    getChromaInitialState(userId)
+    getChromaInitialState()
       .then(data => {
         this.setState({ db_state: data });
         this.setLoading(false);
@@ -125,16 +114,15 @@ class Code extends React.Component {
       return;
     }
     this.setLoading(true);
-    const userId = this.getUserId();
-    getPostgresTable(userId)
+    getPostgresTable()
       .then(data => {
         this.setState({ postgresTableInfo: data.tables});
         this.setLoading(false);
       })
       .catch(error => {
-        createPostgresTable(userId)
+        createPostgresTable()
           .then(data => {
-            getPostgresTable(userId)
+            getPostgresTable()
               .then(data => {
                 this.setState({ postgresTableInfo: data.tables });
                 this.setState({ isLoading: false });
@@ -153,6 +141,11 @@ class Code extends React.Component {
 
   handleDbSelection(selectedDb) {
     this.setState({ chosenDb: selectedDb });
+    localStorage.setItem("selectedDb", selectedDb);
+    this.loadDbData(selectedDb);
+  }
+
+  loadDbData(selectedDb) {
     switch (selectedDb) {
       case "Chroma":
         this.getInitialState();
@@ -165,7 +158,14 @@ class Code extends React.Component {
     }
   }
 
-  async executeCommandsSequentially(commands, userId, error) {
+  handlePostLoginUpdate = () => {
+    // Если пользователь уже выбрал БД, перезагружаем данные после авторизации
+    if (this.state.chosenDb && this.state.chosenDb !== "Choose DB") {
+      this.loadDbData(this.state.chosenDb);
+    }
+  };
+
+  async executeCommandsSequentially(commands, error) {
     this.setLoading(true);
     let allResults = [];
 
@@ -174,7 +174,7 @@ class Code extends React.Component {
       if (command === '') continue;
 
       try {
-        const data = await getChromaResponse(command, userId);
+        const data = await getChromaResponse(command);
 
         if (data === "Error") {
           allResults.push({
@@ -246,8 +246,7 @@ class Code extends React.Component {
     }
     if (chosenDb === "PostgreSQL") {
       this.setLoading(true);
-      const userId = this.getUserId();
-      queryPostgres(text, userId)
+      queryPostgres(text)
         .then(data => {
           if (data === "Error") {
             this.setState({postgresResponse: { message: "Error occurred while executing command" } });
@@ -292,9 +291,8 @@ class Code extends React.Component {
       const error = {
         message: "Please try once again, there is an error in your code",
       }
-      const userId = this.getUserId();
       if (!text.includes('\n')) {
-        getChromaResponse(text, userId)
+        getChromaResponse(text)
           .then(data => {
             if (data === "Error") {
               this.setState({
@@ -322,23 +320,11 @@ class Code extends React.Component {
       }
       else {
         let commands = text.split('\n');
-        this.executeCommandsSequentially(commands, userId, error);
+        this.executeCommandsSequentially(commands, error);
       }
 
     }
   }
 }
-
-
-String.prototype.hashCode = function () {
-  let hash = 0;
-  for (let i = 0; i < this.length; i++) {
-    const chr = this.charCodeAt(i);
-    hash = ((hash << 5) - hash) + chr;
-    hash |= 0;
-  }
-  return hash.toString();
-};
-
 
 export default Code;

@@ -15,6 +15,10 @@ class ClassRooms extends React.Component {
   }
 
   async componentDidMount() {
+    await this.loadClassrooms();
+  }
+
+  async loadClassrooms() {
     try {
       const classrooms = await getMyClassroms();
       this.setState({ classrooms });
@@ -22,6 +26,11 @@ class ClassRooms extends React.Component {
       console.error("Failed to fetch classrooms:", error);
     }
   }
+
+  handlePostLoginUpdate = async () => {
+    // Перезагружаем классы после авторизации
+    await this.loadClassrooms();
+  };
 
   render() {
     if (this.state.classrooms.length === 0) {
@@ -110,15 +119,8 @@ class ClassRooms extends React.Component {
       </div>
     );
   }
-  
 
-  selectClassroom = (classroom) => {
-    this.setState({ selectedClassroom: classroom });
-  };
 
-  selectClassroom = (classroom) => {
-    this.setState({ selectedClassroom: classroom });
-  };
 
 }
 

@@ -1,13 +1,21 @@
 import React from "react"
 import { Button } from "antd";
 import { FaCode } from "react-icons/fa";
-import logo from "../../../img/icon100.png"; 
-
+import logo from "../../../img/icon100.png";
+import logoo from "../../../img/logoo.svg";
 class LeftSideB extends React.Component {
     render() {
         return (
             <span className="header-logo">
-                <Button className="logo-button-outline" onClick={() => this.props.handleButtonClick("home")}><img src={logo} alt="Logo" style={{ height: 32 }} className="header-logo" /></Button>
+                <Button
+                    className="logo-button-outline"
+                    onClick={() => this.props.handleButtonClick("home")}
+                    style={{
+                        
+                    }}
+                >
+                    <img src={logoo} alt="Logo" style={{ height: 32 }} className="header-logo" />
+                </Button>
                 <Button
                     variant="solid"
                     className={this.props.activeButton === "template" ? "my-orange-button-solid" : "my-orange-button-outline"}

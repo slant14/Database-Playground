@@ -69,6 +69,7 @@ class PostgresEngine(DBEngine):
             with conn.cursor() as cur:
                 for query in self._split_queries(full_query):
                     self._save_query_result(cur, query, results)
+                conn.commit()
         return results
 
     def _execute_sql_dump(self, cur: cursor, sql_dump: str):
@@ -82,6 +83,10 @@ class PostgresEngine(DBEngine):
         data = None
         start = time.perf_counter()
         cur.execute(query)
+        
+        # Сохраняем rowcount сразу после выполнения запроса
+        rowcount = cur.rowcount
+        
         try:
             raw_data = cur.fetchall()
             # Only try formatting if description is available (for SELECT)
@@ -99,9 +104,8 @@ class PostgresEngine(DBEngine):
         except psycopg2.ProgrammingError:
             # For queries that do not return results (e.g., INSERT, DROP)
             data = None
-        rowcount = cur.rowcount
+        
         execution_time = time.perf_counter() - start
-        rowcount = cur.rowcount
 
         results.append(SQLQueryResult(query, rowcount, data, execution_time))
 

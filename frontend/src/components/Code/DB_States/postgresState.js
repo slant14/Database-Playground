@@ -20,7 +20,6 @@ class PostgresState extends React.Component {
     };
     render() {
         const { response, db_state, postgresTableInfo } = this.props;
-        const userId = this.props.userid;
         return (
             <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
@@ -31,7 +30,6 @@ class PostgresState extends React.Component {
                         open={this.props.isPostgresModalOpen}
                         onCancel={this.props.close}
                         selectedTable={this.state.chosenTable !== null ? postgresTableInfo[this.state.chosenTable] : null}
-                        userId={userId}
                         width={1200} />
                 </div>
                 <div style={{ marginTop: '10px' }}>

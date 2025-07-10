@@ -9,7 +9,8 @@ class PostgresModal extends React.Component {
     this.state = {
       tableData: [],
       loading: false,
-      error: null
+      error: null,
+      queryResult: null
     };
   }
 
@@ -33,17 +34,53 @@ class PostgresModal extends React.Component {
 
     try {
       const query = `SELECT * FROM ${this.props.selectedTable.name} LIMIT 1000;`;
-      const userId = this.props.userId || 'default_user';
       
-      const result = await queryPostgres(query, userId);
+      const result = await queryPostgres(query);
 
       if (result && result !== "Error") {
         let tableData = [];
         
         if (result.results && result.results.length > 0 && result.results[0].data) {
-          tableData = result.results[0].data;
+          const resultData = result.results[0].data;
+          
+          // Обрабатываем новый формат данных с колонками
+          if (resultData && typeof resultData === 'object' && resultData.columns && resultData.data) {
+            const columns = resultData.columns;
+            const dataObj = resultData.data;
+            
+            // Преобразуем данные в массив строк
+            if (columns.length > 0) {
+              const firstColumnData = dataObj[columns[0]];
+              if (firstColumnData && firstColumnData.length > 0) {
+                for (let i = 0; i < firstColumnData.length; i++) {
+                  const row = columns.map(col => dataObj[col][i]);
+                  tableData.push(row);
+                }
+              }
+            }
+          }
+          // Обрабатываем старый формат данных (массив строк)
+          else if (Array.isArray(resultData)) {
+            tableData = resultData;
+          }
         } else if (result.data) {
-          tableData = result.data;
+          // Обрабатываем прямой формат данных
+          if (result.data && typeof result.data === 'object' && result.data.columns && result.data.data) {
+            const columns = result.data.columns;
+            const dataObj = result.data.data;
+            
+            if (columns.length > 0) {
+              const firstColumnData = dataObj[columns[0]];
+              if (firstColumnData && firstColumnData.length > 0) {
+                for (let i = 0; i < firstColumnData.length; i++) {
+                  const row = columns.map(col => dataObj[col][i]);
+                  tableData.push(row);
+                }
+              }
+            }
+          } else if (Array.isArray(result.data)) {
+            tableData = result.data;
+          }
         } else if (result.result) {
           tableData = result.result;
         } else if (result.rows) {
@@ -58,7 +95,8 @@ class PostgresModal extends React.Component {
         
         this.setState({ 
           tableData: Array.isArray(tableData) ? tableData : [], 
-          loading: false 
+          loading: false,
+          queryResult: result
         });
       } else {
         this.setState({ 
@@ -121,7 +159,27 @@ class PostgresModal extends React.Component {
 
     let columns = [];
     
-    if (this.props.selectedTable && this.props.selectedTable.columns) {
+    // Определяем колонки на основе данных из результата запроса
+    if (this.state.queryResult && this.state.queryResult.results && 
+        this.state.queryResult.results[0] && this.state.queryResult.results[0].data &&
+        this.state.queryResult.results[0].data.columns) {
+      // Используем колонки из результата запроса
+      const resultColumns = this.state.queryResult.results[0].data.columns;
+      columns = resultColumns.map((columnName, index) => ({
+        title: columnName,
+        dataIndex: index.toString(),
+        key: columnName,
+        width: 150,
+        render: (value) => {
+          if (value === null || value === undefined) {
+            return <span style={{ color: '#a2aab3', fontStyle: 'italic' }}>NULL</span>;
+          }
+          return String(value);
+        }
+      }));
+    }
+    // Используем колонки из схемы таблицы
+    else if (this.props.selectedTable && this.props.selectedTable.columns) {
       columns = this.props.selectedTable.columns.map((column, index) => ({
         title: column.name,
         dataIndex: index.toString(),
@@ -135,6 +193,7 @@ class PostgresModal extends React.Component {
         }
       }));
     } else {
+      // Определяем колонки на основе первой строки данных
       const firstRow = tableData[0];
       if (Array.isArray(firstRow)) {
         columns = firstRow.map((_, index) => ({

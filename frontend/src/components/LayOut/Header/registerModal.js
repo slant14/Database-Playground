@@ -10,6 +10,7 @@ class RegisterModal extends React.Component {
       login: "",
       email: "",
       password: "",
+      needMemorizing: false,
       confirmPassword: "",
     }
   }
@@ -38,6 +39,12 @@ class RegisterModal extends React.Component {
 
           <p>Confirm password: </p>
           <Input.Password placeholder="Confirm Password" className="damn" onChange={(data) => this.setState({ confirmPassword: data.target.value })} />
+
+          <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <input type="checkbox" id="isHappy" onChange={(data) => this.setState({ needMemorizing: data.target.checked })} />
+            <span>Remember me</span>
+          </label>
+
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
             <div>
@@ -130,7 +137,7 @@ class RegisterModal extends React.Component {
             });
         }
       } else {
-        this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing, data.access, data.refresh)
+        this.props.logIn(this.state.login, this.state.needMemorizing, data.access, data.refresh)
         notification.success({
           message: 'Registration successful!',
           description: 'Your account has been created. You can now log in to the system.',

@@ -12,6 +12,7 @@ from chroma.ChromaClient import ChromaClient
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import time
+import traceback
 
 import json
 
@@ -22,7 +23,7 @@ from .docs import (
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ChromaQueryParser(APIView):
-    permission_classes=[AllowAny]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         data = json.loads(request.body)
         action = data.get('action')
@@ -37,7 +38,7 @@ class ChromaQueryParser(APIView):
         try:
             data = json.loads(request.body)
             query_text = data.get("code")
-            user_id = data.get("user_id")
+            user_id = request.user.id
         except Exception:
             query_text = None
 
@@ -73,7 +74,7 @@ class ChromaQueryParser(APIView):
         print("Chroma state request received")
         try:
             data = json.loads(request.body)
-            user_id = data.get("user_id")
+            user_id = request.user.id
         except Exception:
             user_id = None
         if not user_id:
@@ -97,83 +98,110 @@ class PlainTextParser(BaseParser):
 
 
 class PutView(APIView):
-    permission_classes=[AllowAny]
+    permission_classes=[IsAuthenticated]
     @put_db_schema_doc
     def put(self, request: Request):
-        data = json.loads(request.body)
-        db_name = data.get("user_id")
-
-        if db_exists(postgres_engine, db_name):
-            postgres_engine.drop_db(db_name)
-            
-        print(data)
-
-        dump = """
-        CREATE TABLE users (
-            id SERIAL PRIMARY KEY,
-            username VARCHAR(50),
-            email VARCHAR(100)
-        );
-"""
-        postgres_engine.create_db(db_name, dump)
-
         try:
-            schema = postgres_engine.get_db(str(db_name))
-            print(f"DEBUG: Database '{db_name}' state after creation:")
-            print(f"Schema: {schema}")
-        except Exception as e:
-            print(f"DEBUG: Error getting database state: {str(e)}")
+            data = json.loads(request.body)
+            user_id = request.user.id
+            db_name = f"db_{user_id}"
 
-        return Response({"detail": "Database was set up"}, status=214)
+            print(f"PutView: user_id={user_id}, db_name={db_name}, data={data}")
+
+            if db_exists(postgres_engine, db_name):
+                postgres_engine.drop_db(db_name)
+                print(f"Dropped existing database for user {db_name}")
+                
+            print(f"Creating database for user {db_name}")
+
+            dump = """
+            CREATE TABLE users (
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(50),
+                email VARCHAR(100)
+            );
+            """
+            postgres_engine.create_db(db_name, dump)
+
+            try:
+                schema = postgres_engine.get_db(db_name)
+                print(f"DEBUG: Database '{db_name}' state after creation:")
+                print(f"Schema: {schema}")
+            except Exception as e:
+                print(f"DEBUG: Error getting database state: {str(e)}")
+
+            return Response({"detail": "Database was set up"}, status=214)
+        except Exception as e:
+            print(f"PutView error: {e}")
+            traceback.print_exc()
+            return Response({"detail": "Error creating database: " + str(e)}, status=500)
 
 
 class SchemaView(APIView):
-    permission_classes=[AllowAny]
+    permission_classes=[IsAuthenticated]
     @get_db_schema_doc
     def post(self, request: Request):
         try:
             data = json.loads(request.body)
-            db_name = data.get("user_id")
+            user_id = request.user.id
+            db_name = f"db_{user_id}"
 
-            print(data)
+            print(f"SchemaView: user_id={user_id}, db_name={db_name}, data={data}")
+            if not db_exists(postgres_engine, db_name):
+                print(f"Database {db_name} does not exist, returning 404")
+                return Response({"detail": "Database does not exist. Please create it first."}, status=404)
 
-            schema = postgres_engine.get_db(str(db_name))
+            schema = postgres_engine.get_db(db_name)
+            print(f"SchemaView: schema={schema}")
 
             return Response(schema.to_json())
         except Exception as e:
+            print(f"SchemaView error: {e}")
+            traceback.print_exc()
             return Response({"detail": "Error retrieving schema: " + str(e)}, status=400)
 
 
 class QueryView(APIView):
-    permission_classes=[AllowAny]
+    permission_classes=[IsAuthenticated]
     parser_classes = [PlainTextParser]
 
     @post_db_query_doc
     def post(self, request: Request):
-        data = json.loads(request.body)
-        db_name = data.get("user_id")
-
-        print(data)
-
-        query = data.get("code")
-        query = query.strip()
-        query = query.replace('\\n', '')
-        print("\n\nDATA:", query, "\n\n")
-        if not isinstance(query, str):
-            return Response({"detail": "Not a plain string query"}, status=400)
-        
         try:
+            data = json.loads(request.body)
+            user_id = request.user.id
+            db_name = f"db_{user_id}"
+
+            print(f"QueryView: user_id={user_id}, db_name={db_name}, data={data}")
+
+            query = data.get("code")
+            query = query.strip()
+            query = query.replace('\\n', '')
+            print(f"QueryView: Executing query: {query}")
+            
+            if not isinstance(query, str):
+                return Response({"detail": "Not a plain string query"}, status=400)
+            
+            if not db_exists(postgres_engine, db_name):
+                return Response({"detail": "Database does not exist. Please create it first."}, status=400)
+            
             results = postgres_engine.send_query(db_name, query)
+            schema = postgres_engine.get_db(db_name)
+
+            json_results = [r.to_json() for r in results]
+            json_schema = schema.to_json()
+
+            print(f"QueryView: Results: {json_results}")
+
+            return Response({
+                "results": json_results,
+                "schema": json_schema
+            })
         except QueryError as e:
+            print(f"QueryView QueryError: {e}")
             return Response({"detail": "QueryError: "+str(e)}, status=400)
-
-        schema = postgres_engine.get_db(db_name)
-
-        json_results = [r.to_json() for r in results]
-        json_schema = schema.to_json()
-
-        return Response({
-            "results": json_results,
-            "schema": json_schema
-        })
+        except Exception as e:
+            print(f"QueryView error: {e}")
+            traceback.print_exc()
+            return Response({"detail": "Error executing query: " + str(e)}, status=500)
         

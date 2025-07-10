@@ -140,11 +140,13 @@ class ExactClassroom extends React.Component {
   };
 
   async componentDidMount() {
-      try {
-        const students = await getMyClassroomClassmates(this.props.classroom.id);
-        this.setState({ students });
-      } catch (error) {
-        console.error("Failed to fetch students:", error);
+      if (this.props.classroom && this.props.classroom.id) {
+        try {
+          const students = await getMyClassroomClassmates(this.props.classroom.id);
+          this.setState({ students });
+        } catch (error) {
+          console.error("Failed to fetch students:", error);
+        }
       }
     }
     
