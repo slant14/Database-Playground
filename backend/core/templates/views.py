@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from engines import postgres_engine
 from session.models import Session
 from session.shortcuts import resolve_session_id
-
+from rest_framework.permissions import IsAuthenticated
 from .docs import post_template_schema
 from .models import Template
 from .serializers import MinTemplateSerializer, TemplateSerializer
@@ -14,6 +14,7 @@ from .serializers import MinTemplateSerializer, TemplateSerializer
 
 class TemplateListCreateView(mixins.ListModelMixin,
                              generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Template.objects.all()
     serializer_class = MinTemplateSerializer
 
@@ -22,12 +23,13 @@ class TemplateListCreateView(mixins.ListModelMixin,
 
     @post_template_schema
     def post(self, request: Request):
-        session_id, err_response = resolve_session_id(request)
+        err_response = resolve_session_id(request)
         if err_response:
             return err_response
 
-        session = Session.objects.get(id=session_id)
-        db_name = session.get_unauth_dbname()
+
+        user_id = request.user.id if request.user.is_authenticated else None
+        db_name = "db_" + str(user_id)
 
         data = JSONParser().parse(request)
         data['dump'] = postgres_engine.get_dump(db_name)

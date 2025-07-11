@@ -156,6 +156,18 @@ export async function getMySubmissions() {
   return res.json();
 }
 
+async function getTempplateList() {
+  const res = await tokenUpdate(`${BASE_URL}/core/templates/template/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+
 async function tokenUpdate(url, options = {}) {
   console.log("tokenUpdate called, url:", url);
   let token = getCookie("access");
@@ -204,3 +216,4 @@ async function tokenUpdate(url, options = {}) {
 
   return res;
 }
+
