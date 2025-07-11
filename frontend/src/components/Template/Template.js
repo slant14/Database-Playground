@@ -2,8 +2,8 @@ import React from 'react';
 import './Template.css';
 import { Typography, Button } from 'antd';
 import { getTemplateList } from '../../api'
+import { setTemplate } from '../../api';
 import SingleTemplate from './singleTemplate';
-import { getTemplateList } from '../../api';
 
 class Template extends React.Component {
   constructor(props) {
@@ -35,7 +35,14 @@ class Template extends React.Component {
           }).catch(error => {
             console.error("Error fetching templates:", error);
           });
-        }}>Templates</button>
+        }}>Get Templates</button>
+        <button onClick={() => {
+          setTemplate().then(data => {
+            console.log("Templates added", data);
+          }).catch(error => {
+            console.error("Error adding templates", error);
+          });
+        }}>Set Template</button>
       </div>
     </div>
     );
