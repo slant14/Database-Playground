@@ -156,8 +156,8 @@ export async function getMySubmissions() {
   return res.json();
 }
 
-async function getTempplateList() {
-  const res = await tokenUpdate(`${BASE_URL}/core/templates/template/`, {
+export async function getTemplateList() {
+  const res = await tokenUpdate(`${BASE_URL}/template/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

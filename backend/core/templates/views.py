@@ -19,6 +19,7 @@ class TemplateListCreateView(mixins.ListModelMixin,
     serializer_class = MinTemplateSerializer
 
     def get(self, request: Request):
+        #print("TemplateListCreateView GET request")
         return self.list(request)
 
     @post_template_schema
@@ -30,6 +31,7 @@ class TemplateListCreateView(mixins.ListModelMixin,
 
         user_id = request.user.id if request.user.is_authenticated else None
         db_name = "db_" + str(user_id)
+        print(f"Creating template for user {user_id} with db name {db_name}")
 
         data = JSONParser().parse(request)
         data['dump'] = postgres_engine.get_dump(db_name)
@@ -38,6 +40,7 @@ class TemplateListCreateView(mixins.ListModelMixin,
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        print(serializer.data)
         return Response(serializer.data)
 
 

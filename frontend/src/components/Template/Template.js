@@ -1,6 +1,7 @@
 import React from 'react';
 import './Template.css';
 import { Typography, Button } from 'antd';
+import { getTemplateList } from '../../api'
 import SingleTemplate from './singleTemplate';
 
 class Template extends React.Component {
@@ -27,9 +28,13 @@ class Template extends React.Component {
     <div className="template-container">
       <div className="template-list">
         <span className='template-preview'><Typography.Text className="template-starting-text"> Choose <Typography.Text className="template-starting-text" style={{color: '#51CB63'}}>template</Typography.Text> from the list above or </Typography.Text> <Button className='my-orange-button-outline' style={{ position: 'relative', top: '-2px',height: '40px', fontSize: '18px' }} onClick={() => this.props.handleButtonClick("code")}>Create Template</Button> </span>
-        {this.state.template.map((item, index) => (
-            <SingleTemplate key={index} title={item.title} description={item.description} handleButtonClick={this.props.handleButtonClick}/>
-        ))}
+        <button onClick={() => {
+          getTemplateList().then(data => {
+            console.log("Templates fetched:", data);
+          }).catch(error => {
+            console.error("Error fetching templates:", error);
+          });
+        }}>Templates</button>
       </div>
     </div>
     );

@@ -188,3 +188,5 @@ mongo_data
 # playground/ ??? wtf
 .DS_Store
 .idea
+
+/backend/playground/
