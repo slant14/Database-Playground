@@ -1,6 +1,7 @@
 import React from 'react';
 import './Template.css';
 import { Typography, Button } from 'antd';
+import { getTemplateList } from '../../api'
 import SingleTemplate from './singleTemplate';
 import { getTemplateList } from '../../api';
 
@@ -25,18 +26,18 @@ class Template extends React.Component {
   }
   render() {
     return (
-      <div className="template-container">
-        <div className="template-list">
-          <span className='template-preview'><Typography.Text className="template-starting-text"> Choose <Typography.Text className="template-starting-text" style={{ color: '#51CB63' }}>template</Typography.Text> from the list above or </Typography.Text> <Button className='my-orange-button-outline' style={{ position: 'relative', top: '-2px', height: '40px', fontSize: '18px' }} onClick={() => this.props.handleButtonClick("code")}>Create Template</Button> </span>
-          <button onClick={() => {
-            getTemplateList().then(data => {
-              console.log("Templates fetched:", data);
-            }).catch(error => {
-              console.error("Error fetching templates:", error);
-            });
-          }}>Templates</button>
-        </div>
+    <div className="template-container">
+      <div className="template-list">
+        <span className='template-preview'><Typography.Text className="template-starting-text"> Choose <Typography.Text className="template-starting-text" style={{color: '#51CB63'}}>template</Typography.Text> from the list above or </Typography.Text> <Button className='my-orange-button-outline' style={{ position: 'relative', top: '-2px',height: '40px', fontSize: '18px' }} onClick={() => this.props.handleButtonClick("code")}>Create Template</Button> </span>
+        <button onClick={() => {
+          getTemplateList().then(data => {
+            console.log("Templates fetched:", data);
+          }).catch(error => {
+            console.error("Error fetching templates:", error);
+          });
+        }}>Templates</button>
       </div>
+    </div>
     );
   }
 }
