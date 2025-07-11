@@ -24,13 +24,8 @@ class TemplateListCreateView(mixins.ListModelMixin,
 
     @post_template_schema
     def post(self, request: Request):
-        err_response = resolve_session_id(request)
-        if err_response:
-            return err_response
-
-
         user_id = request.user.id if request.user.is_authenticated else None
-        db_name = "db_" + str(user_id)
+        db_name = f"db_{user_id}"
         print(f"Creating template for user {user_id} with db name {db_name}")
 
         data = JSONParser().parse(request)

@@ -173,7 +173,7 @@ export async function setTemplate() {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ dump: "CREATE TABLE users ( id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL);" }),
+    body: JSON.stringify({name: '123', author: 'System', type: 'PSQL', dump: "CREATE TABLE users ( id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL);" }),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
