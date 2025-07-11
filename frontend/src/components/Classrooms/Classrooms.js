@@ -102,24 +102,12 @@ class ClassRooms extends React.Component {
                   </li>
                 </ul>
               </div>
-
-              
             </div>
           ))}
         </div>
       </div>
     );
   }
-  
-
-  selectClassroom = (classroom) => {
-    this.setState({ selectedClassroom: classroom });
-  };
-
-  selectClassroom = (classroom) => {
-    this.setState({ selectedClassroom: classroom });
-  };
-
 }
 
 export default ClassRooms;
