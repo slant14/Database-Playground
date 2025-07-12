@@ -191,10 +191,11 @@ docker-compose up
 ### Contributors:
 
 <a href="https://github.com/S25-SWP-Team46/DP-fork/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=othneildrew/DP-fork" alt="contrib.rocks image" />
+  <img src="https://contrib.rocks/image?repo=S25-SWP-Team46/DP-fork" alt="contrib.rocks image" />
 </a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 ---
 
