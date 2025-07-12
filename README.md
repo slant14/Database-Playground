@@ -157,18 +157,20 @@ Then go to
 ---
 
 ### 3. Query processing
-3.1 Code RUnner page
-	1. Click **Templates** in main page
-	2. Click **Create Template** on templates page  
-3.2 Code execution
-	1. On code runner page choose “Chroma” from DB dropdown.  
-	2. Enter: `CREATE 404;`  
-	3. Click **Run** → Verify that data appears in results table.  
-	4. Enter invalid Vector-based (e.g. `CRT 22`) → Click **Run** → Verify syntax error   
-3.3 Multiple DB
-	1. Select “PostgeSQL”  
-	2. Follow the 3.4-3.6 steps with corresponding queries
 
+#### 3.1 Code RUnner page
+1. Click **Templates** in main page
+2. Click **Create Template** on templates pag
+
+#### 3.2 Code execution
+1. On code runner page choose “Chroma” from DB dropdown.  
+2. Enter: `CREATE 404;`  
+3. Click **Run** → Verify that data appears in results table.
+4. Enter invalid Vector-based (e.g. `CRT 22`) → Click **Run** → Verify syntax error   
+
+#### 3.3 Multiple DB
+1. Select “PostgeSQL”  
+2. Follow the 3.4-3.6 steps with corresponding queries
 
 ### Project Installation / Deployment instructions
 
