@@ -114,7 +114,7 @@ docker-compose up
 
 ### Static view
 
-[`static-view`](./docs/architecture/static-view/)
+![static-view](./docs/architecture/static-view/StaticViewUML.png)
 
 Database Playground is an educational platform for interactive database learning, featuring a **React**frontend and **Django** backend. It supports **PostgreSQL**, **ChromaDB**, and **SQLite**, and is deployed via **Docker Compose** with CI/CD automated by **GitHub Actions**.
 
@@ -149,7 +149,7 @@ Clean REST interfaces and a database adapter pattern ensure loose coupling; cont
 
 ### Dynamic view
 
-[dynamic-view](https://github.com/S25-SWP-Team46/DP-fork/tree/main/docs/architecture/deployment-view)
+![dynamic-view](./docs/architecture/deployment-view/DynamicViewUML.PNG)
 
 All measurements were taken in a production‐like environment (React frontend, Dockerized Django backend, AWS RDS PostgreSQL):
 
@@ -163,7 +163,7 @@ All measurements were taken in a production‐like environment (React frontend, 
 
 ### Deployment view
 
-[`deployment-view`](./docs/architecture/deployment-view)
+![deployment-view](./docs/architecture/deployment-view/DeploymentViewUML.png)
 
 The project is deployed in Yandex Cloud on an Ubuntu 24.04 server using Docker containers, with GitHub Actions automating the CI/CD process. Customers access the "Frontend" via a web browser over the Internet. For customers to run the project on their own server, they must add their server's username, IP address, and SSH key to GitHub secrets and then trigger the "Deploy Project" workflow. The "Frontend" communicates with the "Backend" via RestAPI, which in turn interacts with "Backend-DB," "Chroma," "Postgres," "MySQL," and "MongoDB," all running securely within Docker on the server.
 
