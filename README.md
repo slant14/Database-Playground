@@ -122,26 +122,20 @@ Then go to
 1. In the Admin Panel, click **Classrooms**.
 2. Click **Add Classroom**.
 3. Fill in all required fields (e.g., name, description).
+4. Choose the **TAs** and **primary instructor**
 4. Click **Save**.
 
-#### 2.2 Assign the TA Role
-
-1. In the Admin Panel, go to **Users**.
-2. Select the user you wish to promote.
-3. In their profile, set **Role** to **Teacher Assistant**.
-4. Click **Save**.
-
-#### 2.3 Enroll Users
+#### 2.2 Enroll Users
 
 1. In the Admin Panel, click **Enrollments**.
 2. Click **Add Enrollment**.
 3. Complete the form:
    - **User:** Select the student (e.g., yourself).
    - **Classroom:** Choose the class you created.
-   - **Rating:** Assign an initial rating or grade.
+   - **Grade:** Assign an initial rating or grade.
 4. Click **Save**.
 
-#### 2.4 Verify in the App
+#### 2.3 Verify in the App
 
 1. Go to the front-end at http://89.169.178.180:3000/.
 2. Navigate to **Classes** (or the specific class page).
@@ -204,6 +198,14 @@ docker-compose up
 
 [Continuous deployment documentation](./docs/automation/continuous-delivery.md)
 
+---
+
+### Architecture
+
+[Architecture documentation](./docs/architecture/architecture.md)
+
+---
+
 ### Contributors:
 
 <a href="https://github.com/S25-SWP-Team46/DP-fork/graphs/contributors">
@@ -212,14 +214,7 @@ docker-compose up
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 ---
-
-
-### Architecture
-
-[Architecture documentation](./docs/architecture/architecture.md)
-
 
 [contributors-shield]: https://img.shields.io/github/contributors/S25-SWP-Team46/DP-fork.svg?style=for-the-badge
 [contributors-url]: https://github.com/S25-SWP-Team46/DP-fork/graphs/contributors
