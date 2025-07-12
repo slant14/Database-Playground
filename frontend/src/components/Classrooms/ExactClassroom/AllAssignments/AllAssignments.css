@@ -1,6 +1,7 @@
 .allAssignments {
     display: flex;
     flex-direction: column;
+    align-self: center;
 }
 
 .all-assignments {

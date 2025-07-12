@@ -8,6 +8,7 @@ import Home from "./components/Home/Home";
 import ClassRooms from "./components/Classrooms/Classrooms";
 import ExactClassroom from "./components/Classrooms/ExactClassroom/ExactClassroom";
 import AllAssignments from "./components/Classrooms/ExactClassroom/AllAssignments/AllAssignments"
+import Blog from "./components/Classrooms/ExactClassroom/Blog/Blog"
 import Template from "./components/Template/Template";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import { getCookie } from './utils';
@@ -61,6 +62,7 @@ class App extends React.Component {
       allAssignmentsIsActive: true,
       isAssignmentModalOpen: false,
       isArticleModalOpen: false,
+      blog: [],
       isHintModalOpen: false,
       isTableModalOpen: false,
     };
@@ -226,6 +228,14 @@ class App extends React.Component {
             />
           </div>
         )
+      case "Blog":
+        return (
+          <div>
+            <Blog 
+              articles={this.state.blog}
+            />
+          </div>
+        )  
       case "code":
         return (
           <div>
@@ -437,6 +447,13 @@ class App extends React.Component {
   setArticleModalOpen = (isOpen) => {
     this.setState({
       isArticleModalOpen: isOpen
+    });
+  }
+
+  handleAllArticlesClick = (articles) => {
+    this.setState({
+      page: "Blog",
+      blog: articles,
     });
   }
 
