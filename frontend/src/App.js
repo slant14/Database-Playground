@@ -1,5 +1,5 @@
 import React from "react";
-import { App as AntApp } from "antd";
+import { getPostgresTable, createPostgresTable, queryPostgres } from './api';
 import Footer from "./components/LayOut/footer";
 import Header from "./components/LayOut/Header/Header";
 import Account from "./components/Account/Account";
@@ -16,33 +16,33 @@ class App extends React.Component {
   lastActiveButton = '';
   constructor(props) {
     super(props);
-    
+
     // Проверяем, есть ли активная сессия
     const hasActiveSession = sessionStorage.getItem('activeSession') === 'true';
     const needMemorizing = getCookie("needMemorizing") === "true";
     let lastPage = getFromLocalStorage("lastPage");
     console.log('App constructor - hasActiveSession:', hasActiveSession, 'lastPage:', lastPage);
-    
+
     // Если нет активной сессии - это новое открытие (не обновление страницы)
     if (!hasActiveSession) {
       console.log('New session detected - clearing lastPage');
       removeFromLocalStorage("lastPage");
       lastPage = null;
-    
-      if (!needMemorizing){
+
+      if (!needMemorizing) {
         this.logOut();
       }
     }
-    
+
     // Устанавливаем флаг активной сессии
     sessionStorage.setItem('activeSession', 'true');
-    
+
     const login = getCookie("login");
-    
+
     const selectedClassroom = getFromLocalStorage("selectedClassroom");
-    
+
     console.log('App constructor - lastPage:', lastPage, 'selectedClassroom:', selectedClassroom);
-    
+
     this.state = {
       page: lastPage || "home",
       user: {
@@ -53,8 +53,13 @@ class App extends React.Component {
       isModalOpen: false,
       activeButton: lastPage || 'home',
       selectedClassroom: selectedClassroom,
+      allAssignments: [],
+      postgresTableInfo: null,
+      selectedDB: null,
+      allAssignmentsIsActive: true,
       isHintModalOpen: false,
       isTableModalOpen: false,
+      isSaveModalOpen: false,
       isInitialized: false, // Флаг для отслеживания завершения инициализации
     };
     this.setPage = this.setPage.bind(this);
@@ -73,9 +78,9 @@ class App extends React.Component {
     window.addEventListener('popstate', this.handlePopState);
     window.addEventListener('beforeunload', this.handleBeforeUnload);
     window.addEventListener('logout', this.handleLogout);
-    
+
     window.history.replaceState({ page: this.state.page }, '', window.location.pathname);
-    
+
     // Устанавливаем флаг инициализации после небольшой задержки
     setTimeout(() => {
       this.setState({ isInitialized: true });
@@ -100,7 +105,7 @@ class App extends React.Component {
       window.history.pushState({ page: this.state.page }, '', window.location.pathname);
       return;
     }
-    
+
     if (this.state.isHintModalOpen) {
       if (this.codeRef.current) {
         const wasClosed = this.codeRef.current.close();
@@ -113,7 +118,7 @@ class App extends React.Component {
       }
       return;
     }
-    
+
     if (this.state.isTableModalOpen) {
       if (this.outputDBStateRef.current) {
         const wasClosed = this.outputDBStateRef.current.close();
@@ -126,7 +131,20 @@ class App extends React.Component {
       }
       return;
     }
-    
+
+    if (this.state.isSaveModalOpen) {
+      if (this.codeRef.current) {
+        const wasClosed = this.codeRef.current.closeSave();
+        if (wasClosed) {
+          window.history.pushState({ page: 'code' }, '', window.location.pathname);
+        }
+      } else {
+        this.setState({ isSaveModalOpen: false });
+        window.history.pushState({ page: 'code' }, '', window.location.pathname);
+      }
+      return;
+    }
+
     if (this.state.page === "code") {
       this.setState({ page: "template", activeButton: "template" });
       setToLocalStorage("lastPage", "template");
@@ -176,7 +194,7 @@ class App extends React.Component {
       case "classrooms":
         return (
           <div>
-            <ClassRooms ref={this.classroomsRef} selectClassroom={this.selectClassroom}/>
+            <ClassRooms ref={this.classroomsRef} selectClassroom={this.selectClassroom} />
           </div>);
       case "exactClassroom":
         if (!this.state.selectedClassroom) {
@@ -205,20 +223,27 @@ class App extends React.Component {
         }
         return (
           <div>
-            <ExactClassroom classroom={this.state.selectedClassroom}/>
+            <ExactClassroom
+              classroom={this.state.selectedClassroom}
+              handleAllAssignmentsClick={this.handleAllAssignmentsClick}
+            />
           </div>
-        );
+        )
       case "code":
         return (
           <div>
-            <Code 
+            <Code
               ref={this.codeRef}
-              getCookie={getCookie} 
-              isLogin={this.state.isLogin} 
+              getCookie={getCookie}
+              isLogin={this.state.isLogin}
               handleButtonClick={this.handleButtonClick}
               setHintModalOpen={this.setHintModalOpen}
               setTableModalOpen={this.setTableModalOpen}
+              setSaveModalOpen={this.setSaveModalOpen}
+              isSaveModalOpen={this.state.isSaveModalOpen}
               outputDBStateRef={this.outputDBStateRef}
+              selectedDB={this.state.selectedDB}
+              postgresTableInfo={this.state.postgresTableInfo}
             />
           </div>);
       case "acc":
@@ -229,7 +254,7 @@ class App extends React.Component {
       case "template":
         return (
           <div>
-            <Template handleButtonClick={this.handleButtonClick} setPage={this.setPage}/>
+            <Template onTemplateClick={this.onTemplateClick} setPage={this.setPage} isLogin={this.state.isLogin} handleButtonClick={this.handleButtonClick} />
           </div>);
       default:
         return <div>Page not found</div>;
@@ -310,7 +335,27 @@ class App extends React.Component {
       this.handlePostLoginUpdate();
     });
   }
-  
+
+  onTemplateClick = (code) => {
+    this.setState({ selectedDB: "PostgreSQL" });
+    
+    // Создаем объект с данными для отправки
+    const payload = code ? { dump: code } : {};
+    
+    createPostgresTable(payload)
+      .then(() => {
+        return getPostgresTable();
+      })
+      .then(data => {
+        this.setState({ postgresTableInfo: data.tables });
+      })
+      .catch(error => {
+        console.error("Error creating database:", error);
+      });
+      
+    this.setState({ page: "code", activeButton: "code" });
+    this.setPage("code");
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.current !== this.props.current) {
@@ -325,12 +370,12 @@ class App extends React.Component {
     deleteCookie("refresh");
     removeFromLocalStorage("lastPage"); // Удаляем lastPage только при выходе
     removeFromLocalStorage("selectedClassroom");
-    
+
     // Очищаем пользовательские данные
     localStorage.removeItem("selectedDb"); // Очищаем выбранную БД
     // НЕ очищаем cookiesAccepted - это согласие пользователя должно сохраняться
     // deleteCookie("cookiesAccepted"); // Раскомментируйте, если нужно очищать при выходе
-    
+
     // Обновляем состояние после удаления cookies
     this.setState({
       isLogin: false,
@@ -342,7 +387,7 @@ class App extends React.Component {
       page: "home",
       activeButton: "home",
     });
-    
+
     setToLocalStorage("lastPage", "home");
     this.lastActiveButton = "home";
     window.history.replaceState({ page: "home" }, '', window.location.pathname);
@@ -354,7 +399,7 @@ class App extends React.Component {
     const refresh_token = getCookie("refresh");
     const wasLoggedIn = this.state.isLogin;
     const isLoggedIn = !!login && !!token;
-    
+
     this.setState({
       isLogin: isLoggedIn,
     }, () => {
@@ -389,6 +434,10 @@ class App extends React.Component {
     this.setState({ isTableModalOpen: isOpen });
   };
 
+  setSaveModalOpen = (isOpen) => {
+    this.setState({ isSaveModalOpen: isOpen });
+  };
+
   login = () => {
     this.setLogin();
     this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
@@ -402,7 +451,7 @@ class App extends React.Component {
   selectClassroom = (classroom) => {
     console.log('Selecting classroom:', classroom);
     if (classroom && classroom.id) {
-      this.setState({ selectedClassroom: classroom});
+      this.setState({ selectedClassroom: classroom });
       setToLocalStorage("selectedClassroom", classroom);
       this.setPage("exactClassroom");
       setToLocalStorage("lastPage", "exactClassroom");
@@ -424,6 +473,15 @@ class App extends React.Component {
     console.log('Logout event received:', event.detail);
     this.logOut();
   };
+
+  handleAllAssignmentsClick = (assignments, isActive) => {
+    this.setState({
+      page: "allAssignments",
+      allAssignments: assignments,
+      allAssignmentsIsActive: isActive
+    });
+  }
+
 }
 
 export default App;

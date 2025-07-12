@@ -105,7 +105,15 @@ class PutView(APIView):
             data = json.loads(request.body)
             user_id = request.user.id
             db_name = f"db_{user_id}"
-
+            
+            # Получаем dump из запроса
+            dump = data.get("dump")
+            print(f"RECEIVED DUMP: {dump}")
+            print(f"DUMP TYPE: {type(dump)}")
+            print(f"DUMP LENGTH: {len(dump) if dump else 'None'}")
+                
+            
+            print(f"FINAL DUMP: {dump}")
             print(f"PutView: user_id={user_id}, db_name={db_name}, data={data}")
 
             if db_exists(postgres_engine, db_name):
@@ -114,13 +122,6 @@ class PutView(APIView):
                 
             print(f"Creating database for user {db_name}")
 
-            dump = """
-            CREATE TABLE users (
-                id SERIAL PRIMARY KEY,
-                username VARCHAR(50),
-                email VARCHAR(100)
-            );
-            """
             postgres_engine.create_db(db_name, dump)
 
             try:

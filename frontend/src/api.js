@@ -41,13 +41,13 @@ export async function getPostgresTable() {
   return res.json();
 }
 
-export async function createPostgresTable() {
+export async function createPostgresTable(payload = {}) {
   const res = await tokenUpdate(`${BASE_URL}/db/put/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({}),
+    body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
@@ -167,13 +167,24 @@ export async function getTemplateList() {
   return res.json();
 }
 
-export async function setTemplate() {
+export async function setTemplate(name, author, type) {
   const res = await tokenUpdate(`${BASE_URL}/template/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({name: '123', author: 'System', type: 'PSQL', dump: "CREATE TABLE users ( id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL);" }),
+    body: JSON.stringify({name: name, author: author, type: type, dump: "CREATE TABLE users ( id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL);" }),
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+export async function deleteTemplate(id) {
+  const res = await tokenUpdate(`${BASE_URL}/template/${id}/delete/`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();

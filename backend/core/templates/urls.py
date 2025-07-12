@@ -4,5 +4,6 @@ from .views import TemplateListCreateView, TemplateRetreiveView
 
 urlpatterns = [
     path('<int:pk>/', TemplateRetreiveView.as_view()),
+    path('<int:pk>/delete/', TemplateListCreateView.as_view()),
     path('', TemplateListCreateView.as_view()),
 ]

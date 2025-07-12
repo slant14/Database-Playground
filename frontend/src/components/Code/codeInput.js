@@ -1,22 +1,23 @@
 import React from "react"
 import { Button, Select, Upload, notification } from "antd";
-import { UploadOutlined} from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
+import SaveModal from './modalSave';
 import './codeInput.css';
 
 
 class CodeInput extends React.Component {
     constructor(props) {
         super(props);
-        
-        // Восстанавливаем выбранную БД из localStorage
+
         const savedDb = localStorage.getItem("selectedDb");
         const chosenDb = savedDb || 'Choose DB';
-        
+
         this.state = {
             code: '',
             chosenDb: chosenDb,
+            isModalOpen: false,
         };
-        
+
         this.textareaRef = React.createRef();
         this.lineNumbersRef = React.createRef();
         this.wrapperRef = React.createRef();
@@ -40,7 +41,7 @@ class CodeInput extends React.Component {
     handleScroll = (e) => {
         const scrollTop = e.target.scrollTop;
         const scrollLeft = e.target.scrollLeft;
-        
+
         if (this.lineNumbersRef.current) {
             this.lineNumbersRef.current.scrollTop = scrollTop;
         }
@@ -52,6 +53,23 @@ class CodeInput extends React.Component {
     handleCodeChange = (e) => {
         this.setState({ code: e.target.value });
     };
+
+    open = () => {
+        this.setState({ isModalOpen: true });
+        if (this.props.setSaveModalOpen) {
+            this.props.setSaveModalOpen(true)
+        }
+        window.history.pushState({ modalType: 'save', page: 'code' }, '', window.location.pathname);
+    };
+
+    close = () => {
+        const wasOpen = this.state.isModalOpen;
+        this.setState({ isModalOpen: false });
+        if (this.props.setSaveModalOpen) {
+            this.props.setSaveModalOpen(false)
+        }
+        return wasOpen;
+    }
 
     handleFileUpload = (file) => {
         const { chosenDb } = this.state;
@@ -130,7 +148,7 @@ class CodeInput extends React.Component {
         } else {
             acceptedFiles = '.txt,.sql';
         }
-        
+
         const uploadProps = {
             name: 'file',
             accept: acceptedFiles,
@@ -143,20 +161,20 @@ class CodeInput extends React.Component {
                 <p className="code-general-text">Write your code or <span><Upload {...uploadProps}>
                     <Button icon={<UploadOutlined />} className='my-orange-button-outline' > Import File</Button>
                 </Upload></span></p>
-                
+
                 <div className="code-editor-container">
                     <div className="code-editor-wrapper" ref={this.wrapperRef}>
-                        <div 
-                            className="line-numbers" 
+                        <div
+                            className="line-numbers"
                             ref={this.lineNumbersRef}
                         >
                             {this.getLineNumbers()}
                         </div>
-                        <textarea 
+                        <textarea
                             ref={this.textareaRef}
-                            className='code-textarea-with-lines' 
-                            placeholder='Will your code appear here?' 
-                            value={this.state.code} 
+                            className='code-textarea-with-lines'
+                            placeholder='Will your code appear here?'
+                            value={this.state.code}
                             onChange={this.handleCodeChange}
                             onKeyDown={this.handleKeyDown}
                             onScroll={this.handleScroll}
@@ -164,12 +182,12 @@ class CodeInput extends React.Component {
                         />
                     </div>
                 </div>
-                
+
                 <div className='code-buttons' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'right' }}>
                     <Select
                         className='code-select'
                         value={this.state.chosenDb}
-                        style={{ width: 190, marginRight: '10px', marginTop: '10px' }}
+                        style={{ width: 190, marginTop: '10px' }}
                         options={[
                             { value: 'PostgreSQL', label: 'PostgreSQL' },
                             { value: 'SQLite', label: 'SQLite' },
@@ -184,8 +202,24 @@ class CodeInput extends React.Component {
                             }
                         }}
                     />
+                    <Button
+                        className='my-orange-button-outline'
+                        style={{ marginTop: '10px', marginRight: '10px' }}
+                        onClick={() => this.props.openSave && this.props.openSave()}
+                        disabled={!(this.state.chosenDb === "PostgreSQL") }
+                    >
+                        Save Template
+                    </Button>
                     < Button className='my-orange-button-outline' type="primary" style={{ marginTop: '10px', marginLeft: '0px' }} onClick={() => this.props.getIt(this.state.code, this.state.chosenDb)} loading={this.props.isLoading} disabled={this.props.isLoading} iconPosition="end">Run Code</Button>
                 </div>
+                <SaveModal
+                    open={this.props.isSaveModalOpen}
+                    onCancel={() => this.props.setSaveModalOpen && this.props.setSaveModalOpen(false)}
+                    title="Save Template"
+                    selectedDb={this.state.chosenDb}
+                    sqlCode={this.state.code}
+                    onSave={this.props.onSaveTemplate}
+                />
             </div>
         );
     }

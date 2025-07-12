@@ -12,4 +12,4 @@ class TemplateSerializer(serializers.ModelSerializer):
 class MinTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Template
-        fields = ['id', 'name', 'author', 'type']
+        fields = ['id', 'name', 'author', 'type', 'dump']

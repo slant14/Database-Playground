@@ -15,7 +15,9 @@ class Code extends React.Component {
   constructor(props) {
     super(props);
     
-    // Восстанавливаем выбранную БД из localStorage
+    if (this.props.selectedDb == "PostgreSQL") {
+      this.handleDbSelection(this.props.selectedDb);
+    }
     const savedDb = localStorage.getItem("selectedDb");
     const chosenDb = savedDb || "Choose DB";
     
@@ -25,7 +27,7 @@ class Code extends React.Component {
       isModalOpen: false,
       isLoading: false,
       chosenDb: chosenDb,
-      postgresTableInfo: {},
+      postgresTableInfo: this.props.postgresTableInfo || {},
       postgresResponse: {},
     }
 
@@ -53,6 +55,10 @@ class Code extends React.Component {
             getIt={(text, chosenDb) => this.getIt(text, chosenDb)}
             onDbSelect={this.handleDbSelection}
             isLoading={this.state.isLoading}
+            selectedDb={this.state.chosenDb}
+            setSaveModalOpen={this.props.setSaveModalOpen}
+            isSaveModalOpen={this.props.isSaveModalOpen}
+            openSave={this.openSave}
           />
         </main>
         <aside className="code-aside">
@@ -85,11 +91,26 @@ class Code extends React.Component {
     window.history.pushState({ modalType: 'hint', page: 'code' }, '', window.location.pathname);
   };
 
+  openSave = () => {
+    if (this.props.setSaveModalOpen) {
+      this.props.setSaveModalOpen(true);
+    }
+    window.history.pushState({ modalType: 'save', page: 'code' }, '', window.location.pathname);
+  };
+
   close = () => {
     const wasOpen = this.state.isModalOpen;
     this.setState({ isModalOpen: false });
     if (this.props.setHintModalOpen) {
       this.props.setHintModalOpen(false);
+    }
+    return wasOpen;
+  }
+
+  closeSave = () => {
+    const wasOpen = this.props.isSaveModalOpen;
+    if (this.props.setSaveModalOpen) {
+      this.props.setSaveModalOpen(false);
     }
     return wasOpen;
   }
@@ -120,22 +141,6 @@ class Code extends React.Component {
         this.setLoading(false);
       })
       .catch(error => {
-        createPostgresTable()
-          .then(data => {
-            getPostgresTable()
-              .then(data => {
-                this.setState({ postgresTableInfo: data.tables });
-                this.setState({ isLoading: false });
-              })
-              .catch(error => {
-                this.setState({ isLoading: false });
-              })
-            this.setLoading(false);
-          })
-          .catch(error => {
-            this.setLoading(false);
-          });
-        this.setLoading(false);
       })
   }
 
@@ -324,6 +329,14 @@ class Code extends React.Component {
       }
 
     }
+  }
+
+  closeSave = () => {
+    const wasOpen = this.props.isSaveModalOpen;
+    if (this.props.setSaveModalOpen) {
+      this.props.setSaveModalOpen(false);
+    }
+    return wasOpen;
   }
 }
 
