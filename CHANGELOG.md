@@ -1,21 +1,17 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 ## [Unreleased]
 
 ### Added
-- Dynamic photo update functionality in README
-- Workflow diagram visualization ![image1](image1)
-- Enhanced documentation with project workflow visualization
+- Support of MongoDB database
+- 
 
 ### Changed
 - Updated README.md with improved project description and visual workflow
 
-## [MVP2] - 2025-07-07
+## [MVP v2.5] - 2025-07-13
+
+## [MVP v2] - 2025-07-06
 
 ### Added
 - Multiple database support with PostgreSQL integration
@@ -33,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Authentication bug fixes for front-end and back-end integration
 - Database connection stability improvements
 
-## [MVP1] - 2025-07-06
+## [MVP v1] - 2025-06-22
 
 ### Added
 - Chroma database support and integration
@@ -47,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced data persistence layer
 - Improved application performance with database optimization
 
-## [MVP0] - 2025-07-06
+## [MVP v0] - 2025-06-15
 
 ### Added
 - Basic application outline and architecture
