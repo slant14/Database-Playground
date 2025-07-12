@@ -2,10 +2,13 @@ import React from "react";
 import { Typography, Button } from "antd";
 import { FaRegFileCode } from "react-icons/fa6";
 import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
+import { MdOutlineArticle } from "react-icons/md";
 import './ExactClassroom.css';
-import image from "../../img/WideScreen.jpg"
-import image1 from "../../img/Screen.jpg"
-import { getMyClassroomClassmates } from '../../api';
+import Assignments from './Assignments/Assignments';
+import Articles from './Articles/Articles';
+import image from "../../../img/WideScreen.jpg"
+import image1 from "../../../img/Screen.jpg"
+import { getMyClassroomClassmates } from '../../../api';
 
 const { Title, Paragraph, Text, Link } = Typography;
 
@@ -51,37 +54,71 @@ class ExactClassroom extends React.Component {
         {
           title: "Assignment 1",
           open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
+          due: "2025/04/30 00:00:00",
+          description: "Prettyprint is the process of converting and presenting \
+          source code or other objects in a legible and attractive way. A prettyprinter\
+           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
+            the characters with line breaks and indentations to make the code comprehensible",
+          files: []  
         },
         {
           title: "Assignment 2",
           open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
+          due: "2025/04/30 00:00:00",
+          description: "Prettyprint is the process of converting and presenting \
+          source code or other objects in a legible and attractive way. A prettyprinter\
+           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
+            the characters with line breaks and indentations to make the code comprehensible",
+          files: [] 
         },
         {
           title: "Assignment 3",
           open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
+          due: "2025/04/30 00:00:00",
+          description: "Prettyprint is the process of converting and presenting \
+          source code or other objects in a legible and attractive way. A prettyprinter\
+           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
+            the characters with line breaks and indentations to make the code comprehensible",
+          files: [] 
         },
         {
           title: "Assignment 4",
           open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
+          due: "2025/04/30 00:00:00",
+          description: "Prettyprint is the process of converting and presenting \
+          source code or other objects in a legible and attractive way. A prettyprinter\
+           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
+            the characters with line breaks and indentations to make the code comprehensible",
+          files: [] 
         },
         {
           title: "Assignment 5",
           open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
+          due: "2025/04/30 00:00:00",
+          description: "Prettyprint is the process of converting and presenting \
+          source code or other objects in a legible and attractive way. A prettyprinter\
+           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
+            the characters with line breaks and indentations to make the code comprehensible",
+          files: [] 
         },
         {
           title: "Assignment 6",
           open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
+          due: "2025/04/30 00:00:00",
+          description: "Prettyprint is the process of converting and presenting \
+          source code or other objects in a legible and attractive way. A prettyprinter\
+           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
+            the characters with line breaks and indentations to make the code comprehensible",
+          files: [] 
         }
       ],
+      isAssignmentModalOpen: false,
+      selectedAssignment: null,
+      isAssignmentActive: true,
       articles: [
         {
           title: "Pretty Print",
+          author: "Nickolay Kudasov",
           description: "Prettyprint is the process of converting and presenting \
           source code or other objects in a legible and attractive way. A prettyprinter\
            takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
@@ -89,6 +126,7 @@ class ExactClassroom extends React.Component {
         },
         {
           title: "Pretty Print",
+          author: "Nickolay Kudasov",
           description: "Prettyprint is the process of converting and presenting \
           source code or other objects in a legible and attractive way. A prettyprinter\
            takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
@@ -96,6 +134,7 @@ class ExactClassroom extends React.Component {
         },
         {
           title: "Pretty Print",
+          author: "Nickolay Kudasov",
           description: "Prettyprint is the process of converting and presenting \
           source code or other objects in a legible and attractive way. A prettyprinter\
            takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
@@ -103,39 +142,43 @@ class ExactClassroom extends React.Component {
         },
         {
           title: "Pretty Print",
+          author: "Nickolay Kudasov",
           description: "Prettyprint is the process of converting and presenting \
           source code or other objects in a legible and attractive way. A prettyprinter\
            takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
             the characters with line breaks and indentations to make the code comprehensible",
         }
-      ]
+      ],
+      isArticleModalOpen: false,
+      selectedArticle: null,
     }
 
     this.assignmentSectionActiveRef = React.createRef();
     this.assignmentSectionFinishedRef = React.createRef();
   }
 
-  scrollAssignmentsRightActive = () => {
-    if (this.assignmentSectionActiveRef.current) {
-      this.assignmentSectionActiveRef.current.scrollBy({ left: 380, behavior: 'smooth' });
+  scrollAssignmentsRight = (isActive) => {
+    if (isActive) {
+      if (this.assignmentSectionActiveRef.current) {
+        this.assignmentSectionActiveRef.current.scrollBy({ left: 387.5, behavior: 'smooth' });
+      }
+    } else {
+      if (this.assignmentSectionFinishedRef.current) {
+        this.assignmentSectionFinishedRef.current.scrollBy({ left: 387.5, behavior: 'smooth' });
+      }
     }
+    
   };
 
-  scrollAssignmentsLeftActive = () => {
-    if (this.assignmentSectionActiveRef.current) {
-      this.assignmentSectionActiveRef.current.scrollBy({ left: -380, behavior: 'smooth' });
-    }
-  };
-
-  scrollAssignmentsRightFinished = () => {
-    if (this.assignmentSectionFinishedRef.current) {
-      this.assignmentSectionFinishedRef.current.scrollBy({ left: 380, behavior: 'smooth' });
-    }
-  };
-
-  scrollAssignmentsLeftFinished = () => {
-    if (this.assignmentSectionFinishedRef.current) {
-      this.assignmentSectionFinishedRef.current.scrollBy({ left: -380, behavior: 'smooth' });
+  scrollAssignmentsLeft = (isActive) => {
+    if (isActive) {
+      if (this.assignmentSectionActiveRef.current) {
+        this.assignmentSectionActiveRef.current.scrollBy({ left: -387.5, behavior: 'smooth' });
+      }
+    } else {
+      if (this.assignmentSectionFinishedRef.current) {
+        this.assignmentSectionFinishedRef.current.scrollBy({ left: -387.5, behavior: 'smooth' });
+      }
     }
   };
 
@@ -148,6 +191,53 @@ class ExactClassroom extends React.Component {
       }
     }
     
+  handleAssignmentTitleClick = (assignment, isActive) => {
+    this.setState({
+      isAssignmentModalOpen: true,
+      selectedAssignment: assignment,
+      isAssignmentActive: isActive,
+    });
+  };
+
+  handleAssignmentModalClose = () => {
+    this.setState({
+      isAssignmentModalOpen: false,
+      selectedAssignment: null,
+    });
+  };
+
+  handleAssignmentFileDirectUpload = (e, assignment) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    // Example: send file to backend
+    // const formData = new FormData();
+    // formData.append("file", file);
+    // formData.append("assignmentTitle", assignment.title);
+    // fetch("/api/submit-assignment", { method: "POST", body: formData });
+    alert(`File "${file.name}" selected for "${assignment.title}"!`);
+    // Optionally reset the input
+    e.target.value = "";
+  };
+
+  handleAllAssignmentsClick = (assignments, isActive) => {
+    if (this.props.handleAllAssignmentsClick) {
+      this.props.handleAllAssignmentsClick(assignments, isActive);
+    }
+  };
+
+  handleArticleClick = (article) => {
+    this.setState({
+      isArticleModalOpen: true,
+      selectedArticle: article,
+    });
+  }
+
+  handleArticleModalClose = () => {
+    this.setState({
+      isArticleModalOpen: false,
+      selectedArticle: null,
+    });
+  };
 
   render() {
     const classroom = this.props.classroom;
@@ -177,7 +267,7 @@ class ExactClassroom extends React.Component {
         <img className="wide-image" src={image} style={{}}/>
 
         <div className="whole-class">
-          <div className="classroom">
+          <div>
             <Title style={{
               marginTop: 30,
               color: "#fff",
@@ -223,13 +313,19 @@ class ExactClassroom extends React.Component {
           
           <div className="classroom-assignments">
             <div className="active-assignments">
-              <Text className="assignment-label">Active Assignments</Text>
+              <div className="assignments-header">
+                <Text className="assignment-label">Active Assignments</Text>
+                <span className="see-more" 
+                  style={{ cursor: "pointer" }}
+                  onClick={() => this.handleAllAssignmentsClick(this.state.assignmentsActive, true)}
+                >See more</span>
+              </div>
 
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Button
                   className="scroll-right-btn"
                   style={{ marginRight: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
-                  onClick={this.scrollAssignmentsLeftActive}
+                  onClick={() => this.scrollAssignmentsLeft(true)}
                 >
                   <GoTriangleLeft size={32} />
                 </Button>
@@ -240,7 +336,22 @@ class ExactClassroom extends React.Component {
                   style={{ flex: 1 }}
                 >
                   {this.state.assignmentsActive.slice(0, 5).map((el, idx) => (
-                    <div className="assignment-card" key={idx}>
+                    <div
+                      className="assignment-card"
+                      key={idx}
+                      onClick={e => {
+                        // Prevent modal if the click originated from a button or input inside the card
+                        if (
+                          e.target.tagName === "BUTTON" ||
+                          e.target.tagName === "INPUT" ||
+                          e.target.closest('.all-button')
+                        ) {
+                          return;
+                        }
+                        this.handleAssignmentTitleClick(el, true);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
                       <div className="assignment-header">
                         <FaRegFileCode className="assignment-icon"/>
                         <span className="assignment-title">{el.title}</span>
@@ -250,7 +361,19 @@ class ExactClassroom extends React.Component {
                           <div>Open: {el.open}</div>
                           <div>Due: {el.due}</div>
                         </div>
-                        <Button className="submit-button">
+                        <input
+                          type="file"
+                          style={{ display: "none" }}
+                          ref={ref => this[`fileInputActive${idx}`] = ref}
+                          onChange={e => this.handleAssignmentFileDirectUpload(e, el)}
+                        />
+                        <Button
+                          className="all-button"
+                          onClick={e => {
+                            e.stopPropagation();
+                            this[`fileInputActive${idx}`].click();
+                          }}
+                        >
                           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                             <span style={{ position: "relative", top: "-1px" }}>Submit</span>
                           </span>
@@ -262,7 +385,7 @@ class ExactClassroom extends React.Component {
                 <Button
                   className="scroll-right-btn"
                   style={{ marginLeft: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
-                  onClick={this.scrollAssignmentsRightActive}
+                  onClick={() => this.scrollAssignmentsRight(true)}
                 >
                   <GoTriangleRight size={32} />
                 </Button>
@@ -270,13 +393,18 @@ class ExactClassroom extends React.Component {
             </div>
 
             <div className="finished-assignments">
-              <Text className="assignment-label">Finished Assignments</Text>
-
+              <div className="assignments-header">
+                <Text className="assignment-label">Finished Assignments</Text>
+                <span className="see-more"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => this.handleAllAssignmentsClick(this.state.assignmentsFinished, false)}
+                >See more</span>
+              </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Button
                   className="scroll-right-btn"
                   style={{ marginRight: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
-                  onClick={this.scrollAssignmentsLeftFinished}
+                  onClick={() => this.scrollAssignmentsLeft(false)}
                 >
                   <GoTriangleLeft size={32} />
                 </Button>
@@ -287,7 +415,21 @@ class ExactClassroom extends React.Component {
                   style={{ flex: 1 }}
                 >
                   {this.state.assignmentsFinished.slice(0, 5).map((el, idx) => (
-                    <div className="assignment-card" key={idx}>
+                    <div className="assignment-card" 
+                      key={idx}
+                      onClick={e => {
+                        // Prevent modal if the click originated from a button or input inside the card
+                        if (
+                          e.target.tagName === "BUTTON" ||
+                          e.target.tagName === "INPUT" ||
+                          e.target.closest('.all-button')
+                        ) {
+                          return;
+                        }
+                        this.handleAssignmentTitleClick(el, false);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
                       <div className="assignment-header">
                         <FaRegFileCode className="assignment-icon"/>
                         <span className="assignment-title">{el.title}</span>
@@ -297,7 +439,19 @@ class ExactClassroom extends React.Component {
                           <div>Open: {el.open}</div>
                           <div>Due: {el.due}</div>
                         </div>
-                        <Button className="submit-button">
+                        <input
+                          type="file"
+                          style={{ display: "none" }}
+                          ref={ref => this[`fileInputFinished${idx}`] = ref}
+                          onChange={e => this.handleAssignmentFileDirectUpload(e, el)}
+                        />
+                        <Button
+                          className="all-button"
+                          onClick={e => {
+                            e.stopPropagation();
+                            this[`fileInputFinished${idx}`].click();
+                          }}
+                        >
                           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                             <span style={{ position: "relative", top: "-1px" }}>Review</span>
                           </span>
@@ -309,7 +463,7 @@ class ExactClassroom extends React.Component {
                 <Button
                   className="scroll-right-btn"
                   style={{ marginLeft: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
-                  onClick={this.scrollAssignmentsRightFinished}
+                  onClick={() => this.scrollAssignmentsRight(false)}
                 >
                   <GoTriangleRight size={32} />
                 </Button>
@@ -327,30 +481,41 @@ class ExactClassroom extends React.Component {
 
             <div className="articles-list">
               {this.state.articles.slice(0, 3).map((el, idx) => (
-                <div className="article-card" key={idx}>
-                  <img
-                    src={image1}
-                    style={{ width: "350px", height: "40px", borderTopLeftRadius: "7px", borderTopRightRadius: "7px", borderBottomLeftRadius: "0", borderBottomRightRadius: "0" }}
-                  />
-                  <Text className="article-title">
-                    {el.title}
+                <div className="article-card" key={idx} onClick={() => this.handleArticleClick(el)}>
+                  <div className="article-header">
+                    <MdOutlineArticle className="article-icon" />
+                    <span className="article-title">{el.title}</span>
+                  </div>  
+                  <Text className="article-author">
+                    {el.author}
                   </Text>
                   <Text className="article-description">
                     {el.description}
                   </Text>
                 </div>  
               ))}
-            </div>
-
-            <Button className="all-button">
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span style={{ position: "relative", top: "-1px" }}>See all</span>
-              </span>
-            </Button>
+            </div> 
           </div>
-          
         </div>
-       </div> 
+
+        {this.state.isAssignmentModalOpen && this.state.selectedAssignment && (
+          <Assignments
+            open={this.state.isAssignmentModalOpen}
+            onCancel={this.handleAssignmentModalClose}
+            assignment={this.state.selectedAssignment}
+            onAnswerSubmit={this.handleAssignmentFileDirectUpload}
+            isActive={this.state.isAssignmentActive}
+          />
+        )}
+
+        {this.state.isArticleModalOpen && this.state.selectedArticle && (
+          <Articles
+            open={this.state.isArticleModalOpen}
+            onCancel={this.handleArticleModalClose}
+            article={this.state.selectedArticle}
+          />
+        )}
+       </div>
     );
   }
 }
