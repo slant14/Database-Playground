@@ -10,7 +10,7 @@ We use a simplified workflow inspired by GitHub Flow:
 - All work happens in separate branches created from `main`.
 - Branch names are chosen freely (`front`, `back`, `db`, etc.).
 - Issues are created using templates:  
-  [`.github/ISSUE_TEMPLATE/`](../.github/ISSUE_TEMPLATE):  
+  [`.github/ISSUE_TEMPLATE/`](./.github/ISSUE_TEMPLATE):  
 	- [User Story  ](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/backlog-bug-report.yml)
 	- [Bug Report](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/backlog-user-story.yml)
 	- [Technical Task](https://github.com/S25-SWP-Team46/DP-fork/blob/main/.github/ISSUE_TEMPLATE/task.yml)
