@@ -35,7 +35,7 @@ export async function getPostgresTable() {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({}),
+    body: JSON.stringify({type: "PSQL"}),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
@@ -47,7 +47,7 @@ export async function createPostgresTable(payload = {}) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload, {type: "PSQL"}),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
@@ -60,7 +60,7 @@ export async function queryPostgres(text) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ code: text }),
+      body: JSON.stringify({ code: text, type: "PSQL" }),
     });
     
     if (!res.ok) {
@@ -73,6 +73,18 @@ export async function queryPostgres(text) {
     console.error('PostgreSQL API Error:', error);
     throw error;
   }
+}
+
+export async function createMongoCollections() {
+  const res = await tokenUpdate(`${BASE_URL}/db/put/`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({type: "MGDB"}),
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
 }
 
 export async function registerUser(name=null, email=null, password, role = "student") {

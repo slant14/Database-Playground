@@ -112,7 +112,7 @@ def _determine_query_type(query: str) -> OldMongoQuery.Type:
 
 
 def extract_collection_name(query: str) -> str:
-    db_index = query.find("db.")+3
+    db_index = query.find("db.") + 3
     next_dot_index = query.find(".", db_index+1)
     return query[db_index:next_dot_index]
 
