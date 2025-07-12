@@ -1,4 +1,8 @@
 # Database-Playground
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
 
 ![Logo|300](./docs/logo.png)
 
@@ -204,3 +208,12 @@ docker-compose up
 
 [Architecture documentation](./docs/architecture/architecture.md)
 
+
+[contributors-shield]: https://img.shields.io/github/contributors/S25-SWP-Team46/DP-fork.svg?style=for-the-badge
+[contributors-url]: https://github.com/S25-SWP-Team46/DP-fork/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/S25-SWP-Team46/DP-fork.svg?style=for-the-badge
+[forks-url]: https://github.com/S25-SWP-Team46/DP-fork/forks
+[stars-shield]: https://img.shields.io/github/stars/S25-SWP-Team46/DP-fork.svg?style=for-the-badge
+[stars-url]: https://github.com/S25-SWP-Team46/DP-fork/stargazers
+[issues-shield]: https://img.shields.io/github/issues/S25-SWP-Team46/DP-fork.svg?style=for-the-badge
+[issues-url]: https://github.com/S25-SWP-Team46/DP-fork/issues
