@@ -63,22 +63,75 @@ Then go to
 ---
 #### NEW USER - admin usage
 #### Registration usability
-- Enter the main page of the application ->
-	- -> select the ``Sign in`` button -> after which a modal window opens for login (if you enter the data of an unregistered user, an error will be displayed). Therefore, the next step:
-		- -> select the registration option on the model window  -> enter the requested data (name and email are unique for each user, the email must correspond to the standard form and the passwords must match). 
-- Next -> go to the account tab, where your name will be displayed. The following steps are required to verify registration: 
-	1. In the account tab, click on ``Log Out`` then -> on the main page of the message with the previously entered name and password.  
-	2. Log in to the admin panel at http://89.169.178.180:8000/admin/ -> enter name: **admin**, password: **admin**. Next -> go to the Users field in the db structure -> you will see the newly registered user.
-##### Classroom usability
-- Without leaving the admin page -> go to the Classrooms field then -> click on the add classroom button. 
-- Next -> fill all the necessary fields -> create a class by clicking on the ``Save button`` **!(TA (Teacher Assistant) can only be the user who has the TA role set in the user settings!**
-- In order to set the role -> go to the users field -> select the user -> select Teacher Assistant in the role field). 
-- After successfully creating the class -> open the Enrollment field -> create a new Enrollment -> you need to select: 
-	- the user you want to add (for example, add yourself)
-	- the class you want to add the user to
-	- the rating you want to assign to the user.
-- After successfully creating an Enrollment -> log back in to http://89.169.178.180:3000/ -> update (or chose) the class page -> you will see the class you just added yourself to.
+---
+### 1. New-User Registration
 
+1. **Open the App**
+   - Navigate to the main page of the application.
+
+2. **Sign In or Register**
+   - Click **Sign in**.
+   - A login modal appears.
+     - If you enter unregistered credentials, an error message will display.
+   - Click **Register** in the same modal.
+
+3. **Fill Out the Registration Form**
+   - **Name** and **Email** must be unique.
+   - Email must follow a standard format (e.g., `user@example.com`).
+   - Enter your password twice to confirm.
+   - Click **Submit**.
+
+4. **Verify Your Account**
+   1. Go to **Account** (your name appears in the header).
+   2. Click **Log Out**.
+   3. Back on the main page, click **Sign in** and log in with your new credentials to confirm.
+
+5. **Confirm in Admin Panel**
+   1. Open the Admin Panel at `http://89.169.178.180:8000/admin/`.
+   2. Log in with:
+      - **Username:** `admin`
+      - **Password:** `admin`
+   3. Navigate to **Users** &rarr; verify your newly created user is listed.
+
+---
+
+### 2. Classroom Setup
+
+> **Note:** Only users with the **TA** role can be assigned as Teacher Assistants.
+
+#### 2.1 Create a Classroom
+
+1. In the Admin Panel, click **Classrooms**.
+2. Click **Add Classroom**.
+3. Fill in all required fields (e.g., name, description).
+4. Click **Save**.
+
+#### 2.2 Assign the TA Role
+
+1. In the Admin Panel, go to **Users**.
+2. Select the user you wish to promote.
+3. In their profile, set **Role** to **Teacher Assistant**.
+4. Click **Save**.
+
+#### 2.3 Enroll Users
+
+1. In the Admin Panel, click **Enrollments**.
+2. Click **Add Enrollment**.
+3. Complete the form:
+   - **User:** Select the student (e.g., yourself).
+   - **Classroom:** Choose the class you created.
+   - **Rating:** Assign an initial rating or grade.
+4. Click **Save**.
+
+#### 2.4 Verify in the App
+
+1. Go to the front-end at `http://89.169.178.180:3000/`.
+2. Navigate to **Classes** (or the specific class page).
+3. Refresh or re-select the class—you should see yourself enrolled.
+
+---
+
+With these steps, a new admin can register, create a classroom, assign a TA, and enroll students—validated in both the Admin Panel and the main application.
 
 ### Project Installation / Deployment instructions
 
