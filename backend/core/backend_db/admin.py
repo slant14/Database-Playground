@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Classroom, Enrollment, Assignment, Submission
+from .models import Classroom, Enrollment, Assignment, Submission, Article
 from django.conf import settings
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Profile
@@ -66,3 +66,8 @@ class AssignmentAdmin(admin.ModelAdmin):
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('student', 'assignment', 'created_at')
     list_filter = ('assignment',)
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'description', 'file', 'created_date')
+    list_filter = ('title',)
