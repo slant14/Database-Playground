@@ -149,7 +149,7 @@ Clean REST interfaces and a database adapter pattern ensure loose coupling; cont
 
 ### Dynamic view
 
-![dynamic-view](./docs/architecture/deployment-view/DynamicViewUML.PNG)
+![dynamic-view](./docs/architecture/dynamic-view/DynamicViewUML.PNG)
 
 All measurements were taken in a production‐like environment (React frontend, Dockerized Django backend, AWS RDS PostgreSQL):
 
