@@ -56,8 +56,11 @@ class App extends React.Component {
       isModalOpen: false,
       activeButton: lastPage || 'home',
       selectedClassroom: selectedClassroom,
+      isAddClassroomModalOpen: false,
       allAssignments: [],
       allAssignmentsIsActive: true,
+      isAssignmentModalOpen: false,
+      isArticleModalOpen: false,
       isHintModalOpen: false,
       isTableModalOpen: false,
     };
@@ -197,7 +200,10 @@ class App extends React.Component {
           }, 0);
           return (
             <div>
-              <ExactClassroom classroom={null}/>
+              <ExactClassroom 
+                classroom={null}
+                setAddClassroomModalOpen={this.setAddClassroomModalOpen}
+              />
             </div>
           );
         }
@@ -206,6 +212,8 @@ class App extends React.Component {
             <ExactClassroom 
               classroom={this.state.selectedClassroom}
               handleAllAssignmentsClick={this.handleAllAssignmentsClick}
+              setAssignmentModalOpen={this.setAssignmentModalOpen}
+              setArticleModalOpen={this.setArticleModalOpen}
               />
           </div>
         )
@@ -417,6 +425,24 @@ class App extends React.Component {
       page: "allAssignments",
       allAssignments: assignments,
       allAssignmentsIsActive: isActive
+    });
+  }
+
+  setAssignmentModalOpen = (isOpen) => {
+    this.setState({
+      isAssignmentModalOpen: isOpen,
+    });
+  };
+
+  setArticleModalOpen = (isOpen) => {
+    this.setState({
+      isArticleModalOpen: isOpen
+    });
+  }
+
+  setAddClassroomModalOpen = (isOpen) => {
+    this.setState({
+      isAddClassroomModalOpen: isOpen
     });
   }
 

@@ -160,11 +160,11 @@ class ExactClassroom extends React.Component {
   scrollAssignmentsRight = (isActive) => {
     if (isActive) {
       if (this.assignmentSectionActiveRef.current) {
-        this.assignmentSectionActiveRef.current.scrollBy({ left: 387.5, behavior: 'smooth' });
+        this.assignmentSectionActiveRef.current.scrollBy({ left: 387, behavior: 'smooth' });
       }
     } else {
       if (this.assignmentSectionFinishedRef.current) {
-        this.assignmentSectionFinishedRef.current.scrollBy({ left: 387.5, behavior: 'smooth' });
+        this.assignmentSectionFinishedRef.current.scrollBy({ left: 387, behavior: 'smooth' });
       }
     }
     
@@ -173,21 +173,23 @@ class ExactClassroom extends React.Component {
   scrollAssignmentsLeft = (isActive) => {
     if (isActive) {
       if (this.assignmentSectionActiveRef.current) {
-        this.assignmentSectionActiveRef.current.scrollBy({ left: -387.5, behavior: 'smooth' });
+        this.assignmentSectionActiveRef.current.scrollBy({ left: -387, behavior: 'smooth' });
       }
     } else {
       if (this.assignmentSectionFinishedRef.current) {
-        this.assignmentSectionFinishedRef.current.scrollBy({ left: -387.5, behavior: 'smooth' });
+        this.assignmentSectionFinishedRef.current.scrollBy({ left: -387, behavior: 'smooth' });
       }
     }
   };
 
   async componentDidMount() {
-      try {
-        const students = await getMyClassroomClassmates(this.props.classroom.id);
-        this.setState({ students });
-      } catch (error) {
-        console.error("Failed to fetch students:", error);
+      if (this.props.classroom && this.props.classroom.id) {
+        try {
+          const students = await getMyClassroomClassmates(this.props.classroom.id);
+          this.setState({ students });
+        } catch (error) {
+          console.error("Failed to fetch students:", error);
+        }
       }
     }
     
@@ -197,6 +199,9 @@ class ExactClassroom extends React.Component {
       selectedAssignment: assignment,
       isAssignmentActive: isActive,
     });
+    if (this.props.setAssignmentModalOpen) {
+      this.props.setAssignmentModalOpen(true);
+    }
   };
 
   handleAssignmentModalClose = () => {
@@ -204,18 +209,15 @@ class ExactClassroom extends React.Component {
       isAssignmentModalOpen: false,
       selectedAssignment: null,
     });
+    if (this.props.setAssignmentModalOpen) {
+      this.props.setAssignmentModalOpen(false);
+    }
   };
 
   handleAssignmentFileDirectUpload = (e, assignment) => {
     const file = e.target.files[0];
     if (!file) return;
-    // Example: send file to backend
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // formData.append("assignmentTitle", assignment.title);
-    // fetch("/api/submit-assignment", { method: "POST", body: formData });
     alert(`File "${file.name}" selected for "${assignment.title}"!`);
-    // Optionally reset the input
     e.target.value = "";
   };
 
@@ -230,6 +232,9 @@ class ExactClassroom extends React.Component {
       isArticleModalOpen: true,
       selectedArticle: article,
     });
+    if (this.props.setArticleModalOpen) {
+      this.props.setArticleModalOpen(true);
+    }
   }
 
   handleArticleModalClose = () => {
@@ -237,6 +242,9 @@ class ExactClassroom extends React.Component {
       isArticleModalOpen: false,
       selectedArticle: null,
     });
+    if (this.props.setArticleModalOpen) {
+      this.props.setArticleModalOpen(false);
+    }
   };
 
   render() {
