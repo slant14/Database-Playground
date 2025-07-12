@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Assignment
 from rest_framework import viewsets
-from .models import Classroom, Enrollment, Submission, User, Profile
+from .models import Classroom, Enrollment, Submission, User, Profile, Article
 from django.conf import settings
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -79,7 +79,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class ClassroomViewSet(viewsets.ModelViewSet):
     queryset = Classroom.objects.all()
     serializer_class = ClassroomSerializer
-    
+
     @action(detail=False, methods=['post'], url_path='create')
     def create_classroom(self, request, *args, **kwargs):
         user = request.user
@@ -162,6 +162,16 @@ class ClassroomViewSet(viewsets.ModelViewSet):
         serializer = ProfileSerializer(students, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['get'], url_path='articles')
+    def articles_of_classroom(self, request):
+        classroom_id = request.query_params.get('classroom_id')
+        if not classroom_id:
+            return Response({'error': 'classroom_id is required'}, status=400)
+        articles = Article.objects.filter(classrooms__id=classroom_id)
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data)
+
+
     @action(detail=False, methods=['get'], url_path='all', permission_classes=[AllowAny])
     def all_classes(self, request):
         classrooms = Classroom.objects.all()
@@ -239,21 +249,29 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     def classroom_my_assignments(self, request):
         classroom_id = request.query_params.get('classroom_id')
         user = request.user
+        try:
+            user_profile = user.profile
+        except Profile.DoesNotExist:
+            return Response({'error': 'User profile not found'}, status=400)
+
         if not classroom_id:
             return Response({'error': 'classroom_id is required'}, status=400)
 
+        now = timezone.now()
+
         assignments = Assignment.objects.filter(classroom_id=classroom_id)
         submitted_ids = Submission.objects.filter(student=user_profile, assignment__classroom_id = classroom_id).values_list('assignment_id', flat=True)
+       
 
-        now = timezone.now()
         closed = assignments.filter(close_at__lt=now)
-        available = assignments.filter(open_at__lte=now, close_at__gte=now)
+        submitted = assignments.filter(id__in=submitted_ids)
+        finished = (closed | submitted).distinct()
 
-        submitted = available.filter(id__in=submitted_ids)
+        available = assignments.filter(open_at__lte=now, close_at__gte=now)
         not_submitted = available.exclude(id__in=submitted_ids)
+
         return Response({
-            'closed': AssignmentSerializer(closed, many=True).data,
-            'submitted': AssignmentSerializer(submitted, many=True).data,
+            'finished': AssignmentSerializer(finished, many=True).data,
             'not_submitted': AssignmentSerializer(not_submitted, many=True).data,
         })
 
