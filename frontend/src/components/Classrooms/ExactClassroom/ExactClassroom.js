@@ -319,7 +319,7 @@ class ExactClassroom extends React.Component {
             <div className="students-list">
               {this.state.students.map((el, idx) => (
                 <Text key={idx} className="student">
-                  {el.name}
+                  {el.user_name}
                 </Text>
               ))}
             </div>
