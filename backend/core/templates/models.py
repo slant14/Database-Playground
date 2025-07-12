@@ -6,6 +6,7 @@ class DBType(models.TextChoices):
     MYSQL = "MSQL"
     SQLITE = "SQLT"
     MONGODB = "MGDB"
+    CHROMA = "CHRM"
 
 
 class Template(models.Model):
