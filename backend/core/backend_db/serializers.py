@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Classroom, Enrollment, Course, Assignment, Submission, Topic, Article, Profile
+from .models import Classroom, Enrollment, Assignment, Submission, Article, Profile
 from django.conf import settings
 from django.contrib.auth import get_user_model
 #from django.contrib.auth import authenticate

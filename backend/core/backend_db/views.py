@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from .models import Course, Assignment
+from .models import Assignment
 from rest_framework import viewsets
-from .models import Classroom, Enrollment, Submission, Topic, User, Profile
+from .models import Classroom, Enrollment, Submission, User, Profile
 from django.conf import settings
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .serializers import UserSerializer, ClassroomSerializer, EnrollmentSerializer, CourseSerializer, AssignmentSerializer, SubmissionSerializer, ProfileSerializer
+from .serializers import UserSerializer, ClassroomSerializer, EnrollmentSerializer, AssignmentSerializer, SubmissionSerializer, ProfileSerializer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
@@ -77,6 +77,8 @@ class UserViewSet(viewsets.ModelViewSet):
         
 
 class ClassroomViewSet(viewsets.ModelViewSet):
+    queryset = Classroom.objects.all()
+    
     @action(detail=False, methods=['post'], url_path='create')
     def create_classroom(self, request, *args, **kwargs):
         user = request.user
