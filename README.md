@@ -1,4 +1,7 @@
 # Database-Playground
+
+![Logo](./docs/logoo.svg)
+
 This is free web-service for learning and testing different types of databases  
 Available on http://89.169.178.180:3000/  
 [Demo video](https://disk.yandex.com.am/i/3592sfysVX_rSA)  
