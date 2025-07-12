@@ -1,20 +1,10 @@
-# Jekyll configuration for implementing a sidebar for README.md
-
-# Site settings
 title: DP-fork
 description: Documentation for DP-fork
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://S25-SWP-Team46.github.io/DP-fork" # your site URL
-
-# Theme
 theme: minima
 
-# Sidebar configuration
-# Using 'jekyll-toc' plugin for automatic Table of Contents sidebar
 plugins:
   - jekyll-toc
 
-# jekyll-toc settings to enable sidebar on README
 toc:
   min_level: 2
   max_level: 3
@@ -24,32 +14,9 @@ toc:
   list_class: "sidebar-toc"
   skip_no_ids: false
 
-# Custom includes or layout for sidebar (if using minima or custom theme)
+# If you want to use a custom sidebar layout, set a default for README.md
 defaults:
   - scope:
       path: "README.md"
     values:
-      layout: sidebar # You need to create a sidebar.html layout if not present
-
-# If deploying to GitHub Pages
-github:
-  is_project_page: true
-
-# Exclude files from build (optional)
-exclude:
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - vendor
-
-# Optional: If using a custom sidebar, you may want to add navigation data
-# navigation:
-#   - title: "Introduction"
-#     url: /README.html
-#   - title: "Getting Started"
-#     url: /getting-started.html
-
-# Note:
-# 1. To actually display a sidebar, your layout must include the sidebar HTML that renders the TOC or navigation.
-# 2. If you use another theme, check if it supports sidebar navigation and configure accordingly.
-# 3. If you want the sidebar only on the README, make sure your README is converted to an index.md or placed in _pages with the correct front matter.
+      layout: sidebar
