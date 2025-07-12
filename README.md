@@ -1,6 +1,6 @@
 # Database-Playground
 
-![Logo|300](./docs/logoo.svg)
+![Logo|300](./docs/logo.png)
 
 This is free web-service for learning and testing different types of databases  
 Available on http://89.169.178.180:3000/  
