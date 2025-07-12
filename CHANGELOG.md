@@ -15,7 +15,7 @@
 ### Added  
 - Templates support and integration for PostgreSQL
 - Templates support and integration for Chroma
-- Classroom functionality
+- Assignments and blog section functionality for classrooms
 
 ### Changed  
 - Ability to add classrooms also from UI
@@ -25,7 +25,7 @@
 
 ### Added
 - Multiple database support with PostgreSQL integration
-- Classroom interface
+- Classroom interface functionality
 - User registration system
 - Database structure redesign for better scalability
 - Enhanced authentication system with bug fixes
