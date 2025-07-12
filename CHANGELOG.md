@@ -13,8 +13,8 @@
 ## [MVP v2.5] - 2025-07-13
 
 ### Added  
-- Templates support for PostgreSQL
-- Templates support for Chroma
+- Templates support and integration for PostgreSQL
+- Templates support and integration for Chroma
 
 ### Changed  
 - Ability to add classrooms also from UI
@@ -44,8 +44,6 @@
 - Chroma database support and integration
 - Initial database connectivity features
 - Basic database operations and queries
-- Template creation system for standardized content
-- Template testing framework
 
 ### Changed
 - Migrated from basic file storage to database-driven architecture
