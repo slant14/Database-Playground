@@ -77,34 +77,32 @@ Then go to
 
 
 ---
-### NEW USER - admin usage
-### Registration usability
-
+### App testing 
 ---
 
-#### 1. New-User Registration
+### 1. New-User Registration
 
-1. **Open the App**
+1.1 **Open the App**
    - Navigate to the main page of the application.
 
-2. **Sign In or Register**
+1.2 **Sign In or Register**
    - Click **Sign in**.
    - A login modal appears.
      - If you enter unregistered credentials, an error message will display.
    - Click **Register** in the same modal.
 
-3. **Fill Out the Registration Form**
+1.3 **Fill Out the Registration Form**
    - **Name** and **Email** must be unique.
    - Email must follow a standard format (e.g., `user@example.com`).
    - Enter your password twice to confirm.
    - Click **Submit**.
 
-4. **Verify Your Account**
+1.4 **Verify Your Account**
    1. Go to **Account** (your name appears in the header).
    2. Click **Log Out**.
    3. Back on the main page, click **Sign in** and log in with your new credentials to confirm.
 
-5. **Confirm in Admin Panel**
+1.5 **Confirm in Admin Panel**
    1. Open the Admin Panel at http://89.169.178.180:8000/admin/.
    2. Log in with:
       - **Username:** `admin`
@@ -113,9 +111,7 @@ Then go to
 
 ---
 
-#### 2. Classroom Setup
-
-> **Note:** Only users with the **TA** role can be assigned as Teacher Assistants.
+### 2. Classroom Setup
 
 #### 2.1 Create a Classroom
 
@@ -142,6 +138,16 @@ Then go to
 3. Refresh or re-select the class—you should see yourself enrolled.
 
 ---
+
+### 3. Query processing
+3.1 Click **Templates** in main page
+3.2 Click **Create Template** on templates page  
+3.3 On code runner page choose “Chroma” from DB dropdown.  
+3.4 Enter: `CREATE 404;`  
+3.5 Click **Run** → Verify that data appears in results table.  
+3.6 Enter invalid Vector-based (e.g. `CRT 22`) → Click **Run** → Verify syntax error \  
+3.7 Select “PostgeSQL”  
+3.8 Follow the 3.4-3.6 steps with corresponding queries
 
 With these steps, a new admin can register, create a classroom, assign a TA, and enroll students—validated in both the Admin Panel and the main application.
 
