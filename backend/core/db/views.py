@@ -4,9 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.parsers import BaseParser
 
 from engines import postgres_engine
+from engines import mongo_engine
 from engines.exceptions import QueryError
 from engines.shortcuts import db_exists
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from db.shortcuts import get_db_engine
 
 from chroma.ChromaClient import ChromaClient
 from django.views.decorators.csrf import csrf_exempt
@@ -116,16 +118,20 @@ class PutView(APIView):
             print(f"FINAL DUMP: {dump}")
             print(f"PutView: user_id={user_id}, db_name={db_name}, data={data}")
 
-            if db_exists(postgres_engine, db_name):
-                postgres_engine.drop_db(db_name)
+            engine = get_db_engine(data.get("type"))
+            if not engine:
+                return Response({"detail": "Unsupported database type"}, status=400)
+
+            if db_exists(engine, db_name):
+                engine.drop_db(db_name)
                 print(f"Dropped existing database for user {db_name}")
                 
             print(f"Creating database for user {db_name}")
-
-            postgres_engine.create_db(db_name, dump)
+            
+            engine.create_db(db_name, dump)
 
             try:
-                schema = postgres_engine.get_db(db_name)
+                schema = engine.get_db(db_name)
                 print(f"DEBUG: Database '{db_name}' state after creation:")
                 print(f"Schema: {schema}")
             except Exception as e:
@@ -147,12 +153,16 @@ class SchemaView(APIView):
             user_id = request.user.id
             db_name = f"db_{user_id}"
 
+            engine = get_db_engine(data.get("type"))
+            if not engine:
+                return Response({"detail": "Unsupported database type"}, status=400)
+
             print(f"SchemaView: user_id={user_id}, db_name={db_name}, data={data}")
-            if not db_exists(postgres_engine, db_name):
+            if not db_exists(engine, db_name):
                 print(f"Database {db_name} does not exist, returning 404")
                 return Response({"detail": "Database does not exist. Please create it first."}, status=404)
 
-            schema = postgres_engine.get_db(db_name)
+            schema = engine.get_db(db_name)
             print(f"SchemaView: schema={schema}")
 
             return Response(schema.to_json())
@@ -179,15 +189,19 @@ class QueryView(APIView):
             query = query.strip()
             query = query.replace('\\n', '')
             print(f"QueryView: Executing query: {query}")
+
+            engine = get_db_engine(data.get("type"))
+            if not engine:
+                return Response({"detail": "Unsupported database type"}, status=400)
             
             if not isinstance(query, str):
                 return Response({"detail": "Not a plain string query"}, status=400)
             
-            if not db_exists(postgres_engine, db_name):
+            if not db_exists(engine, db_name):
                 return Response({"detail": "Database does not exist. Please create it first."}, status=400)
             
-            results = postgres_engine.send_query(db_name, query)
-            schema = postgres_engine.get_db(db_name)
+            results = engine.send_query(db_name, query)
+            schema = engine.get_db(db_name)
 
             json_results = [r.to_json() for r in results]
             json_schema = schema.to_json()
