@@ -28,12 +28,12 @@ We use a simplified workflow inspired by GitHub Flow:
 - When work is done:
   - Push your branch.
   - Create a Pull Request to `main` using the template: 
-  - [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md)
+  - [.github/PULL_REQUEST_TEMPLATE.md](../.github/PULL_REQUEST_TEMPLATE.md)
   - Request a review.
 - Review policy: global merge requests approving by customer's review
 - Merge only after approvals and passing tests in `main`.
 - Close related issues after merging and delete branch.  
-- [GitGraph](./docs/photo_2025-07-06_04-35-49.jpg)  
+- ![GitGraph](./photo_2025-07-06_04-35-49.jpg)  
 
 ---
 ### Secrets management
