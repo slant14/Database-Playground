@@ -144,10 +144,10 @@ Then go to
 	2. Fill name (test), password (123456), email (test@email.com), ect. (remember the name and password for first user)  
 	3. Create several more users (using 2-3 steps) for TA and primary instructor  
 2.2 Go to http://89.169.178.180:3000  
-	1. Click **Sign In** → enter **name** “test”, **password** “123456”  
-	2. Click **Classrooms** → click **Add Classroom** button → enter the title “Biology 101”, select the **TA**, **primary_instructor** (add yourself), **students** → click **Save** button  
-	3. The created class will appear on Classroom page  
-
+	4. Click **Sign In** → enter **name** “test”, **password** “123456”  
+	5. Click **Classrooms** → click **Add Classroom** button → enter the title “Biology 101”, select the **TA**, **primary_instructor** (add yourself), **students** → click **Save** button  
+	6. The created class will appear on Classroom page  
+ 
 ---
 
 ### 3. Query processing
