@@ -2,15 +2,15 @@
 
 ### Static view
 
-[static-view](./static-view/static-view.md)
+[Documentation for static view](./static-view/static-view.md)
 
 ### Dynamic view
 
-[dynamic-view](./dynamic-view/dynamic-view.md)
+[Documentation for dynamic view](./dynamic-view/dynamic-view.md)
 
 ### Deployment view
 
-[deployment-view](./deployment-view/deployment-view.md)
+[Documentation for deployment view](./deployment-view/deployment-view.md)
 
 ### Tech Stack
 
