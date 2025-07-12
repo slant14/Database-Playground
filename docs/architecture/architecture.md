@@ -2,7 +2,7 @@
 
 ### Static view
 
-[./static-view](./static-view/static-view.md)
+[static-view](./static-view/static-view.md)
 
 ### Dynamic view
 
