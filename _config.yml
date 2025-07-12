@@ -1,8 +1,2 @@
-title: "DP-fork Documentation"
-theme: "just-the-docs"
-
-# Enable the sidebar navigation
-just_the_docs:
-  search_enabled: true
-
-repository: "S25-SWP-Team46/DP-fork"
+theme: minima
+title: DP-fork
