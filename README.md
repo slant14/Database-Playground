@@ -23,17 +23,21 @@ Project Goals:
 
 
 ### Feature Roadmap
-- [x] Query processer
-- [x] Registration
 - [x] Main page
+- [x] Registration
+- [x] Query processer
+	- [x] Templates support
 - [x] Multiple databases support
+	- [x] PostgreSQL
+	- [x] ChromaDB
+	- [ ] SQLite
+	- [ ] MongoDB
 - [x] Classrooms space
-- [x] Tasks space
-- [x] Templates support
-- [x] Blog space
-- [ ] Feedback system
+	- [x] Blog space
+	- [x] Tasks space
+		- [ ] Feedback system
 - [ ] Profile space
-- [ ] Achivements
+	- [ ] Achivements
 
 ### Usage instructions / Short user guide
 
