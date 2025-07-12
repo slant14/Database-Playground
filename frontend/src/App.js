@@ -337,21 +337,40 @@ class App extends React.Component {
   }
 
   onTemplateClick = (code) => {
-    this.setState({ selectedDB: "PostgreSQL" });
-    
-    // Создаем объект с данными для отправки
-    const payload = code ? { dump: code } : {};
-    
-    createPostgresTable(payload)
-      .then(() => {
-        return getPostgresTable();
-      })
-      .then(data => {
-        this.setState({ postgresTableInfo: data.tables });
-      })
-      .catch(error => {
-        console.error("Error creating database:", error);
-      });
+    // Если передан code (dump), значит используется шаблон - выбираем PostgreSQL
+    // Если code не передан, значит создается новый шаблон - оставляем "Choose DB"
+    if (code) {
+      this.setState({ selectedDB: "PostgreSQL" });
+      
+      // Создаем объект с данными для отправки
+      const payload = { dump: code };
+      
+      createPostgresTable(payload)
+        .then(() => {
+          return getPostgresTable();
+        })
+        .then(data => {
+          this.setState({ postgresTableInfo: data.tables });
+        })
+        .catch(error => {
+          console.error("Error creating database:", error);
+        });
+    } else {
+      // Для создания нового шаблона - сбрасываем выбор БД
+      this.setState({ selectedDB: "Choose DB" });
+      
+      // Создаем пустую базу данных
+      createPostgresTable({})
+        .then(() => {
+          return getPostgresTable();
+        })
+        .then(data => {
+          this.setState({ postgresTableInfo: data.tables });
+        })
+        .catch(error => {
+          console.error("Error creating database:", error);
+        });
+    }
       
     this.setState({ page: "code", activeButton: "code" });
     this.setPage("code");

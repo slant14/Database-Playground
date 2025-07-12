@@ -1,5 +1,6 @@
 import React from "react"
 import { Button, Select, Upload, notification } from "antd";
+import { FaSave } from 'react-icons/fa';
 import { UploadOutlined } from '@ant-design/icons';
 import SaveModal from './modalSave';
 import './codeInput.css';
@@ -203,12 +204,12 @@ class CodeInput extends React.Component {
                         }}
                     />
                     <Button
-                        className='my-orange-button-outline'
+                        className='my-save-button'
                         style={{ marginTop: '10px', marginRight: '10px' }}
                         onClick={() => this.props.openSave && this.props.openSave()}
                         disabled={!(this.state.chosenDb === "PostgreSQL") }
                     >
-                        Save Template
+                        <FaSave style={{ fontSize: '20px', verticalAlign: 'middle' }} />
                     </Button>
                     < Button className='my-orange-button-outline' type="primary" style={{ marginTop: '10px', marginLeft: '0px' }} onClick={() => this.props.getIt(this.state.code, this.state.chosenDb)} loading={this.props.isLoading} disabled={this.props.isLoading} iconPosition="end">Run Code</Button>
                 </div>

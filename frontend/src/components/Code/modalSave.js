@@ -9,19 +9,44 @@ class SaveModal extends React.Component {
     super(props)
     this.state = {
       templateName: "",
+      templateDescription: "",
       templateAuthor: getCookie("login") || "",
       templateType: "PSQL",
     }
   }
 
   handleSave = () => {
-    const { templateName, templateAuthor, templateType } = this.state;
-    if (templateName.trim() === "") {
+    const { templateName, templateDescription, templateAuthor, templateType } = this.state;
+    if (templateName.trim() === "" || templateDescription.trim() === "") {
+      notification.warning({
+        message: 'Fields Required',
+        description: 'Please fill in both the name and description fields.',
+        placement: 'bottomRight',
+        duration: 3,
+      });
       return;
     }
-    
-    // Передаем также код SQL из пропсов
-    setTemplate(templateName, templateAuthor, templateType)
+    if (templateName.length > 30) {
+      notification.warning({
+        message: 'Name Too Long',
+        description: 'Template name must be no more than 30 characters.',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+    if (templateDescription.length > 100) {
+      notification.warning({
+        message: 'Description Too Long',
+        description: 'Template description must be no more than 100 characters.',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+
+    const combinedName = `${templateName.trim()} | ${templateDescription.trim()}`;
+    setTemplate(combinedName, templateAuthor, templateType)
       .then(() => {
         notification.success({
           message: 'Template saved',
@@ -58,27 +83,39 @@ class SaveModal extends React.Component {
         <div > 
             <Typography.Text className='modal-text'> <TbPointFilled style={{position: 'relative', top: '2px'}}/> Save your current database schema as a <Typography.Text className='modal-text' style={{color: '#51CB63'}}>template</Typography.Text></Typography.Text><br/>
             <div style={{marginLeft: '20px', marginBottom: '20px'}}>
-                <Typography.Text className='modal-text' > This will save your current database state so you can reuse it later or share with others.</Typography.Text>
+                <Typography.Text className='modal-text' > This will save your current database state so you can reuse it later.</Typography.Text>
             </div>
             
-            <div style={{marginTop: '20px'}}>
-              <Typography.Text className='modal-text' style={{display: 'block', marginBottom: '8px'}}>Template Name <Typography.Text style={{color: 'red'}}>*</Typography.Text></Typography.Text>
+            <div style={{}}>
+              <Typography.Text className='modal-text' style={{display: 'block'}}>Template Name (no more than 30 symbols)</Typography.Text>
               <Input 
                 placeholder="Enter template name"
+                className="login"
                 value={this.state.templateName}
                 onChange={(e) => this.setState({ templateName: e.target.value })}
-                style={{marginBottom: '16px'}}
+                style={{}}
+              />
+            </div>
+
+            <div style={{marginBottom: '20px'}}>
+              <Typography.Text className='modal-text' style={{display: 'block'}}>Template Description (No more than 100 symbols)</Typography.Text>
+              <Input 
+                placeholder="Enter template description"
+                className="login"
+                value={this.state.templateDescription}
+                onChange={(e) => this.setState({ templateDescription: e.target.value })}
+                style={{}}
               />
             </div>
             
-            <div style={{display: 'flex', justifyContent: 'flex-end', gap: '8px'}}>
-              <Button onClick={this.props.onCancel}>
+            <div style={{display: 'flex', justifyContent: 'flex-end', gap: '4px'}}>
+              <Button onClick={this.props.onCancel} className="my-orange-button-outline">
                 Cancel
               </Button>
               <Button 
                 type="primary" 
+                className="my-orange-button-solid"
                 onClick={this.handleSave}
-                disabled={this.state.templateName.trim() === ""}
               >
                 Save Template
               </Button>

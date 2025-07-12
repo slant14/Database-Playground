@@ -15,8 +15,8 @@ class Code extends React.Component {
   constructor(props) {
     super(props);
     
-    if (this.props.selectedDb == "PostgreSQL") {
-      this.handleDbSelection(this.props.selectedDb);
+    if (this.props.selectedDB == "PostgreSQL") {
+      this.handleDbSelection(this.props.selectedDB);
     }
     const savedDb = localStorage.getItem("selectedDb");
     const chosenDb = savedDb || "Choose DB";
@@ -43,6 +43,18 @@ class Code extends React.Component {
     // Загружаем данные для выбранной БД при монтировании компонента
     if (this.state.chosenDb !== "Choose DB" && this.props.isLogin) {
       this.loadDbData(this.state.chosenDb);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    // Если selectedDB изменился и теперь это PostgreSQL, обновляем выбор
+    if (prevProps.selectedDB !== this.props.selectedDB && this.props.selectedDB === "PostgreSQL") {
+      this.handleDbSelection(this.props.selectedDB);
+    }
+    // Если selectedDB стал null (Create Template), сбрасываем выбор
+    if (prevProps.selectedDB !== this.props.selectedDB && this.props.selectedDB === null) {
+      this.setState({ chosenDb: "Choose DB" });
+      localStorage.removeItem("selectedDb");
     }
   }
 
