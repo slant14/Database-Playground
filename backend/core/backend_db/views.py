@@ -78,6 +78,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class ClassroomViewSet(viewsets.ModelViewSet):
     queryset = Classroom.objects.all()
+    serializer_class = ClassroomSerializer
     
     @action(detail=False, methods=['post'], url_path='create')
     def create_classroom(self, request, *args, **kwargs):
@@ -141,11 +142,16 @@ class ClassroomViewSet(viewsets.ModelViewSet):
 
         primary_classrooms = Classroom.objects.filter(primary_instructor=user_profile)
 
-        return Response({
-            'student': ClassroomSerializer(student_classrooms, many=True).data,
-            'TA': ClassroomSerializer(TA_classrooms, many=True).data,
-            'primary_instructor': ClassroomSerializer(primary_classrooms, many=True).data,
-        })
+        classrooms = (student_classrooms | TA_classrooms | primary_classrooms).distinct()
+
+        serializer = self.get_serializer(classrooms, many=True)
+        return Response(serializer.data)
+
+        #return Response({
+        #    'student': ClassroomSerializer(student_classrooms, many=True).data,
+        #    'TA': ClassroomSerializer(TA_classrooms, many=True).data,
+        #    'primary_instructor': ClassroomSerializer(primary_classrooms, many=True).data,
+        #})
     
     @action(detail=False, methods=['get'], url_path='students')
     def students_of_classroom(self, request):

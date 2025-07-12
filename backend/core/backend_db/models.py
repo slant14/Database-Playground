@@ -60,8 +60,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.name
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
-    avatar = models.ImageField(blank = True)
+    user = models.OneToOneField(User, on_delete = models.CASCADE, related_name='profile')
+    avatar = models.ImageField(blank = True, upload_to='profile_images')
     school = models.CharField(blank = True, null = True)
 
     def __str__(self):
@@ -82,7 +82,8 @@ class Article(models.Model):
     title = models.TextField()
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     description = models.TextField()
-    file = models.FileField(upload_to='articles');
+    file = models.FileField(blank=True, upload_to='articles');
+    created_date = models.DateTimeField(auto_now_add = True)
     #classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='articles')
 
     def __str__(self):
