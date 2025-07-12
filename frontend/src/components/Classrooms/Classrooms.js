@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Button } from "antd";
-import { getMyClassroms } from '../../api';
+import { getMyClassrooms } from '../../api';
 import './Classrooms.css';
 import AddClassroom from "./AddClassroom"
 import image from "../../img/Screen.jpg"
@@ -18,7 +18,7 @@ class ClassRooms extends React.Component {
 
   async componentDidMount() {
     try {
-      const classrooms = await getMyClassroms();
+      const classrooms = await getMyClassrooms();
       this.setState({ classrooms });
     } catch (error) {
       console.error("Failed to fetch classrooms:", error);

@@ -30,7 +30,7 @@ class CustomUserAdmin(UserAdmin):
     ordering = ("email",
         )
 
-admin.site.register(User, CustomUserAdmin)
+admin.site.register(User)
 admin.site.register(Profile)
 
 #admin.site.register(Classroom)

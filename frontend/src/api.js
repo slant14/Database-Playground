@@ -97,7 +97,7 @@ export async function loginUser(name=null, password, role = "student") {
   return res.json();
 }
 
-export async function getMyClassroms() {
+export async function getMyClassrooms() {
   //const token = getCookie("access");
   const res = await tokenUpdate(`${BASE_URL}/app/classrooms/my/`, {
     method: 'GET',
@@ -135,13 +135,13 @@ export async function getClassroomMyAssignments(id) {
   return res.json();
 }
 
-export async function createClassroom(title, description, TA, primary_instructor) {
+export async function createClassroom(title, description, TA, students, primary_instructor) {
   const res = await tokenUpdate(`${BASE_URL}/app/classrooms/create/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, description, TA, students: [], primary_instructor })  
+    body: JSON.stringify({ title, description, TA, students, primary_instructor })  
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();

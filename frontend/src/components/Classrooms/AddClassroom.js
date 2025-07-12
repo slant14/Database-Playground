@@ -1,5 +1,6 @@
 import React from "react"
 import './AddClassroom.css';
+import { getProfiles, createClassroom } from '../../api';
 import { Modal, Input, Typography, Select, Button } from "antd";
 
 const { Title } = Typography;
@@ -14,25 +15,23 @@ class AddClassroom extends React.Component {
       primaryInstructor: props.currentUser || null,
       tas: [],
       students: [],
-
-      primaryInstructorsList: [
-        {
-            id: 1,
-            name: "Anna"
-        },
-        {
-            id: 2,
-            name: "Anastasia"
-        },
-        {
-            id: 3,
-            name: "Kristina"
-        }
-      ],
-      tasList: [],
-      studentsList: [],
+      users: [],
       
     }
+  }
+
+  async componentDidMount() {
+      try {
+        const users = await getProfiles();
+        this.setState({ users });
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    }
+  
+  async addClassroom() {
+    const { title, description, tas, students, primaryInstructor} = this.state;
+    const data = await createClassroom (title, description, tas, students, primaryInstructor)
   }
 
   handlePrimaryInstructorChange = value => {
@@ -85,8 +84,8 @@ class AddClassroom extends React.Component {
             value={this.state.primaryInstructor}
             onChange={this.handlePrimaryInstructorChange}
           >
-            {this.state.primaryInstructorsList.map(instr => (
-              <Option key={instr.id} value={instr.id}>{instr.name}</Option>
+            {this.state.users.map(instr => (
+              <Option key={instr.id} value={instr.id}>{instr.user_name}</Option>
             ))}
           </Select>
           {/*
@@ -102,8 +101,8 @@ class AddClassroom extends React.Component {
             value={this.state.tas}
             onChange={this.handleTAsChange}
           >
-            {this.state.tasList.map(ta => (
-              <Option key={ta.id} value={ta.id}>{ta.name}</Option>
+            {this.state.users.map(ta => (
+              <Option key={ta.id} value={ta.id}>{ta.user_name}</Option>
             ))}
           </Select>
 
@@ -115,61 +114,16 @@ class AddClassroom extends React.Component {
             value={this.state.students}
             onChange={this.handleStudentsChange}
           >
-            {this.state.studentsList.map(student => (
-              <Option key={student.id} value={student.id}>{student.name}</Option>
+            {this.state.users.map(student => (
+              <Option key={student.id} value={student.id}>{student.user_name}</Option>
             ))}
           </Select>
 
-          {/*
           <Button type="primary" 
-            onClick={async () => {
-                if (this.state.title === "" || this.state.description === "" || this.state.primaryInstructor == [] || this.state.tas == []) {
-                  notification.warning({
-                    message: 'Incomplete data',
-                    description: 'Please fill in all fields',
-                    placement: 'bottomRight',
-                    duration: 4
-                  });
-                } else {
-                  const data = await addClassroom(this.state.title, this.state.description, this.state.primaryInstructor, this.state.tas, this.state.students);
-                  if (data.error) {
-                    switch (data.error) {
-                      case "406":
-                        notification.error({
-                          message: 'Login failed',
-                          description: 'User not found',
-                          placement: 'bottomRight',
-                          duration: 4,
-                        });
-                        break;
-                      default:
-                        notification.error({
-                          message: 'Login failed',
-                          description: 'An unexpected error occurred',
-                          placement: 'bottomRight',
-                          duration: 4,
-                        });
-                    }
-                  } else {
-                    this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing, data.access, data.refresh)
-                    notification.success({
-                      message: 'Login successful',
-                      description: 'Welcome to the system!',
-                      placement: 'bottomRight',
-                      duration: 4,
-                    });
-                    this.props.onCancel()
-                    this.setState({
-                      login: "",
-                      password: "",
-                      needMemorizing: false,
-                    })
-                  }
-                }
-              }}>
-            Add
-          </Button>  
-            */}
+            onClick={() => {
+              this.addClassroom()
+            }}>Add</Button>  
+            
         </form>
       </Modal>
     );
