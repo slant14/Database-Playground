@@ -127,7 +127,7 @@ Then go to
 
 #### 2.4 Verify in the App
 
-1. Go to the front-end at `http://89.169.178.180:3000/`.
+1. Go to the front-end at http://89.169.178.180:3000/.
 2. Navigate to **Classes** (or the specific class page).
 3. Refresh or re-select the class—you should see yourself enrolled.
 
