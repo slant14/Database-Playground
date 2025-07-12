@@ -2,15 +2,15 @@
 
 ### Static view
 
-![static-view](./static-view/static-view.md)
+[`./static-view`](https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/architecture/static-view/static-view.md)
 
 ### Dynamic view
 
-![dynamic-view](./dynamic-view/dynamic-view.md)
+[dynamic-view](./dynamic-view/dynamic-view.md)
 
 ### Deployment view
 
-![deployment-view](./deployment-view/deployment-view.md)
+[deployment-view](./deployment-view/deployment-view.md)
 
 ### Tech Stack
 
