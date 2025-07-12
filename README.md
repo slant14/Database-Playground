@@ -140,25 +140,28 @@ Then go to
 ### Fronend option + admin
 
 2.1 Log into admin at http://89.169.178.180:8000/admin (with admin/admin).  
-2.2 Go to **Users** → *Add User**  
-2.3 Fill name (test), password (123456), email (test@email.com), ect. (remember the name and password for first user)  
-2.4 Create several more users (using 2-3 steps) for TA and primary instructor  
-2.5 Go to http://89.169.178.180:3000  
-2.6 Click **Sign In** → enter **name** “test”, **password** “123456”  
-2.7 Click **Classrooms** → click **Add Classroom** button → enter the title “Biology 101”, select the **TA**, **primary_instructor** (add yourself), **students** → click **Save** button  
-2.8 The created class will appear on Classroom page  
+	1. Go to **Users** → *Add User**  
+	2. Fill name (test), password (123456), email (test@email.com), ect. (remember the name and password for first user)  
+	3. Create several more users (using 2-3 steps) for TA and primary instructor  
+2.2 Go to http://89.169.178.180:3000  
+	1. Click **Sign In** → enter **name** “test”, **password** “123456”  
+	2. Click **Classrooms** → click **Add Classroom** button → enter the title “Biology 101”, select the **TA**, **primary_instructor** (add yourself), **students** → click **Save** button  
+	3. The created class will appear on Classroom page  
 
 ---
 
 ### 3. Query processing
-3.1 Click **Templates** in main page
-3.2 Click **Create Template** on templates page  
-3.3 On code runner page choose “Chroma” from DB dropdown.  
-3.4 Enter: `CREATE 404;`  
-3.5 Click **Run** → Verify that data appears in results table.  
-3.6 Enter invalid Vector-based (e.g. `CRT 22`) → Click **Run** → Verify syntax error \  
-3.7 Select “PostgeSQL”  
-3.8 Follow the 3.4-3.6 steps with corresponding queries
+3.1 Code RUnner page
+	1. Click **Templates** in main page
+	2. Click **Create Template** on templates page  
+3.2 Code execution
+	1. On code runner page choose “Chroma” from DB dropdown.  
+	2. Enter: `CREATE 404;`  
+	3. Click **Run** → Verify that data appears in results table.  
+	4. Enter invalid Vector-based (e.g. `CRT 22`) → Click **Run** → Verify syntax error   
+3.3 Multiple DB
+	1. Select “PostgeSQL”  
+	2. Follow the 3.4-3.6 steps with corresponding queries
 
 With these steps, a new admin can register, create a classroom, assign a TA, and enroll students—validated in both the Admin Panel and the main application.
 
