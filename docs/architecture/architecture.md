@@ -2,7 +2,7 @@
 
 ### Static view
 
-[`./static-view`](https://github.com/S25-SWP-Team46/DP-fork/blob/main/docs/architecture/static-view/static-view.md)
+[`./static-view`](https://github.com/S25-SWP-Team46/DP-fork/main/docs/architecture/static-view/static-view.md)
 
 ### Dynamic view
 
