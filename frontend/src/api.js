@@ -123,19 +123,9 @@ export async function getMyClassroomClassmates(id) {
   return res.json();
 }
 
-export async function getMyAssignments() {
-  const res = await tokenUpdate(`${BASE_URL}/app/assignments/my/`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  if (!res.ok) throw new Error("API call failed");
-  return res.json();
-}
 
-export async function getCourseAssignments(id) {
-  const res = await tokenUpdate(`${BASE_URL}/app/assignments/by_course/?course_id=${id}`, {
+export async function getClassroomMyAssignments(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/assignments/my/classroom/?classroom_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -145,8 +135,20 @@ export async function getCourseAssignments(id) {
   return res.json();
 }
 
-export async function getMySubmissions() {
-  const res = await tokenUpdate(`${BASE_URL}/app/assignments/submitted/`, {
+export async function createClassroom(title, description, TA, primary_instructor) {
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/create/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, description, TA, students: [], primary_instructor })  
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function getProfiles() {
+  const res = await tokenUpdate(`${BASE_URL}/app/profile/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -188,9 +190,6 @@ async function tokenUpdate(url, options = {}) {
         console.log("Refresh response:", refreshRes);
         console.log("New access token:", data.access);
       } else {
-        document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-        document.cookie = "refresh=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-        //window.location.href = "/";
         console.log("Refresh failed, redirecting to /");
         return;
       }

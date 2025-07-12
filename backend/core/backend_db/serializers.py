@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Classroom, Enrollment, Course, Assignment, Submission, Topic
+from .models import Classroom, Enrollment, Course, Assignment, Submission, Topic, Article, Profile
 from django.conf import settings
 from django.contrib.auth import get_user_model
 #from django.contrib.auth import authenticate
@@ -49,39 +49,59 @@ class ClassroomSerializer(serializers.ModelSerializer):
     #capacity = serializers.IntegerField(read_only=True)
     class Meta:
         model = Classroom
-        fields = ['id', 'title', 'description', 'TA', 'primary_instructor', 'topic', 'created_date', 'capacity', 'TA_names', 'primary_instructor_name']
+        fields = ['id', 'title', 'description', 'TA', 'primary_instructor', 'created_date', 'capacity', 'TA_names', 'primary_instructor_name']
 
     def get_TA_names(self, obj):
         return [ta.user.name for ta in obj.TA.all()]
 
-    def validate_TA(self, value):
-        for profile in value:
-            if profile.user.role != 'ta':
-                raise serializers.ValidationError(f"{profile.user.name} is not a TA")
-        return value
 
-class TopicSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Topic
-        fields = '__all__'
+#class TopicSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Topic
+#        fields = '__all__'
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):
+    student_name = serializers.CharField(source='student.user.name', read_only=True)
+    student_email = serializers.CharField(source='student.user.email', read_only=True)
+    
     class Meta:
         model = Enrollment
-        fields = '__all__'
+        fields = ['id', 'student', 'student_name', 'student_email', 'classroom', 'grade', 'enrollment_date']
 
-class CourseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = '__all__'
+#class CourseSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Course
+#        fields = '__all__'
 
 class AssignmentSerializer(serializers.ModelSerializer):
+    #available = serializers.SerializerMethodField()
+
     class Meta:
         model = Assignment
         fields = '__all__'
+    
+    #def get_available(self, obj):
+    #    now = timezone.now()
+    #    return obj.open_at <= now <= obj.close_at
 
 class SubmissionSerializer(serializers.ModelSerializer):
+    student_name = serializers.CharField(source='student.user.name', read_only=True)
+    student_email = serializers.CharField(source='student.user.email', read_only=True)
+    
     class Meta:
         model = Submission
-        fields = '__all__' 
+        fields = ['id', 'student', 'student_name', 'student_email', 'assignment', 'query', 'feedback', 'created_at']
+
+class  ArticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = '__all__'
+
+class ProfileSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.name', read_only=True)
+    user_email = serializers.CharField(source='user.email', read_only=True)
+    
+    class Meta:
+        model = Profile
+        fields = ['id', 'user', 'user_name', 'user_email', 'school', 'avatar']
