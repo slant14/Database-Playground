@@ -1,2 +1,30 @@
-theme: minima
 title: DP-fork
+description: Documentation for DP-fork
+theme: minima
+
+# Use "docs" as the source
+source: docs
+
+# Plugins
+plugins:
+  - jekyll-toc
+
+toc:
+  min_level: 2
+  max_level: 3
+  ordered_list: false
+  no_toc_section_class: "no-toc"
+  list_id: "sidebar-toc"
+  list_class: "sidebar-toc"
+  skip_no_ids: false
+
+# If you want to use a custom sidebar layout, set a default for README.md
+defaults:
+  - scope:
+      path: "README.md"
+    values:
+      layout: sidebar
+  - scope:
+      path: "index.md"
+    values:
+      layout: sidebar
