@@ -42,7 +42,7 @@ We use a simplified workflow inspired by GitHub Flow:
 
 ---
 ### Secrets management
-The Django secret key, necessary to run Django app and the SSH key, server IP, USER name, necessary to connect the remote server are handling in the Secrets space.
+The Django secret key, necessary to run Django app and the SSH key, server IP, USER name, necessary to connect the remote server are stored in the security settings of the repository (secrets and variables -> actions) and passed to the docker environment in the deploy.yml script.
 
 ---
 
