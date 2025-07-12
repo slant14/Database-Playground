@@ -27,7 +27,7 @@ Project Goals:
 - [x] Registration
 - [x] Query processer
 	- [x] Templates support
-- [x] Multiple databases support
+- [x] Multiple databases support:
 	- [x] PostgreSQL
 	- [x] ChromaDB
 	- [ ] SQLite
