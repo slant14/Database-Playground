@@ -188,7 +188,13 @@ docker-compose up
 
 [Continuous deployment documentation](./docs/automation/continuous-delivery.md)
 
+### Contributors:
 
+<a href="https://github.com/S25-SWP-Team46/DP-fork/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=othneildrew/DP-fork" alt="contrib.rocks image" />
+</a>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
