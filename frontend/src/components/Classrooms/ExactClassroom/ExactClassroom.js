@@ -7,8 +7,7 @@ import './ExactClassroom.css';
 import Assignments from './Assignments/Assignments';
 import Articles from './Articles/Articles';
 import image from "../../../img/WideScreen.jpg"
-import image1 from "../../../img/Screen.jpg"
-import { getMyClassroomClassmates } from '../../../api';
+import { getMyClassroomClassmates, getClassroomMyAssignments } from '../../../api';
 
 const { Title, Paragraph, Text, Link } = Typography;
 
@@ -50,68 +49,7 @@ class ExactClassroom extends React.Component {
           due: "2025/04/30 00:00:00"
         }
       ],
-      assignmentsActive: [
-        {
-          title: "Assignment 1",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-          files: []  
-        },
-        {
-          title: "Assignment 2",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-          files: [] 
-        },
-        {
-          title: "Assignment 3",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-          files: [] 
-        },
-        {
-          title: "Assignment 4",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-          files: [] 
-        },
-        {
-          title: "Assignment 5",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-          files: [] 
-        },
-        {
-          title: "Assignment 6",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-          files: [] 
-        }
-      ],
+      assignmentsActive: [],
       isAssignmentModalOpen: false,
       selectedAssignment: null,
       isAssignmentActive: true,
@@ -186,7 +124,9 @@ class ExactClassroom extends React.Component {
       if (this.props.classroom && this.props.classroom.id) {
         try {
           const students = await getMyClassroomClassmates(this.props.classroom.id);
-          this.setState({ students });
+          const allAssignments = await getClassroomMyAssignments(this.props.classroom.id);
+          const assignmentsActive = allAssignments.not_submitted;
+          this.setState({ students, assignmentsActive });
         } catch (error) {
           console.error("Failed to fetch students:", error);
         }
@@ -372,8 +312,8 @@ class ExactClassroom extends React.Component {
                       </div>
                       <div className="assignment-info-row">
                         <div className="assignment-info-text">
-                          <div>Open: {el.open}</div>
-                          <div>Due: {el.due}</div>
+                          <div>Open: {el.open_at}</div>
+                          <div>Due: {el.close_at}</div>
                         </div>
                         <input
                           type="file"

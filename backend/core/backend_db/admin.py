@@ -69,5 +69,5 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'description', 'file', 'created_date')
+    list_display = ('title', 'author', 'description', 'file')
     list_filter = ('title',)

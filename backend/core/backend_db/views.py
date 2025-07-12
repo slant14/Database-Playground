@@ -239,6 +239,11 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     def classroom_my_assignments(self, request):
         classroom_id = request.query_params.get('classroom_id')
         user = request.user
+        try:
+            user_profile = user.profile
+        except Profile.DoesNotExist:
+            return Response({'error': 'User profile not found'}, status=400)
+        
         if not classroom_id:
             return Response({'error': 'classroom_id is required'}, status=400)
 

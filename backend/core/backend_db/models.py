@@ -82,8 +82,8 @@ class Article(models.Model):
     title = models.TextField()
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     description = models.TextField()
-    file = models.FileField(blank=True, upload_to='articles');
-    created_date = models.DateTimeField(auto_now_add = True)
+    file = models.FileField(blank=True, upload_to='articles')
+    #created_date = models.DateTimeField(auto_now_add = True)
     #classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='articles')
 
     def __str__(self):
@@ -96,7 +96,7 @@ class Classroom(models.Model):
     primary_instructor = models.ForeignKey(to = Profile, on_delete = models.CASCADE, related_name='primary_classrooms')
     #topic = models.ForeignKey(to = Topic, on_delete = models.DO_NOTHING, null = True)
     created_date = models.DateTimeField(auto_now_add = True)
-    articles = models.ManyToManyField(blank=True, Article, related_name='classrooms')
+    articles = models.ManyToManyField(Article, related_name='classrooms', blank=True)
     #capacity = models.IntegerField()
 
     def __str__(self) -> str:
