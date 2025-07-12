@@ -41,13 +41,14 @@ export async function getPostgresTable() {
   return res.json();
 }
 
+// "dump": ""
 export async function createPostgresTable(payload = {}) {
   const res = await tokenUpdate(`${BASE_URL}/db/put/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload, {type: "PSQL"}),
+    body: JSON.stringify({...payload, type: "PSQL"}),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();

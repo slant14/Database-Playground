@@ -7,7 +7,7 @@ from engines import postgres_engine
 from engines import mongo_engine
 from engines.exceptions import QueryError
 from engines.shortcuts import db_exists
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from db.shortcuts import get_db_engine
 
 from chroma.ChromaClient import ChromaClient
@@ -93,7 +93,7 @@ class ChromaQueryParser(APIView):
 
 
 class PlainTextParser(BaseParser):
-    permission_classes=[AllowAny]
+    permission_classes=[IsAuthenticated]
     media_type = 'text/plain'
     def parse(self, stream, media_type=None, parser_context=None):
         return stream.read().decode('utf-8')
@@ -105,20 +105,22 @@ class PutView(APIView):
     def put(self, request: Request):
         try:
             data = json.loads(request.body)
+            #print (f"PutView: Received data: {data}")
             user_id = request.user.id
             db_name = f"db_{user_id}"
             
             # Получаем dump из запроса
-            dump = data.get("dump")
-            print(f"RECEIVED DUMP: {dump}")
-            print(f"DUMP TYPE: {type(dump)}")
-            print(f"DUMP LENGTH: {len(dump) if dump else 'None'}")
+            dump = data.get("dump", "")
+            #print(f"RECEIVED DUMP: {dump}")
+            #print(f"DUMP TYPE: {type(dump)}")
+            #print(f"DUMP LENGTH: {len(dump) if dump else 'None'}")
                 
             
-            print(f"FINAL DUMP: {dump}")
-            print(f"PutView: user_id={user_id}, db_name={db_name}, data={data}")
+            #print(f"FINAL DUMP: {dump}")
+            #print(f"PutView: user_id={user_id}, db_name={db_name}, data={data}")
 
             engine = get_db_engine(data.get("type"))
+            print(f"Using engine: {engine}")
             if not engine:
                 return Response({"detail": "Unsupported database type"}, status=400)
 
@@ -151,6 +153,7 @@ class SchemaView(APIView):
         try:
             data = json.loads(request.body)
             user_id = request.user.id
+            print(f"SchemaView: user_id={user_id}")
             db_name = f"db_{user_id}"
 
             engine = get_db_engine(data.get("type"))
@@ -174,7 +177,6 @@ class SchemaView(APIView):
 
 class QueryView(APIView):
     permission_classes=[IsAuthenticated]
-    parser_classes = [PlainTextParser]
 
     @post_db_query_doc
     def post(self, request: Request):
