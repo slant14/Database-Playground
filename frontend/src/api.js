@@ -124,6 +124,18 @@ export async function getMyClassroomClassmates(id) {
 }
 
 
+export async function getMyClassroomArticles(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/articles/?classroom_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+
 export async function getClassroomMyAssignments(id) {
   const res = await tokenUpdate(`${BASE_URL}/app/assignments/my/classroom/?classroom_id=${id}`, {
     method: 'GET',
