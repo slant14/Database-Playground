@@ -247,6 +247,12 @@ class ExactClassroom extends React.Component {
     }
   };
 
+  handleAllArticlesClick = (articles) => {
+    if (this.props.handleAllArticlesClick) {
+      this.props.handleAllArticlesClick(articles);
+    }
+  };
+
   render() {
     const classroom = this.props.classroom;
     
@@ -480,12 +486,18 @@ class ExactClassroom extends React.Component {
           </div>
 
           <div style={{marginTop: 30,}}>
-            <Text style={{
-              fontWeight: 400,
-              fontSize: 25,
-              fontFamily: "'Noto Sans', sans-serif",
-              color: "#fff",
-            }}>Blog</Text>
+            <div className="assignments-header">
+                <Text style={{
+                  fontWeight: 400,
+                  fontSize: 25,
+                  fontFamily: "'Noto Sans', sans-serif",
+                  color: "#fff",
+                }}>Blog</Text>
+                <span className="see-more" 
+                  style={{ cursor: "pointer" }}
+                  onClick={() => this.handleAllArticlesClick(this.state.articles)}
+                >See more</span>
+              </div>
 
             <div className="articles-list">
               {this.state.articles.slice(0, 3).map((el, idx) => (
