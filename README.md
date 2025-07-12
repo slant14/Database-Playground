@@ -19,7 +19,7 @@ Project Goals:
 - Allow tracking of student performance, attendance, and participation in classroom environments.
 
 ### Project Context Diagram
-![Project Context Diagram](./docs.PCD.png)
+![Project Context Diagram](./docs/PCD.png)
 
 
 ### Feature Roadmap
