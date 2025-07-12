@@ -4,12 +4,21 @@
 
 ### Added
 - Support of MongoDB database
-- 
+- Support of SQLite database
+- Assignment grading
 
 ### Changed
-- Updated README.md with improved project description and visual workflow
+- Assignments page view
 
 ## [MVP v2.5] - 2025-07-13
+
+### Added  
+- Templates support for PostgreSQL
+- Templates support for Chroma
+
+### Changed  
+- Ability to add classrooms also from UI
+- Display of queries input
 
 ## [MVP v2] - 2025-07-06
 
