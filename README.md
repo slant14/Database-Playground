@@ -5,7 +5,7 @@ Available on http://89.169.178.180:3000/
 
 ## Development
 
-[Development documentation](./docs/CONTRIBUTING.md)
+[Development documentation](./CONTRIBUTING.md)
 
 
 ---
