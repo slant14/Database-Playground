@@ -89,7 +89,7 @@ Then go to
    3. Back on the main page, click **Sign in** and log in with your new credentials to confirm.
 
 5. **Confirm in Admin Panel**
-   1. Open the Admin Panel at `http://89.169.178.180:8000/admin/`.
+   1. Open the Admin Panel at http://89.169.178.180:8000/admin/.
    2. Log in with:
       - **Username:** `admin`
       - **Password:** `admin`
