@@ -22,6 +22,18 @@ Project Goals:
 - Ensure secure authentication and template access.
 - Allow tracking of student performance, attendance, and participation in classroom environments.
 
+### Built With
+
+* [![React][React.js]][React-url]
+* [![Django][Django.com]][Django-url]
+* [![PostgreSQL][Postgres.com]][Postgres-url]
+* [![Chroma][Chroma.com]][Chroma-url]
+* [![MongoDB][MongoDB.com]][MongoDB-url]
+* [![FastAPI][FastAPI.com]][FastAPI-url]
+* [![MegaParsec][MegaParsec.com]][MegaParsec-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### Project Context Diagram
 ![Project Context Diagram](./docs/PCD.png)
 
@@ -217,3 +229,17 @@ docker-compose up
 [stars-url]: https://github.com/S25-SWP-Team46/DP-fork/stargazers
 [issues-shield]: https://img.shields.io/github/issues/S25-SWP-Team46/DP-fork.svg?style=for-the-badge
 [issues-url]: https://github.com/S25-SWP-Team46/DP-fork/issues
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Django.com]: https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white
+[Django-url]: https://www.djangoproject.com/
+[Postgres.com]: https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white
+[Postgres-url]: https://www.postgresql.org/
+[Chroma.com]: https://img.shields.io/badge/Chroma-4B0082?style=for-the-badge
+[Chroma-url]: https://www.trychroma.com/
+[MongoDB.com]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
+[MongoDB-url]: https://www.mongodb.com/
+[FastAPI.com]: https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white
+[FastAPI-url]: https://fastapi.tiangolo.com/
+[MegaParsec.com]: https://img.shields.io/badge/MegaParsec-3776AB?style=for-the-badge
+[MegaParsec-url]: https://github.com/mrkkrp/megaparsec
