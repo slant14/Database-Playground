@@ -61,10 +61,12 @@ Then go to
 
 
 ---
-#### NEW USER - admin usage
-#### Registration usability
+### NEW USER - admin usage
+### Registration usability
+
 ---
-### 1. New-User Registration
+
+#### 1. New-User Registration
 
 1. **Open the App**
    - Navigate to the main page of the application.
@@ -95,7 +97,7 @@ Then go to
 
 ---
 
-### 2. Classroom Setup
+#### 2. Classroom Setup
 
 > **Note:** Only users with the **TA** role can be assigned as Teacher Assistants.
 
