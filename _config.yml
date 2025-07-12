@@ -1,22 +1,8 @@
-title: DP-fork
-description: Documentation for DP-fork
-theme: minima
+title: "DP-fork Documentation"
+theme: "just-the-docs"
 
-plugins:
-  - jekyll-toc
+# Enable the sidebar navigation
+just_the_docs:
+  search_enabled: true
 
-toc:
-  min_level: 2
-  max_level: 3
-  ordered_list: false
-  no_toc_section_class: "no-toc"
-  list_id: "sidebar-toc"
-  list_class: "sidebar-toc"
-  skip_no_ids: false
-
-# If you want to use a custom sidebar layout, set a default for README.md
-defaults:
-  - scope:
-      path: "README.md"
-    values:
-      layout: sidebar
+repository: "S25-SWP-Team46/DP-fork"
