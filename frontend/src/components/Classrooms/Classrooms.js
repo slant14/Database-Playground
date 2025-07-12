@@ -63,6 +63,17 @@ class ClassRooms extends React.Component {
             marginBottom: 10
           }}>classrooms yet</Text>
           </Title>
+          <Button className="add-classroom" onClick={this.handleModalOpen}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <span style={{ position: "relative", top: "-1px" }}>Add Classroom</span>
+          </span>
+        </Button>
+        {this.state.isModalOpen && (
+          <AddClassroom
+            open={this.state.isModalOpen}
+            onCancel={this.handleModalClose}
+          />
+        )}
         </div>
       );
     }
