@@ -1,5 +1,5 @@
 ### Continuous Deployment
-[`deploy.yml`](.github/workflows/deploy.yml)
+[`deploy.yml`](../../github/workflows/deploy.yml)
 
 Used tools:
 - **Docker** is the containerization platform that runs our applications on the server. Our script ensures it's installed and builds the project with docker-compose on the server
