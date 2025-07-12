@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Button } from "antd";
-import { getMyClassroms } from '../../api';
+import { getMyClassrooms } from '../../api';
 import './Classrooms.css';
 import AddClassroom from "./AddClassroom"
 import image from "../../img/Screen.jpg"
@@ -18,7 +18,7 @@ class ClassRooms extends React.Component {
 
   async componentDidMount() {
     try {
-      const classrooms = await getMyClassroms();
+      const classrooms = await getMyClassrooms();
       this.setState({ classrooms });
     } catch (error) {
       console.error("Failed to fetch classrooms:", error);
@@ -63,6 +63,17 @@ class ClassRooms extends React.Component {
             marginBottom: 10
           }}>classrooms yet</Text>
           </Title>
+          <Button className="add-classroom" onClick={this.handleModalOpen}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <span style={{ position: "relative", top: "-1px" }}>Add Classroom</span>
+          </span>
+        </Button>
+        {this.state.isModalOpen && (
+          <AddClassroom
+            open={this.state.isModalOpen}
+            onCancel={this.handleModalClose}
+          />
+        )}
         </div>
       );
     }

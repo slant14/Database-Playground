@@ -97,7 +97,7 @@ export async function loginUser(name=null, password, role = "student") {
   return res.json();
 }
 
-export async function getMyClassroms() {
+export async function getMyClassrooms() {
   //const token = getCookie("access");
   const res = await tokenUpdate(`${BASE_URL}/app/classrooms/my/`, {
     method: 'GET',
