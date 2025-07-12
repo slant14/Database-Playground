@@ -1,19 +1,8 @@
-title: DP-fork
+title: "DP-fork Documentation"
+theme: "just-the-docs"
 
-markdown: kramdown
-theme: minima
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
+# Enable the sidebar navigation
+just_the_docs:
+  search_enabled: true
 
-  exclude:
-  - .sass-cache/
-  - .jekyll-cache/
-  - gemfiles/
-  - Gemfile
-  - Gemfile.lock
-  - node_modules/
-  - vendor/bundle/
-  - vendor/cache/
-  - vendor/gems/
-  - vendor/ruby/
+repository: "S25-SWP-Team46/DP-fork"
