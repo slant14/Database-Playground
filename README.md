@@ -8,6 +8,7 @@ Available on http://89.169.178.180:3000/
 [Development documentation](./docs/CONTRIBUTING.md)
 
 
+---
 
 
 ## Quality characteristics and quality attribute scenarios
@@ -15,6 +16,7 @@ Available on http://89.169.178.180:3000/
 [Quality characteristics and quality attribute scenarios documentation](./docs/quality-assurance/quality-attribute-scenarios.md)
 
 
+---
 
 
 ## Quality assurance
@@ -27,7 +29,7 @@ Available on http://89.169.178.180:3000/
 [User acceptance tests documentation](./docs/quality-assurance/user-acceptance-tests.md)
 
 
-
+---
 
 
 ## Build and deployment automation
@@ -52,10 +54,16 @@ docker-compose build --build-arg REACT_APP_API_URL=http://your-server-ip:8000
 docker-compose up  
 
 
+---
+
 
 ## Architecture
 
 [Architecture documentation](./docs/architecture/architecture.md)
+
+
+---
+
 
 ## Usage 
 ### EXISTED USER - w/o admin panel
