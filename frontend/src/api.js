@@ -170,6 +170,17 @@ export async function getProfiles() {
   return res.json();
 }
 
+export async function getMyRoleInClassroom(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/classroom/my/role/?classroom_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
 async function tokenUpdate(url, options = {}) {
   console.log("tokenUpdate called, url:", url);
   let token = getCookie("access");

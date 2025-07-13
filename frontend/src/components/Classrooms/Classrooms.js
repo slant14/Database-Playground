@@ -45,6 +45,7 @@ class ClassRooms extends React.Component {
 
    handleClassroomCreated = (classroom) => {
     this.handleModalClose();
+    this.props.selectClassroom(classroom);
   };
 
   render() {
@@ -57,13 +58,13 @@ class ClassRooms extends React.Component {
             fontSize: 45,
             fontFamily: "'Noto Sans', sans-serif",
             fontWeight: 600,
-            marginBottom: 10
+            marginBottom: 0
           }}>There are no <Text style={{
             color: "#51CB63",
             fontSize: 45,
             fontFamily: "'Noto Sans', sans-serif",
             fontWeight: 600,
-            marginBottom: 10
+            marginBottom: 0
           }}>classrooms yet</Text>
           </Title>
           <Button className="add-classroom" onClick={this.handleModalOpen}>
@@ -89,13 +90,13 @@ class ClassRooms extends React.Component {
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
-          marginBottom: 10
+          marginBottom: 0
         }}>Class<Text style={{
           color: "#fff",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
-          marginBottom: 10
+          marginBottom: 0
         }}>rooms</Text>
         </Title>
         <Button className="add-classroom" onClick={this.handleModalOpen}>

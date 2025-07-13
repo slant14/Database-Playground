@@ -17,7 +17,7 @@ class CustomUserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
 
-        Profile.objects.get_or_create(user=user)
+        #Profile.objects.get_or_create(user=user)
 
         return user
 
@@ -67,10 +67,10 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.name
 
-#@receiver(post_save, sender = User)
-#def save_user(sender, instance, created, **kwargs):
-#    if created:
-#        Profile.objects.create(user = instance)
+@receiver(post_save, sender = User)
+def save_user(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user = instance)
         
 #class Topic(models.Model):
 #    title = models.CharField(max_length = 50)
@@ -83,7 +83,7 @@ class Article(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     description = models.TextField()
     file = models.FileField(blank=True, upload_to='articles')
-    #created_date = models.DateTimeField(auto_now_add = True)
+    created_date = models.DateTimeField(auto_now_add = True)
     #classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='articles')
 
     def __str__(self):
@@ -104,7 +104,7 @@ class Classroom(models.Model):
     
     @property
     def capacity(self):
-        return self.enrollments.count()
+        return max(self.enrollments.count() - self.TA.count() - 1, 0)
 
 class Enrollment(models.Model):
     student = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='enrollments')

@@ -153,12 +153,50 @@ class ClassroomViewSet(viewsets.ModelViewSet):
         #    'primary_instructor': ClassroomSerializer(primary_classrooms, many=True).data,
         #})
     
+
+    @action(detail=False, methods=['get'], url_path='my/role')
+    def my_role(self, request):
+        classroom_id = request.query_params.get('classroom_id')
+        user = request.user
+        try:
+            user_profile = user.profile
+        except Profile.DoesNotExist:
+            return Response({'error': 'User profile not found'}, status=400)
+         
+        classroom = Classroom.objects.get(id=classroom_id)
+        students = User.objects.filter(enrollments__classroom=classroom_id)
+        TAs = classroom.TA
+        primary_instructor = classroom.primary_instructor
+
+        roles = []
+
+        if user in students:
+            roles.append('Student')
+
+        if user in TAs:
+            roles.append('TA')
+        
+        if user in primary_instructor:
+            roles.append('primary_instructor')
+
+        return Response({'roles': roles})
+    
+
     @action(detail=False, methods=['get'], url_path='students')
     def students_of_classroom(self, request):
         classroom_id = request.query_params.get('classroom_id')
         if not classroom_id:
             return Response({'error': 'classroom_id is required'}, status=400)
-        students = Profile.objects.filter(enrollments__classroom=classroom_id)
+        
+        classroom = Classroom.objects.get(id=classroom_id)
+        
+        users = Profile.objects.filter(enrollments__classroom=classroom_id)
+
+        TA_ids = list(classroom.TA.values_list('id', flat=True))
+        primary_instructor_id = classroom.primary_instructor.id
+
+        students = users.exclude(id__in = TA_ids + [primary_instructor_id])
+
         serializer = ProfileSerializer(students, many=True)
         return Response(serializer.data)
 
