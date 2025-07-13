@@ -83,7 +83,7 @@ class Article(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     description = models.TextField()
     file = models.FileField(blank=True, upload_to='articles')
-    created_date = models.DateTimeField(auto_now_add = True)
+    #created_date = models.DateTimeField(auto_now_add = True)
     #classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='articles')
 
     def __str__(self):

@@ -378,6 +378,15 @@ class App extends React.Component {
     });
   }
 
+  handlePostLoginUpdate = () => {
+    // Обновляем данные в компонентах после авторизации
+    if (this.state.page === "code" && this.codeRef.current) {
+      this.codeRef.current.handlePostLoginUpdate();
+    } else if (this.state.page === "classrooms" && this.classroomsRef.current) {
+      this.classroomsRef.current.handlePostLoginUpdate();
+    }
+  };
+
   onTemplateClick = (code) => {
     // Если передан code (dump), значит используется шаблон - выбираем PostgreSQL
     // Если code не передан, значит создается новый шаблон - оставляем "Choose DB"
