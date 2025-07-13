@@ -23,7 +23,7 @@ services:
       - SECRET_KEY=test
       - DEBUG=True
       - ALLOWED_HOSTS=*
-      #- SECRET_KEY=replace-this-in-prod
+      - SECRET_KEY=replace-this-in-prod
       - POSTGRES_DB=backend_db
       - POSTGRES_HOST=backend-db
       - POSTGRES_PORT=5432
@@ -31,6 +31,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     command: >
         sh -c " python manage.py makemigrations &&
+                python manage.py migrate --fake-initial || python manage.py migrate --fake || true &&
                 python manage.py migrate && 
                 python manage.py create_superuser_if_none && 
                 python manage.py runserver 0.0.0.0:8000"
