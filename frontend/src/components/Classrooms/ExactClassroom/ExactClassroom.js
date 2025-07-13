@@ -7,7 +7,7 @@ import './ExactClassroom.css';
 import Assignments from './Assignments/Assignments';
 import Articles from './Articles/Articles';
 import image from "../../../img/WideScreen.jpg"
-import { getMyClassroomClassmates, getClassroomMyAssignments } from '../../../api';
+import { getMyClassroomClassmates, getClassroomMyAssignments, getMyClassroomArticles } from '../../../api';
 
 const { Title, Paragraph, Text, Link } = Typography;
 
@@ -17,76 +17,12 @@ class ExactClassroom extends React.Component {
     super(props)
     this.state = {
       students: [],
-      assignmentsFinished: [
-        {
-          title: "Assignment 1",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
-        },
-        {
-          title: "Assignment 2",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
-        },
-        {
-          title: "Assignment 3",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
-        },
-        {
-          title: "Assignment 4",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
-        },
-        {
-          title: "Assignment 5",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
-        },
-        {
-          title: "Assignment 6",
-          open: "2025/04/27 00:00:00",
-          due: "2025/04/30 00:00:00"
-        }
-      ],
+      assignmentsFinished: [],
       assignmentsActive: [],
       isAssignmentModalOpen: false,
       selectedAssignment: null,
       isAssignmentActive: true,
-      articles: [
-        {
-          title: "Pretty Print",
-          author: "Nickolay Kudasov",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-        },
-        {
-          title: "Pretty Print",
-          author: "Nickolay Kudasov",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-        },
-        {
-          title: "Pretty Print",
-          author: "Nickolay Kudasov",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-        },
-        {
-          title: "Pretty Print",
-          author: "Nickolay Kudasov",
-          description: "Prettyprint is the process of converting and presenting \
-          source code or other objects in a legible and attractive way. A prettyprinter\
-           takes blocks of code and prints them in an aesthetically pleasing fashion, presenting\
-            the characters with line breaks and indentations to make the code comprehensible",
-        }
-      ],
+      articles: [],
       isArticleModalOpen: false,
       selectedArticle: null,
     }
@@ -126,7 +62,9 @@ class ExactClassroom extends React.Component {
           const students = await getMyClassroomClassmates(this.props.classroom.id);
           const allAssignments = await getClassroomMyAssignments(this.props.classroom.id);
           const assignmentsActive = allAssignments.not_submitted;
-          this.setState({ students, assignmentsActive });
+          const assignmentsFinished = allAssignments.finished;
+          const articles = await getMyClassroomArticles(this.props.classroom.id)
+          this.setState({ students, assignmentsActive, assignmentsFinished, articles });
         } catch (error) {
           console.error("Failed to fetch students:", error);
         }
@@ -294,7 +232,6 @@ class ExactClassroom extends React.Component {
                       className="assignment-card"
                       key={idx}
                       onClick={e => {
-                        // Prevent modal if the click originated from a button or input inside the card
                         if (
                           e.target.tagName === "BUTTON" ||
                           e.target.tagName === "INPUT" ||
@@ -372,7 +309,6 @@ class ExactClassroom extends React.Component {
                     <div className="assignment-card" 
                       key={idx}
                       onClick={e => {
-                        // Prevent modal if the click originated from a button or input inside the card
                         if (
                           e.target.tagName === "BUTTON" ||
                           e.target.tagName === "INPUT" ||
@@ -425,15 +361,10 @@ class ExactClassroom extends React.Component {
             </div>
           </div>
 
-          <div style={{marginTop: 30,}}>
-            <div className="assignments-header">
-                <Text style={{
-                  fontWeight: 400,
-                  fontSize: 25,
-                  fontFamily: "'Noto Sans', sans-serif",
-                  color: "#fff",
-                }}>Blog</Text>
-                <span className="see-more" 
+          <div className="blog-section">
+            <div className="blog-header">
+                <Text className="blog-label">Blog</Text>
+                <span className="blog-see-more" 
                   style={{ cursor: "pointer" }}
                   onClick={() => this.handleAllArticlesClick(this.state.articles)}
                 >See more</span>

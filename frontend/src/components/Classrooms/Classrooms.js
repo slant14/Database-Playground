@@ -43,6 +43,9 @@ class ClassRooms extends React.Component {
     }
   };  
 
+   handleClassroomCreated = (classroom) => {
+    this.handleModalClose();
+  };
 
   render() {
     if (this.state.classrooms.length === 0) {
@@ -143,6 +146,7 @@ class ClassRooms extends React.Component {
         <AddClassroom
           open={this.state.isModalOpen}
           onCancel={this.handleModalClose}
+          onClassroomCreated={this.handleClassroomCreated}
         />
       )}
       </div>

@@ -31,7 +31,10 @@ class AddClassroom extends React.Component {
   
   async addClassroom() {
     const { title, description, tas, students, primaryInstructor} = this.state;
-    const data = await createClassroom (title, description, tas, students, primaryInstructor)
+    const newClassroom = await createClassroom(title, description, tas, students, primaryInstructor);
+    if (newClassroom && this.props.onClassroomCreated) {
+      this.props.onClassroomCreated(newClassroom);
+    }
   }
 
   handlePrimaryInstructorChange = value => {
@@ -119,7 +122,8 @@ class AddClassroom extends React.Component {
             ))}
           </Select>
 
-          <Button type="primary" 
+          <Button className="add-button"
+            type="primary" 
             onClick={() => {
               this.addClassroom()
             }}>Add</Button>  
