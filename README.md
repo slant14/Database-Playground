@@ -4,7 +4,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-![Logo|300](./docs/logo.png)
+![Logo](/DP-fork/docs/logo.png)
 
 This is free web-service for learning and testing different types of databases  
 Available on http://89.169.178.180:3000/  
