@@ -5,7 +5,7 @@ from .models import Classroom, Enrollment, Submission, User, Profile, Article
 from django.conf import settings
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .serializers import UserSerializer, ClassroomSerializer, EnrollmentSerializer, AssignmentSerializer, SubmissionSerializer, ProfileSerializer
+from .serializers import UserSerializer, ClassroomSerializer, EnrollmentSerializer, AssignmentSerializer, SubmissionSerializer, ProfileSerializer, ArticleSerializer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
