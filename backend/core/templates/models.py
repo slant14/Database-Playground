@@ -6,10 +6,11 @@ class DBType(models.TextChoices):
     MYSQL = "MSQL"
     SQLITE = "SQLT"
     MONGODB = "MGDB"
+    CHROMA = "CHRM"
 
 
 class Template(models.Model):
-    name =  models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=150, unique=True)
     author = models.CharField(max_length=20)
     type = models.CharField(choices=DBType)
-    dump = models.TextField()
+    dump = models.TextField(blank=True, default="")

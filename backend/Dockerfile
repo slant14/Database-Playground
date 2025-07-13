@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -14,8 +14,10 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY core/requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+COPY ./core/requirements.txt /app/
+
+RUN pip install --upgrade pip 
+RUN pip install -r requirements.txt
 
 COPY . /app
 ENV PYTHONPATH=/app/core

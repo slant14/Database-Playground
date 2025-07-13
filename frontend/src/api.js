@@ -1,15 +1,15 @@
 import { act } from "react";
-import { getCookie } from './utils';
+import { getCookie, deleteCookie } from './utils';
 
 const BASE_URL = process.env.REACT_APP_API_URL || "";
 
-export async function getChromaResponse(text, id) {
-  const res = await fetch(`${BASE_URL}/db/chroma/`, {
+export async function getChromaResponse(text) {
+  const res = await tokenUpdate(`${BASE_URL}/db/chroma/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ code: text, user_id: id, action: 'execute' }),
+    body: JSON.stringify({ code: text, action: 'execute' }),
   });
   if (!res.ok) {
     return "Error";
@@ -17,50 +17,51 @@ export async function getChromaResponse(text, id) {
   return res.json();
 }
 
-export async function getChromaInitialState(id) {
-  const res = await fetch(`${BASE_URL}/db/chroma/`, {
+export async function getChromaInitialState() {
+  const res = await tokenUpdate(`${BASE_URL}/db/chroma/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ user_id: id, action: 'state' }),
+    body: JSON.stringify({ action: 'state' }),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
 
-export async function getPostgresTable(id) {
-  const res = await fetch(`${BASE_URL}/db/schema/`, {
+export async function getPostgresTable() {
+  const res = await tokenUpdate(`${BASE_URL}/db/schema/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ user_id: id }),
+    body: JSON.stringify({type: "PSQL"}),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
 
-export async function createPostgresTable(id) {
-  const res = await fetch(`${BASE_URL}/db/put/`, {
+// "dump": ""
+export async function createPostgresTable(payload = {}) {
+  const res = await tokenUpdate(`${BASE_URL}/db/put/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ user_id: id }),
+    body: JSON.stringify({...payload, type: "PSQL"}),
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
 
-export async function queryPostgres(text, id) {
+export async function queryPostgres(text) {
   try {
-    const res = await fetch(`${BASE_URL}/db/query/`, {
+    const res = await tokenUpdate(`${BASE_URL}/db/query/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ user_id: id, code: text }),
+      body: JSON.stringify({ code: text, type: "PSQL" }),
     });
     
     if (!res.ok) {
@@ -73,6 +74,18 @@ export async function queryPostgres(text, id) {
     console.error('PostgreSQL API Error:', error);
     throw error;
   }
+}
+
+export async function createMongoCollections() {
+  const res = await tokenUpdate(`${BASE_URL}/db/put/`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({type: "MGDB"}),
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
 }
 
 export async function registerUser(name=null, email=null, password, role = "student") {
@@ -97,7 +110,7 @@ export async function loginUser(name=null, password, role = "student") {
   return res.json();
 }
 
-export async function getMyClassroms() {
+export async function getMyClassrooms() {
   //const token = getCookie("access");
   const res = await tokenUpdate(`${BASE_URL}/app/classrooms/my/`, {
     method: 'GET',
@@ -123,8 +136,9 @@ export async function getMyClassroomClassmates(id) {
   return res.json();
 }
 
-export async function getMyAssignments() {
-  const res = await tokenUpdate(`${BASE_URL}/app/assignments/my/`, {
+
+export async function getMyClassroomArticles(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/articles/?classroom_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -134,8 +148,9 @@ export async function getMyAssignments() {
   return res.json();
 }
 
-export async function getCourseAssignments(id) {
-  const res = await tokenUpdate(`${BASE_URL}/app/assignments/by_course/?course_id=${id}`, {
+
+export async function getClassroomMyAssignments(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/assignments/my/classroom/?classroom_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -145,9 +160,67 @@ export async function getCourseAssignments(id) {
   return res.json();
 }
 
-export async function getMySubmissions() {
-  const res = await tokenUpdate(`${BASE_URL}/app/assignments/submitted/`, {
+export async function createClassroom(title, description, TA, students, primary_instructor) {
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/create/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, description, TA, students, primary_instructor })  
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function getProfiles() {
+  const res = await tokenUpdate(`${BASE_URL}/app/profile/`, {
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+
+export async function getTemplateList() {
+  const res = await tokenUpdate(`${BASE_URL}/template/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+export async function getMyRoleInClassroom(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/classroom/my/role/?classroom_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function setTemplate(name, author, type) {
+  const res = await tokenUpdate(`${BASE_URL}/template/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({name: name, author: author, type: type, dump: "CREATE TABLE users ( id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL);" }),
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+export async function deleteTemplate(id) {
+  const res = await tokenUpdate(`${BASE_URL}/template/${id}/delete/`, {
+    method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -188,10 +261,10 @@ async function tokenUpdate(url, options = {}) {
         console.log("Refresh response:", refreshRes);
         console.log("New access token:", data.access);
       } else {
-        document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-        document.cookie = "refresh=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-        //window.location.href = "/";
-        console.log("Refresh failed, redirecting to /");
+        deleteCookie("access");
+        deleteCookie("refresh");
+        window.dispatchEvent(new CustomEvent('logout', { detail: 'Token refresh failed' }));
+        console.log("Refresh failed, logout event dispatched");
         return;
       }
     } else {
@@ -204,3 +277,4 @@ async function tokenUpdate(url, options = {}) {
 
   return res;
 }
+

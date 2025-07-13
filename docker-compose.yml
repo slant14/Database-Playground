@@ -1,46 +1,48 @@
-#version: '3.9'
-
 services:
   backend-db:
     image: postgres:15
     container_name: backend-db
     environment:
       POSTGRES_DB: backend_db
-      POSTGRES_USER: backend_user
-      POSTGRES_PASSWORD: backend_pass
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "7000:5432"
     volumes:
       - backend_pgdata:/var/lib/postgresql/data
 
   backend:
-    build:
-      context: ./backend
+    build: ./backend/
     volumes:
-      - ./backend:/app
+      - ./backend/core:/app
     ports:
       - "8000:8000"
     depends_on:
       - backend-db
-      - frontend
-      - chroma
     environment:
       - DEBUG=True
       - ALLOWED_HOSTS=*
       - SECRET_KEY=replace-this-in-prod
       - POSTGRES_DB=backend_db
-      - POSTGRES_USER=backend_user
-      - POSTGRES_PASSWORD=backend_pass
       - POSTGRES_HOST=backend-db
       - POSTGRES_PORT=5432
-      # - DATABASE_URL=sqlite:///db.sqlite3
-      # - POSTGRES_USER=my_pg_user
-      # - POSTGRES_PASSWORD=my_pg_password
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
     command: >
-        sh -c "python core/manage.py makemigrations &&
-                python core/manage.py migrate &&
-                python core/manage.py create_superuser_if_none && 
-                python core/manage.py runserver 0.0.0.0:8000"
+        sh -c " 
+                # Try normal migration first
+                python manage.py makemigrations 2>/dev/null &&
+                python manage.py migrate 2>/dev/null ||
+                # If that fails, reset migrations completely  
+                (echo 'Migration dependency error detected, resetting...' &&
+                 find /app -path '*/migrations/*.py' -not -name '__init__.py' -delete 2>/dev/null || true &&
+                 python manage.py makemigrations &&
+                 python manage.py migrate --fake-initial &&
+                 python manage.py migrate) &&
+                python manage.py create_superuser_if_none && 
+                python manage.py runserver 0.0.0.0:8000"
 
   chroma:
     build:
@@ -53,48 +55,56 @@ services:
     environment:
       - PYTHONPATH=/app
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      target: build
-      args:
-        REACT_APP_API_URL: http://localhost:8000
-    environment:
-      - NODE_OPTIONS=--max-old-space-size=4096
+  frontend-37:
+    build: ./frontend-37
     ports:
-      - "3000:3000"
+      - "5173:5173"
+    volumes:
+      - ./frontend-37:/app
+      - /app/node_modules
+    environment:
+      VITE_PROD: ${PROD}
 
   postgres:
     image: postgres
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: my_pg_user
-      POSTGRES_PASSWORD: my_pg_password
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_pgdata:/var/lib/postgresql/data
-
-  mysql:
-    image: mysql:8.0
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_USER: my_mysql_user
-      MYSQL_PASSWORD: my_mysql_password
-      MYSQL_ROOT_PASSWORD: my_mysql_root_password
-    volumes:
-      - ./mysql_data:/var/lib/mysql
 
   mongodb:
     image: mongo
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: my_mongo_user
-      MONGO_INITDB_ROOT_PASSWORD: my_mongo_password
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     volumes:
       - ./mongo_data:/data/db
+
+  frontend-46:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: build
+      args:
+        REACT_APP_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+
+  # mysql:
+  #   image: mysql:8.0
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     MYSQL_USER: ${MYSQL_USER}
+  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  #   volumes:
+  #     - ./mysql_data:/var/lib/mysql
+
 
 volumes:
   backend_pgdata:

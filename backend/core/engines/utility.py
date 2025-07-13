@@ -15,9 +15,8 @@ def postgres_wrap_exceptions(func):
             if "does not exist" in str(e):
                 raise DBNotExists
             raise e
-        
+
         except psycopg2.Error as e:
             raise QueryError(str(e))
 
     return wrapper
-

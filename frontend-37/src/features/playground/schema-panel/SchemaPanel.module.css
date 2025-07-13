@@ -1,0 +1,17 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: 24px;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  white-space: nowrap;
+  border-bottom: 1px solid #c1c1c1;
+}
+
+.schema {
+  flex-grow: 1;
+  overflow-y: auto;
+}

@@ -86,7 +86,7 @@ class MyModal extends React.Component {
                         });
                     }
                   } else {
-                    this.props.logIn(this.state.login, this.state.password, this.state.needMemorizing, data.access, data.refresh)
+                    this.props.logIn(this.state.login, this.state.needMemorizing, data.access, data.refresh)
                     notification.success({
                       message: 'Login successful',
                       description: 'Welcome to the system!',

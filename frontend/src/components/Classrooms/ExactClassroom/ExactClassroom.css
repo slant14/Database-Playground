@@ -1,0 +1,309 @@
+.whole {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.whole-class {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    text-align: left;
+    gap: 160px;
+}
+
+.classroom-description {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+    margin-left: 40px;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    gap: 10px
+}
+
+.class-info {
+    color: #51CB63;
+    font-weight: 400;
+    width: 200px;
+}
+
+.class-label {
+    color: #51CB63;
+    font-weight: 400;
+}
+
+.students-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-left: 40px;
+    width: 250px;
+    height: 400px;           
+    overflow-y: auto;  
+    scrollbar-color: #a2aab3 #191d1a !important;
+    scrollbar-width: thin !important;     
+    border: 1px solid #a2aab3;  
+    border-radius: 8px;
+    padding: 10px;
+    padding-left: 16px;                   
+}
+
+.student {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+}
+
+.classroom-assignments {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+}
+
+.active-assignments {
+   margin-bottom: 50px;
+}
+
+.assignments-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;           
+    justify-content: space-between;
+    margin-left: 60px;
+}
+
+.assignment-label {
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: 400;
+    text-align: left;
+}
+
+.see-more {
+    color: #51CB63;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+    align-self: flex-end;
+    margin-right: 65px;
+}
+
+.see-more:hover {
+    color: #3c9249;
+}
+
+.assignment-title {
+    font-weight: 400;
+    font-size: 20px;
+    color: #fff;
+}
+
+.assignment-info-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;           
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.assignment-info-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.assignment-section {
+    display: flex;
+    flex-direction: row;
+    gap: 35px;
+    margin-top: 20px;
+    overflow-x: auto;         
+    scroll-behavior: smooth;  
+    max-width: 740px;
+    width: 740px; 
+}
+
+.assignment-section::-webkit-scrollbar {
+    display: none;
+}
+
+.assignment-section {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.assignment-card {
+    display: flex;
+    flex-direction: column;
+    font-weight: 300;
+
+    border: 1px solid #a2aab3;  
+    border-radius: 8px;
+    padding: 10px;
+    width: 330px;
+    min-width: 330px;
+    max-width: 330px;
+    cursor: pointer;
+}
+
+.assignment-card:hover {
+    border: 1px solid #51CB63; 
+}
+
+.assignment-header {
+    display: flex;
+    align-items: center;
+    gap: 12px; 
+    margin-bottom: 16px;
+}
+
+.assignment-icon {
+    font-size: 30px; 
+    color: #51CB63;
+}
+
+.all-button {
+    background: #191d1a !important;
+    color: #51CB63 !important;
+    border-color: #51CB63 !important;
+    font-family: 'Noto Sans', sans-serif;
+    align-self: flex-end;
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
+.all-button:hover {
+    background: #51CB63 !important;
+    color: #ffffff !important;
+    border-color: #51CB63 !important;
+}
+
+.scroll-right-btn {
+    background: transparent !important;
+    color: #51CB63 !important;
+    border: none !important;
+    cursor: pointer;
+    transition: background 0.2s;
+    height: 50px !important;
+    width: 50px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100px; /* bigger icon */
+    padding: 0 !important;
+}
+
+.finished-assignments {
+    margin-top: 60px;
+}
+
+.blog-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    width: 350px;
+}
+
+.blog-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.blog-label {
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: 400;
+    text-align: left;
+}
+
+.blog-see-more {
+    color: #51CB63;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+    align-self: flex-end;
+}
+
+.blog-see-more:hover {
+    color: #3c9249;
+}
+
+.articles-list {
+    color: #ffffff;
+    font-family: 'Noto Sans', sans-serif;
+    display: flex;
+    flex-direction: column; 
+    gap: 24px;              
+    margin-top: 20px;
+}
+
+.article-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #a2aab3;
+    font-family: 'Noto Sans', sans-serif !important;
+    width: 350px;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.article-card:hover {
+    border: 1px solid #51CB63; 
+}
+
+.article-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.article-icon {
+    font-size: 30px; 
+    color: #51CB63;
+}
+
+.article-title {
+    font-family: 'Noto Sans', sans-serif !important;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 400;
+    text-align: left;
+}
+
+.article-author {
+    font-family: 'Noto Sans', sans-serif !important;
+    color: #a2aab3;
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.article-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;      
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 5.5em;          
+    font-size: 16px;
+    font-family: 'Noto Sans', sans-serif !important;
+    color: #ffffff;
+    font-weight: 300;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}

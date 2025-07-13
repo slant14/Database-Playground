@@ -1,9 +1,10 @@
-from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, #email,
@@ -23,11 +24,11 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_superuser', True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must be set as staff'))
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError(_("Superuser must be set as staff"))
 
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must be set as superuser'))
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError(_("Superuser must be set as superuser"))
 
         return self.create_user(#email,
                                  password, **extra_fields)
@@ -49,10 +50,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.USERNAME_FIELD
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
-    username = models.CharField(max_length = 250)
-    avatar = models.ImageField(blank = True)
-    school = models.CharField(blank = True, null = True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.CharField(max_length=250)
+    avatar = models.ImageField(blank=True)
+    school = models.CharField(blank=True, null=True)
 
     def __str__(self):
         return self.user.USERNAME_FIELD
@@ -60,4 +61,4 @@ class Profile(models.Model):
 @receiver(post_save, sender = User)
 def save_user(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user = instance)
+        Profile.objects.create(user=instance)

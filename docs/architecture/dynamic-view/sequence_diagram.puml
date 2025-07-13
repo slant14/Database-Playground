@@ -1,0 +1,29 @@
+@startuml sequence
+
+Frontend ->  DjangoREST: Request Templates
+DjangoREST -> DjangoORM: Get Templates
+DjangoREST <-- DjangoORM: Return Templates
+Frontend <-- DjangoREST: Return Templates
+
+Frontend -> DjangoREST: Send DB Query
+DjangoREST -> DBEngine: Execute DB Query
+DBEngine -> DBConnector: Connect to DB and execute Query
+DBEngine <-- DBConnector: Return result of executed query
+DjangoREST <-- DBEngine: Return processed query result
+Frontend <-- DjangoREST: Return valid JSON result query
+
+Frontend -> DjangoREST: Save DB to Template
+DjangoREST -> DjangoORM: Get Session from session_id 
+DjangoREST <-- DjangoORM: Return session_id or error
+DjangoREST -> DjangoORM: Get SessionInfo from Session 
+DjangoREST <-- DjangoORM: Return SessionInfo
+DjangoREST -> DBEngine: Request dump of current db
+DBEngine -> DumpMechanism: Request dump of db
+DBEngine <-- DumpMechanism: Return dump of db
+DjangoREST <-- DBEngine: Return dump of current db
+DjangoREST -> DjangoORM: Create new Template from dump
+DjangoREST <-- DjangoORM: Return created Template
+Frontend <-- DjangoREST: Return Success message
+
+
+@enduml

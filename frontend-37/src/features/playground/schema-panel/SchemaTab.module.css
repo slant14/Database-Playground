@@ -1,0 +1,13 @@
+.tab {
+  font-size: 24px;
+  font-weight: bold;
+  padding: 10px;
+  cursor: pointer;
+  background-color: #e9e9ff;
+}
+
+.selected {
+  background-color: #6968ff;
+  cursor: default;
+  color: white;
+}

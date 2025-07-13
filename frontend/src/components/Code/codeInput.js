@@ -1,15 +1,75 @@
 import React from "react"
 import { Button, Select, Upload, notification } from "antd";
-import { UploadOutlined} from '@ant-design/icons';
+import { FaSave } from 'react-icons/fa';
+import { UploadOutlined } from '@ant-design/icons';
+import SaveModal from './modalSave';
+import './codeInput.css';
 
 
 class CodeInput extends React.Component {
     constructor(props) {
         super(props);
+
+        const savedDb = localStorage.getItem("selectedDb");
+        const chosenDb = savedDb || 'Choose DB';
+
         this.state = {
             code: '',
-            chosenDb: 'Choose DB',
+            chosenDb: chosenDb,
+            isModalOpen: false,
         };
+
+        this.textareaRef = React.createRef();
+        this.lineNumbersRef = React.createRef();
+        this.wrapperRef = React.createRef();
+    }
+
+    componentDidMount() {
+        // Если есть сохраненная БД, уведомляем родительский компонент
+        if (this.state.chosenDb !== 'Choose DB' && this.props.onDbSelect) {
+            this.props.onDbSelect(this.state.chosenDb);
+        }
+    }
+
+    // Функция для подсчета номеров строк
+    getLineNumbers = () => {
+        const lines = this.state.code.split('\n');
+        const lineCount = Math.max(lines.length, 1);
+        return Array.from({ length: lineCount }, (_, i) => i + 1).join('\n');
+    };
+
+    // Синхронизация скролла между номерами строк и текстом
+    handleScroll = (e) => {
+        const scrollTop = e.target.scrollTop;
+        const scrollLeft = e.target.scrollLeft;
+
+        if (this.lineNumbersRef.current) {
+            this.lineNumbersRef.current.scrollTop = scrollTop;
+        }
+        if (this.wrapperRef.current) {
+            this.wrapperRef.current.scrollLeft = scrollLeft;
+        }
+    };
+
+    handleCodeChange = (e) => {
+        this.setState({ code: e.target.value });
+    };
+
+    open = () => {
+        this.setState({ isModalOpen: true });
+        if (this.props.setSaveModalOpen) {
+            this.props.setSaveModalOpen(true)
+        }
+        window.history.pushState({ modalType: 'save', page: 'code' }, '', window.location.pathname);
+    };
+
+    close = () => {
+        const wasOpen = this.state.isModalOpen;
+        this.setState({ isModalOpen: false });
+        if (this.props.setSaveModalOpen) {
+            this.props.setSaveModalOpen(false)
+        }
+        return wasOpen;
     }
 
     handleFileUpload = (file) => {
@@ -89,7 +149,7 @@ class CodeInput extends React.Component {
         } else {
             acceptedFiles = '.txt,.sql';
         }
-        
+
         const uploadProps = {
             name: 'file',
             accept: acceptedFiles,
@@ -102,18 +162,33 @@ class CodeInput extends React.Component {
                 <p className="code-general-text">Write your code or <span><Upload {...uploadProps}>
                     <Button icon={<UploadOutlined />} className='my-orange-button-outline' > Import File</Button>
                 </Upload></span></p>
-                <textarea 
-                    className='code-textarea' 
-                    placeholder='Will your code appear here?' 
-                    value={this.state.code} 
-                    onChange={(data) => this.setState({ code: data.target.value })}
-                    onKeyDown={this.handleKeyDown}
-                ></textarea>
+
+                <div className="code-editor-container">
+                    <div className="code-editor-wrapper" ref={this.wrapperRef}>
+                        <div
+                            className="line-numbers"
+                            ref={this.lineNumbersRef}
+                        >
+                            {this.getLineNumbers()}
+                        </div>
+                        <textarea
+                            ref={this.textareaRef}
+                            className='code-textarea-with-lines'
+                            placeholder='Will your code appear here?'
+                            value={this.state.code}
+                            onChange={this.handleCodeChange}
+                            onKeyDown={this.handleKeyDown}
+                            onScroll={this.handleScroll}
+                            spellCheck={false}
+                        />
+                    </div>
+                </div>
+
                 <div className='code-buttons' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'right' }}>
                     <Select
                         className='code-select'
-                        defaultValue="Choose DB"
-                        style={{ width: 190, marginRight: '10px', marginTop: '10px' }}
+                        value={this.state.chosenDb}
+                        style={{ width: 190, marginTop: '10px' }}
                         options={[
                             { value: 'PostgreSQL', label: 'PostgreSQL' },
                             { value: 'SQLite', label: 'SQLite' },
@@ -122,13 +197,30 @@ class CodeInput extends React.Component {
                         ]}
                         onChange={value => {
                             this.setState({ chosenDb: value });
+                            localStorage.setItem("selectedDb", value);
                             if (this.props.onDbSelect) {
                                 this.props.onDbSelect(value);
                             }
                         }}
                     />
+                    <Button
+                        className='my-save-button'
+                        style={{ marginTop: '10px', marginRight: '10px' }}
+                        onClick={() => this.props.openSave && this.props.openSave()}
+                        disabled={!(this.state.chosenDb === "PostgreSQL") }
+                    >
+                        <FaSave style={{ fontSize: '20px', verticalAlign: 'middle' }} />
+                    </Button>
                     < Button className='my-orange-button-outline' type="primary" style={{ marginTop: '10px', marginLeft: '0px' }} onClick={() => this.props.getIt(this.state.code, this.state.chosenDb)} loading={this.props.isLoading} disabled={this.props.isLoading} iconPosition="end">Run Code</Button>
                 </div>
+                <SaveModal
+                    open={this.props.isSaveModalOpen}
+                    onCancel={() => this.props.setSaveModalOpen && this.props.setSaveModalOpen(false)}
+                    title="Save Template"
+                    selectedDb={this.state.chosenDb}
+                    sqlCode={this.state.code}
+                    onSave={this.props.onSaveTemplate}
+                />
             </div>
         );
     }

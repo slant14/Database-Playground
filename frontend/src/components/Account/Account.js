@@ -1,10 +1,18 @@
 import React from "react";
 import { Button, Typography } from "antd";
+import { createMongoCollections } from "../../api";
 import "./Account.css";
 
 const { Title, Paragraph, Text, Link } = Typography;
 
 class Account extends React.Component {
+
+handleMongo = async () => {
+  createMongoCollections()
+    .then(data => {console.log(data)})
+    .catch(er => {console.log("Erooooooooor122221")})
+}
+
   render() {
     return (
       <div className="account-container">
@@ -60,6 +68,8 @@ class Account extends React.Component {
           Press <Text keyboard className="account-text">Esc</Text> to exit...
         </Paragraph>
         <Button variant="solid" className="my-danger-button" onClick={this.props.logOut}>Log out</Button>
+        <Button variant="solid" className="my-danger-button" onClick={this.handleMongo}>Mongo Envoke</Button>
+
       </div>
     );
   }

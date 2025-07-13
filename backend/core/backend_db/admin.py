@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import Classroom, Enrollment, Course, Assignment, Submission
+from .models import Classroom, Enrollment, Assignment, Submission, Article
 from django.conf import settings
-from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Profile, Topic, Classroom
+from .models import User, Profile
 
 class CustomUserAdmin(UserAdmin):
     model = User
@@ -35,7 +34,7 @@ admin.site.register(User)
 admin.site.register(Profile)
 
 #admin.site.register(Classroom)
-admin.site.register(Topic)
+#admin.site.register(Topic)
 
 @admin.register(Classroom)
 class ClassroomAdmin(admin.ModelAdmin):
@@ -44,7 +43,7 @@ class ClassroomAdmin(admin.ModelAdmin):
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "TA":
-            kwargs["queryset"] = Profile.objects.filter(user__role='ta')
+            kwargs["queryset"] = Profile.objects.all()
         return super().formfield_for_manytomany(db_field, request, **kwargs)
 
 @admin.register(Enrollment)
@@ -52,18 +51,23 @@ class EnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'classroom', 'grade', 'enrollment_date')
     list_filter = ('classroom',)
 
-@admin.register(Course)
-class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_at')
-    search_fields = ('title',)
+#@admin.register(Course)
+#class CourseAdmin(admin.ModelAdmin):
+#    list_display = ('title', 'created_at')
+#    search_fields = ('title',)
 
 @admin.register(Assignment)
 class AssignmentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'course', 'created_at')
-    list_filter = ('course',)
-    search_fields = ('name',)
+    list_display = ('title', 'classroom', 'created_at')
+    list_filter = ('classroom',)
+    search_fields = ('title',)
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('student', 'assignment', 'created_at')
     list_filter = ('assignment',)
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'description', 'file')
+    list_filter = ('title',)
