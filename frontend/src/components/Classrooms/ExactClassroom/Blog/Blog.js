@@ -73,15 +73,15 @@ class AllAssignments extends React.Component {
 
         <div className="articles-list">
           {this.state.articles.slice(0, 3).map((el, idx) => (
-            <div className="article-card" key={idx} onClick={() => this.handleArticleClick(el)}>
-              <div className="article-header">
-                <MdOutlineArticle className="article-icon" />
-                <span className="article-title">{el.title}</span>
+            <div className="allArticle-card" key={idx} onClick={() => this.handleArticleClick(el)}>
+              <div className="allArticle-header">
+                <MdOutlineArticle className="allArticle-icon" />
+                <span className="allArticle-title">{el.title}</span>
               </div>  
-              <Text className="article-author">
+              <Text className="allArticle-author">
                 {el.author}
               </Text>
-              <Text className="article-description">
+              <Text className="allArticle-description">
                 {el.description}
                </Text>
             </div>  

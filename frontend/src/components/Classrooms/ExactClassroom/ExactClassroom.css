@@ -205,6 +205,40 @@
     margin-top: 60px;
 }
 
+.blog-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+}
+
+.blog-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.blog-label {
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: 400;
+    text-align: left;
+}
+
+.blog-see-more {
+    color: #51CB63;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+    align-self: flex-end;
+}
+
+.blog-see-more:hover {
+    color: #3c9249;
+}
+
 .articles-list {
     color: #ffffff;
     font-family: 'Noto Sans', sans-serif;
@@ -228,7 +262,6 @@
 .article-card:hover {
     border: 1px solid #51CB63; 
 }
-
 
 .article-header {
     display: flex;

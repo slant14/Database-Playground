@@ -213,7 +213,8 @@ class App extends React.Component {
           <div>
             <ExactClassroom 
               classroom={this.state.selectedClassroom}
-              handleAllAssignmentsClick={this.handleAllAssignmentsClick}
+              handleAllAssignmentsClick={this.handleAllAssignmentsClick}              
+              handleAllArticlesClick={this.handleAllArticlesClick}
               setAssignmentModalOpen={this.setAssignmentModalOpen}
               setArticleModalOpen={this.setArticleModalOpen}
               />
