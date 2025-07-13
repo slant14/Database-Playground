@@ -6,7 +6,9 @@ import Account from "./components/Account/Account";
 import Code from "./components/Code/Code";
 import Home from "./components/Home/Home";
 import ClassRooms from "./components/Classrooms/Classrooms";
-import ExactClassroom from "./components/ExactClassroom/ExactClassroom";
+import ExactClassroom from "./components/Classrooms/ExactClassroom/ExactClassroom";
+import AllAssignments from "./components/Classrooms/ExactClassroom/AllAssignments/AllAssignments"
+import Blog from "./components/Classrooms/ExactClassroom/Blog/Blog"
 import Template from "./components/Template/Template";
 import CookieNotice from "./components/CookieNotice/CookieNotice";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
@@ -53,10 +55,14 @@ class App extends React.Component {
       isModalOpen: false,
       activeButton: lastPage || 'home',
       selectedClassroom: selectedClassroom,
+      isAddClassroomModalOpen: false,
       allAssignments: [],
       postgresTableInfo: null,
       selectedDB: null,
       allAssignmentsIsActive: true,
+      isAssignmentModalOpen: false,
+      isArticleModalOpen: false,
+      blog: [],
       isHintModalOpen: false,
       isTableModalOpen: false,
       isSaveModalOpen: false,
@@ -79,6 +85,8 @@ class App extends React.Component {
     window.addEventListener('beforeunload', this.handleBeforeUnload);
     window.addEventListener('logout', this.handleLogout);
 
+    sessionStorage.setItem('wasReloaded', 'true');
+
     window.history.replaceState({ page: this.state.page }, '', window.location.pathname);
 
     // Устанавливаем флаг инициализации после небольшой задержки
@@ -97,6 +105,19 @@ class App extends React.Component {
     // При выгрузке страницы сохраняем текущую страницу в localStorage
     // sessionStorage автоматически очистится при закрытии вкладки
     setToLocalStorage("lastPage", this.state.page);
+  };
+
+  handlePageHide = (event) => {
+    if (event.persisted) {
+      sessionStorage.setItem('wasReloaded', 'true');
+    } else {
+      setTimeout(() => {
+        const wasReloaded = sessionStorage.getItem('wasReloaded');
+        if (!wasReloaded) {
+          this.deleteCookieSync("lastPage");
+        }
+      }, 100);
+    }
   };
 
   handlePopState = (event) => {
@@ -215,20 +236,41 @@ class App extends React.Component {
           }, 100);
           return (
             <div>
-              <div style={{ padding: '50px', textAlign: 'center' }}>
-                <span>Redirecting to classrooms...</span>
-              </div>
+              <ExactClassroom 
+                classroom={null}
+                setAddClassroomModalOpen={this.setAddClassroomModalOpen}
+              />
             </div>
           );
         }
         return (
           <div>
-            <ExactClassroom
+            <ExactClassroom 
               classroom={this.state.selectedClassroom}
-              handleAllAssignmentsClick={this.handleAllAssignmentsClick}
+              handleAllAssignmentsClick={this.handleAllAssignmentsClick}              
+              handleAllArticlesClick={this.handleAllArticlesClick}
+              setAssignmentModalOpen={this.setAssignmentModalOpen}
+              setArticleModalOpen={this.setArticleModalOpen}
+              />
+          </div>
+        )
+      case "allAssignments":
+        return (
+          <div>
+            <AllAssignments 
+              assignments={this.state.allAssignments}
+              isActive={this.state.allAssignmentsIsActive}
             />
           </div>
         )
+      case "Blog":
+        return (
+          <div>
+            <Blog 
+              articles={this.state.blog}
+            />
+          </div>
+        )  
       case "code":
         return (
           <div>
@@ -479,25 +521,36 @@ class App extends React.Component {
     }
   };
 
-  handlePostLoginUpdate = () => {
-    // Обновляем данные в компонентах после авторизации
-    if (this.state.page === "code" && this.codeRef.current) {
-      this.codeRef.current.handlePostLoginUpdate();
-    } else if (this.state.page === "classrooms" && this.classroomsRef.current) {
-      this.classroomsRef.current.handlePostLoginUpdate();
-    }
-  };
-
-  handleLogout = (event) => {
-    console.log('Logout event received:', event.detail);
-    this.logOut();
-  };
-
-  handleAllAssignmentsClick = (assignments, isActive) => {
+   handleAllAssignmentsClick = (assignments, isActive) => {
     this.setState({
       page: "allAssignments",
       allAssignments: assignments,
       allAssignmentsIsActive: isActive
+    });
+  }
+
+  setAssignmentModalOpen = (isOpen) => {
+    this.setState({
+      isAssignmentModalOpen: isOpen,
+    });
+  };
+
+  setArticleModalOpen = (isOpen) => {
+    this.setState({
+      isArticleModalOpen: isOpen
+    });
+  }
+
+  handleAllArticlesClick = (articles) => {
+    this.setState({
+      page: "Blog",
+      blog: articles,
+    });
+  }
+
+  setAddClassroomModalOpen = (isOpen) => {
+    this.setState({
+      isAddClassroomModalOpen: isOpen
     });
   }
 

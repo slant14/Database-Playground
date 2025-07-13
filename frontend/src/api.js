@@ -110,7 +110,7 @@ export async function loginUser(name=null, password, role = "student") {
   return res.json();
 }
 
-export async function getMyClassroms() {
+export async function getMyClassrooms() {
   //const token = getCookie("access");
   const res = await tokenUpdate(`${BASE_URL}/app/classrooms/my/`, {
     method: 'GET',
@@ -136,8 +136,9 @@ export async function getMyClassroomClassmates(id) {
   return res.json();
 }
 
-export async function getMyAssignments() {
-  const res = await tokenUpdate(`${BASE_URL}/app/assignments/my/`, {
+
+export async function getMyClassroomArticles(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/articles/?classroom_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -147,8 +148,9 @@ export async function getMyAssignments() {
   return res.json();
 }
 
-export async function getCourseAssignments(id) {
-  const res = await tokenUpdate(`${BASE_URL}/app/assignments/by_course/?course_id=${id}`, {
+
+export async function getClassroomMyAssignments(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/assignments/my/classroom/?classroom_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -158,8 +160,20 @@ export async function getCourseAssignments(id) {
   return res.json();
 }
 
-export async function getMySubmissions() {
-  const res = await tokenUpdate(`${BASE_URL}/app/assignments/submitted/`, {
+export async function createClassroom(title, description, TA, students, primary_instructor) {
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/create/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, description, TA, students, primary_instructor })  
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function getProfiles() {
+  const res = await tokenUpdate(`${BASE_URL}/app/profile/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -169,6 +183,7 @@ export async function getMySubmissions() {
   return res.json();
 }
 
+
 export async function getTemplateList() {
   const res = await tokenUpdate(`${BASE_URL}/template/`, {
     method: 'GET',
@@ -177,6 +192,17 @@ export async function getTemplateList() {
     },
   });
   if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+export async function getMyRoleInClassroom(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/classroom/my/role/?classroom_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 

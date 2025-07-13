@@ -20,7 +20,6 @@ services:
     depends_on:
       - backend-db
     environment:
-      - SECRET_KEY=test
       - DEBUG=True
       - ALLOWED_HOSTS=*
       - SECRET_KEY=replace-this-in-prod
@@ -32,8 +31,16 @@ services:
       - MONGO_USER=${MONGO_USER}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
     command: >
-        sh -c " python manage.py makemigrations &&
-                python manage.py migrate && 
+        sh -c " 
+                # Try normal migration first
+                python manage.py makemigrations 2>/dev/null &&
+                python manage.py migrate 2>/dev/null ||
+                # If that fails, reset migrations completely  
+                (echo 'Migration dependency error detected, resetting...' &&
+                 find /app -path '*/migrations/*.py' -not -name '__init__.py' -delete 2>/dev/null || true &&
+                 python manage.py makemigrations &&
+                 python manage.py migrate --fake-initial &&
+                 python manage.py migrate) &&
                 python manage.py create_superuser_if_none && 
                 python manage.py runserver 0.0.0.0:8000"
 
