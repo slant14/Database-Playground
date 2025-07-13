@@ -20,7 +20,6 @@ services:
     depends_on:
       - backend-db
     environment:
-      - SECRET_KEY=test
       - DEBUG=True
       - ALLOWED_HOSTS=*
       - SECRET_KEY=replace-this-in-prod
