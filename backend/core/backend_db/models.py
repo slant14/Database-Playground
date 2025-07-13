@@ -88,6 +88,7 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+    
 
 class Classroom(models.Model):
     title = models.CharField(max_length = 200)
@@ -96,7 +97,7 @@ class Classroom(models.Model):
     primary_instructor = models.ForeignKey(to = Profile, on_delete = models.CASCADE, related_name='primary_classrooms')
     #topic = models.ForeignKey(to = Topic, on_delete = models.DO_NOTHING, null = True)
     created_date = models.DateTimeField(auto_now_add = True)
-    articles = models.ManyToManyField(Article, related_name='classrooms', blank=True)
+    articles = models.ManyToManyField(Article, blank=True, related_name='classrooms')
     #capacity = models.IntegerField()
 
     def __str__(self) -> str:
@@ -105,6 +106,7 @@ class Classroom(models.Model):
     @property
     def capacity(self):
         return max(self.enrollments.count() - self.TA.count() - 1, 0)
+
 
 class Enrollment(models.Model):
     student = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='enrollments')
