@@ -98,8 +98,8 @@ class ClassroomViewSet(viewsets.ModelViewSet):
             ta_ids = [ta_ids] if ta_ids else []
         if not isinstance(student_ids, list):
             student_ids = [student_ids] if student_ids else []
-        if user_profile.id not in ta_ids:
-            ta_ids.append(user_profile.id)
+        #if user_profile.id not in ta_ids:
+        #    ta_ids.append(user_profile.id)
         if not data.get('primary_instructor'):
             primary_instructor_id = user_profile.id
 

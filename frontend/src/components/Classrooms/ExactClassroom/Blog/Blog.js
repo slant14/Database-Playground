@@ -63,6 +63,7 @@ class AllAssignments extends React.Component {
     return (
       <div className="allArticles">
         <Title style={{
+          textAlign: "center",
           marginTop: 30,
           color: "#51CB63",
           fontSize: 45,
@@ -71,8 +72,8 @@ class AllAssignments extends React.Component {
           marginBottom: 10
         }}> Blog </Title>
 
-        <div className="articles-list">
-          {this.state.articles.slice(0, 3).map((el, idx) => (
+        <div className="allArticles-list">
+          {articles.map((el, idx) => (
             <div className="allArticle-card" key={idx} onClick={() => this.handleArticleClick(el)}>
               <div className="allArticle-header">
                 <MdOutlineArticle className="allArticle-icon" />

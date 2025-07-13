@@ -1,10 +1,19 @@
-.articles-list {
+.allArticles {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+}
+
+.allArticles-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); gap: 40px; 
+    justify-items: center;
+    overflow-y: auto;  
+    scrollbar-color: #a2aab3 #191d1a !important;
+    scrollbar-width: thin !important; 
+
     color: #ffffff;
     font-family: 'Noto Sans', sans-serif;
-    display: flex;
-    flex-direction: column; 
-    gap: 24px;              
-    margin-top: 20px;
 }
 
 .allArticle-card {

@@ -26,6 +26,15 @@ class SaveModal extends React.Component {
       });
       return;
     }
+    if (templateName.includes('|') || templateDescription.includes('|')) {
+      notification.warning({
+        message: 'Invalid Character',
+        description: 'Symbol "|" is not allowed in name or description.',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
     if (templateName.length > 30) {
       notification.warning({
         message: 'Name Too Long',
