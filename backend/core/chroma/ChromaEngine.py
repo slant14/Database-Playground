@@ -2,7 +2,7 @@ import os
 import re
 import time
 from typing import Any, Dict, List, Union
-
+import requests
 import chromadb
 from chromadb.utils import embedding_functions
 
@@ -90,22 +90,14 @@ class ChromaEngine:
 class QueryParser:
     @staticmethod
     def parse(query: str) -> dict:
-        query = query.strip()
-        if not query:
-            raise ValueError("Empty query")
-
-        command = query.split()[0].upper()
-
-        if command == "ADD":
-            return QueryParser._parse_add(query)
-        elif command == "SEARCH":
-            return QueryParser._parse_search(query)
-        elif command == "GET":
-            return QueryParser._parse_get(query)
-        elif command == "DELETE":
-            return QueryParser._parse_delete(query)
+        url = "http://haskell_api:8080/parse"  # имя сервиса из docker-compose
+        print(f"Sending query to Haskell parser: {query.encode('utf-8')}")
+        response = requests.post(url, data=query.encode("utf-8"))
+        if response.status_code == 200:
+            print(f"Haskell parser response: {response.json()}")
+            return response.json()
         else:
-            raise ValueError(f"Unknown command: {command}")
+            raise ValueError(f"Haskell parse error: {response.text}")
 
     @staticmethod
     def _parse_add(query: str) -> dict:

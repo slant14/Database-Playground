@@ -1,4 +1,11 @@
 services:
+
+  haskell_api:
+    build:
+      context: ./backend/core/chroma/Parser
+    ports:
+      - "8080:8080"
+
   backend-db:
     image: postgres:15
     container_name: backend-db
