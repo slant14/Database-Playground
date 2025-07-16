@@ -94,7 +94,7 @@ class QueryParser:
         print(f"Sending query to Haskell parser: {query.encode('utf-8')}")
         response = requests.post(url, data=query.encode("utf-8"))
         if response.status_code == 200:
-            print(f"Haskell parser response: {response.json()}")
+            print(f"Haskell parser response: {response}")
             return response.json()
         else:
             raise ValueError(f"Haskell parse error: {response.text}")

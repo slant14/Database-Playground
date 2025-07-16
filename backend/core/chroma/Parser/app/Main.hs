@@ -14,11 +14,6 @@ main = scotty 8080 $ do
   post "/parse" $ do
     query <- body
     let input = BL.unpack query
-        res = runParser Parser.parseQuery "" input
-    case res of
-      Left err    -> do
-        status status400
-        text $ TL.pack ("Parse error: " ++ show err)
-      Right value -> do
-        setHeader "Content-Type" "application/json"
-        text $ TL.pack value
+        res = Parser.runParseAllQueriesAsJson input
+    setHeader "Content-Type" "application/json"
+    text $ TL.pack res
