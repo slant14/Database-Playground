@@ -4,6 +4,7 @@ import Add from '../Responses/add';
 import Delete from '../Responses/delete';
 import Get from '../Responses/get';
 import Search from '../Responses/search';
+import Update from '../Responses/update';
 
 
 class ChromaResult extends React.Component {
@@ -73,6 +74,7 @@ class ChromaResult extends React.Component {
                 {result.command === 'DELETE' || result.error === "Document not found" ? <Delete response={responseForComponent} /> : ""}
                 {result.command === 'GET' ? <Get response={responseForComponent} /> : ""}
                 {result.command === 'SEARCH' ? <Search response={responseForComponent} /> : ""}
+                {result.command === 'UPDATE' ? <Update response={responseForComponent} /> : ""}
             </div>
         );
     }

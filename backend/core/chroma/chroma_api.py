@@ -27,6 +27,12 @@ class DeleteDocumentRequest(BaseModel):
     user_id: int
     doc_id: str
 
+class UpdateDocumentRequest(BaseModel):
+    user_id: int
+    doc_id: str
+    text: Optional[str] = None
+    metadata: Optional[Dict] = None
+
 class QueryParseRequest(BaseModel):
     user_id: int
     code: str
@@ -74,6 +80,22 @@ async def delete_document(request: DeleteDocumentRequest):
         engine = ChromaEngine(request.user_id)
         engine.delete(request.doc_id)
         return {"status": "success", "message": "Document deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/update_document")
+async def update_document(request: UpdateDocumentRequest):
+    try:
+        engine = ChromaEngine(request.user_id)
+        success = engine.update_document(
+            doc_id=request.doc_id,
+            text=request.text,
+            metadata=request.metadata
+        )
+        if success:
+            return {"status": "success", "message": "Document updated successfully"}
+        else:
+            raise HTTPException(status_code=404, detail="Document not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -133,6 +155,24 @@ async def query_parser(request: QueryParseRequest):
                 else:
                     engine.delete(parsed["doc_id"])
                     result = {"command": "DELETE", "status": "deleted"}
+            
+            elif command == "UPDATE":
+                doc_id = parsed["doc_id"]
+                text = parsed["text"]
+                metadata = parsed["metadata"]
+                
+                if not doc_id:
+                    result = {"command": "UPDATE", "error": "Document ID is required for update"}
+                else:
+                    existing_doc = engine.get_by_id(doc_id)
+                    if existing_doc is None:
+                        result = {"command": "UPDATE", "error": "Document not found"}
+                    else:
+                        success = engine.update_document(doc_id=doc_id, text=text, metadata=metadata)
+                        if success:
+                            result = {"command": "UPDATE", "doc_id": doc_id, "status": "updated"}
+                        else:
+                            result = {"command": "UPDATE", "error": "Failed to update document"}
             
             else:
                 result = {"command": command, "error": "Unknown command"}

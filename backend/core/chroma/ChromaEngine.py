@@ -42,6 +42,16 @@ class ChromaEngine:
             ids=[doc_id] if doc_id else None,
         )
 
+    def update_document(self, doc_id: str, text: str = None, metadata: dict = None):
+        try:
+            self.collection.update(
+                ids=[doc_id],
+                documents=[text] if text else None,
+                metadatas=[metadata] if metadata else None,
+            )
+        except Exception as e:
+            print(f"Error updating document: {e}")
+
     def search(self, query: str, k: int = 5, filters: dict = None) -> List[Dict]:
         results = self.collection.query(query_texts=[query], n_results=k, where=filters)
         return self._format_results(results)
