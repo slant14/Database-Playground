@@ -59,3 +59,6 @@ class ChromaClient:
     def health_check(self) -> Dict:
         response = requests.get(f"{self.base_url}/health")
         return response.json()
+    
+    
+chroma_client = ChromaClient()

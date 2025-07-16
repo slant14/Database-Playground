@@ -9,7 +9,7 @@ export async function getChromaResponse(text) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ code: text, action: 'execute' }),
+    body: JSON.stringify({ code: text, action: 'query' }),
   });
   if (!res.ok) {
     return "Error";

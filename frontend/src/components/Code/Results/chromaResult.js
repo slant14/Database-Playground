@@ -54,12 +54,25 @@ class ChromaResult extends React.Component {
             return <Typography.Text className='code-text' style={{ color: '#B22222' }}>Please try once again, there is an error in your code</Typography.Text>;
         }
         
+        // Handle parse errors from Haskell parser
+        if (result.command === 'PARSE_ERROR') {
+            return <Typography.Text className='code-text' style={{ color: '#B22222' }}>Parse Error: {result.error}</Typography.Text>;
+        }
+        
+        // Create a response object that includes the full response data for individual commands
+        const responseForComponent = {
+            ...result,
+            execution_time: this.props.response.execution_time,
+            db_state: this.props.response.db_state,
+            documents_count: this.props.response.documents_count
+        };
+        
         return (
             <div>
-                {result.command === 'ADD' ? <Add response={result} /> : ""}
-                {result.command === 'DELETE' || result.error === "Document not found" ? <Delete response={result} /> : ""}
-                {result.command === 'GET' ? <Get response={result} /> : ""}
-                {result.command === 'SEARCH' ? <Search response={result} /> : ""}
+                {result.command === 'ADD' ? <Add response={responseForComponent} /> : ""}
+                {result.command === 'DELETE' || result.error === "Document not found" ? <Delete response={responseForComponent} /> : ""}
+                {result.command === 'GET' ? <Get response={responseForComponent} /> : ""}
+                {result.command === 'SEARCH' ? <Search response={responseForComponent} /> : ""}
             </div>
         );
     }
