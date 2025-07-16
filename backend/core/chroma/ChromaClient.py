@@ -55,6 +55,11 @@ class ChromaClient:
         response = requests.post(f"{self.base_url}/update_document", json=data)
         return response.json()
     
+    def drop_collection(self, user_id: int) -> Dict:
+        data = {"user_id": user_id}
+        response = requests.post(f"{self.base_url}/drop_collection", json=data)
+        return response.json()
+    
     def get_db_state(self, user_id: int) -> Dict:
         data = {"user_id": user_id}
         response = requests.post(f"{self.base_url}/get_db_state", json=data)

@@ -8,7 +8,7 @@ from chromadb.utils import embedding_functions
 
 
 class ChromaEngine:
-    def drop(self):
+    def drop_collection(self):
         try:
             results = self.collection.get()
             all_ids = results.get("ids", [])
