@@ -1,5 +1,6 @@
 import React from "react";
-import { getPostgresTable, createPostgresTable, queryPostgres } from './api';
+import { getPostgresTable, createPostgresTable } from './api';
+import { createMongoCollections, getMongoCollections } from './api';
 import Footer from "./components/LayOut/footer";
 import Header from "./components/LayOut/Header/Header";
 import Account from "./components/Account/Account";
@@ -30,6 +31,7 @@ class App extends React.Component {
       console.log('New session detected - clearing lastPage');
       removeFromLocalStorage("lastPage");
       lastPage = null;
+      removeFromLocalStorage("selectedDB");
 
       if (!needMemorizing) {
         this.logOut();
@@ -57,7 +59,8 @@ class App extends React.Component {
       selectedClassroom: selectedClassroom,
       isAddClassroomModalOpen: false,
       allAssignments: [],
-      postgresTableInfo: null,
+      postgresTableInfo: [],
+      mongoCollectionInfo: [],
       selectedDB: null,
       allAssignmentsIsActive: true,
       isAssignmentModalOpen: false,
@@ -167,6 +170,7 @@ class App extends React.Component {
     }
 
     if (this.state.page === "code") {
+      removeFromLocalStorage("selectedDB");
       this.setState({ page: "template", activeButton: "template" });
       setToLocalStorage("lastPage", "template");
     } else if (this.state.page === "exactClassroom") {
@@ -236,7 +240,7 @@ class App extends React.Component {
           }, 100);
           return (
             <div>
-              <ExactClassroom 
+              <ExactClassroom
                 classroom={null}
                 setAddClassroomModalOpen={this.setAddClassroomModalOpen}
               />
@@ -245,19 +249,19 @@ class App extends React.Component {
         }
         return (
           <div>
-            <ExactClassroom 
+            <ExactClassroom
               classroom={this.state.selectedClassroom}
-              handleAllAssignmentsClick={this.handleAllAssignmentsClick}              
+              handleAllAssignmentsClick={this.handleAllAssignmentsClick}
               handleAllArticlesClick={this.handleAllArticlesClick}
               setAssignmentModalOpen={this.setAssignmentModalOpen}
               setArticleModalOpen={this.setArticleModalOpen}
-              />
+            />
           </div>
         )
       case "allAssignments":
         return (
           <div>
-            <AllAssignments 
+            <AllAssignments
               assignments={this.state.allAssignments}
               isActive={this.state.allAssignmentsIsActive}
             />
@@ -266,14 +270,15 @@ class App extends React.Component {
       case "Blog":
         return (
           <div>
-            <Blog 
+            <Blog
               articles={this.state.blog}
             />
           </div>
-        )  
+        )
       case "code":
         return (
           <div>
+            {console.log("Rendering Code component: ", this.state.mongoCollectionInfo)}
             <Code
               ref={this.codeRef}
               getCookie={getCookie}
@@ -286,6 +291,7 @@ class App extends React.Component {
               outputDBStateRef={this.outputDBStateRef}
               selectedDB={this.state.selectedDB}
               postgresTableInfo={this.state.postgresTableInfo}
+              mongoCollectionInfo={this.state.mongoCollectionInfo}
             />
           </div>);
       case "acc":
@@ -387,29 +393,71 @@ class App extends React.Component {
     }
   };
 
-  onTemplateClick = (code) => {
+  onTemplateClick = (code, db) => {
     // Если передан code (dump), значит используется шаблон - выбираем PostgreSQL
     // Если code не передан, значит создается новый шаблон - оставляем "Choose DB"
     if (code) {
-      this.setState({ selectedDB: "PostgreSQL" });
-      
-      // Создаем объект с данными для отправки
-      const payload = { dump: code };
-      
-      createPostgresTable(payload)
-        .then(() => {
-          return getPostgresTable();
-        })
-        .then(data => {
-          this.setState({ postgresTableInfo: data.tables });
-        })
-        .catch(error => {
-          console.error("Error creating database:", error);
-        });
+      if (db === "PSQL") {
+        this.setState({ selectedDB: "PostgreSQL" });
+
+        // Создаем объект с данными для отправки
+        const payload = { dump: code };
+
+        createPostgresTable(payload)
+          .then(() => {
+            return getPostgresTable();
+          })
+          .then(data => {
+            this.setState({ postgresTableInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating database:", error);
+          });
+
+        createMongoCollections({})
+          .then(() => {
+            return getMongoCollections();
+          })
+          .then(data => {
+            this.setState({ mongoCollectionInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating MongoDB collections:", error);
+          });
+      }
+      if (db === "MGDB") {
+        this.setState({ selectedDB: "MongoDB" });
+
+        localStorage.setItem("selectedDB", "MongoDB");
+        // Создаем объект с данными для отправки
+        const payload = { dump: code };
+
+        createMongoCollections(payload)
+          .then(() => {
+            return getMongoCollections();
+          })
+          .then(data => {
+            this.setState({ mongoCollectionInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating MongoDB collections:", error);
+          });
+
+        createPostgresTable({})
+          .then(() => {
+            return getPostgresTable();
+          })
+          .then(data => {
+            this.setState({ postgresTableInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating database:", error);
+          });
+      }
     } else {
       // Для создания нового шаблона - сбрасываем выбор БД
       this.setState({ selectedDB: "Choose DB" });
-      
+
       // Создаем пустую базу данных
       createPostgresTable({})
         .then(() => {
@@ -421,8 +469,19 @@ class App extends React.Component {
         .catch(error => {
           console.error("Error creating database:", error);
         });
+
+      createMongoCollections({})
+        .then(() => {
+          return getMongoCollections();
+        })
+        .then(data => {
+          this.setState({ mongoCollectionInfo: data.tables });
+        })
+        .catch(error => {
+          console.error("Error creating MongoDB collections:", error);
+        });
     }
-      
+
     this.setState({ page: "code", activeButton: "code" });
     this.setPage("code");
   }
@@ -442,7 +501,7 @@ class App extends React.Component {
     removeFromLocalStorage("selectedClassroom");
 
     // Очищаем пользовательские данные
-    localStorage.removeItem("selectedDb"); // Очищаем выбранную БД
+    localStorage.removeItem("selectedDB"); // Очищаем выбранную БД
     // НЕ очищаем cookiesAccepted - это согласие пользователя должно сохраняться
     // deleteCookie("cookiesAccepted"); // Раскомментируйте, если нужно очищать при выходе
 
@@ -530,7 +589,7 @@ class App extends React.Component {
     }
   };
 
-   handleAllAssignmentsClick = (assignments, isActive) => {
+  handleAllAssignmentsClick = (assignments, isActive) => {
     this.setState({
       page: "allAssignments",
       allAssignments: assignments,

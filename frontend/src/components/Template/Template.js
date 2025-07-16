@@ -49,10 +49,10 @@ class Template extends React.Component {
     }
   }
 
-  handleUseTemplate = (dump) => {
+  handleUseTemplate = (dump, db) => {
     // Этот метод для кнопки "Use Template" - передаем dump
     if (this.props.isLogin) {
-      this.props.onTemplateClick(dump); // С dump
+      this.props.onTemplateClick(dump, db); // С dump
     } else {
       notification.warning({
         message: 'Authentication Required',

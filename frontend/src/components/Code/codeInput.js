@@ -10,9 +10,8 @@ class CodeInput extends React.Component {
     constructor(props) {
         super(props);
 
-        const savedDb = localStorage.getItem("selectedDb");
+        const savedDb = localStorage.getItem("selectedDB");
         const chosenDb = savedDb || 'Choose DB';
-
         this.state = {
             code: '',
             chosenDb: chosenDb,
@@ -197,7 +196,7 @@ class CodeInput extends React.Component {
                         ]}
                         onChange={value => {
                             this.setState({ chosenDb: value });
-                            localStorage.setItem("selectedDb", value);
+                            localStorage.setItem("selectedDB", value);
                             if (this.props.onDbSelect) {
                                 this.props.onDbSelect(value);
                             }
@@ -207,7 +206,8 @@ class CodeInput extends React.Component {
                         className='my-save-button'
                         style={{ marginTop: '10px', marginRight: '10px' }}
                         onClick={() => this.props.openSave && this.props.openSave()}
-                        disabled={!(this.state.chosenDb === "PostgreSQL") }
+                        chosenDb={this.state.chosenDb}
+                        disabled={!(this.state.chosenDb === "PostgreSQL" || this.state.chosenDb === "MongoDB")}
                     >
                         <FaSave style={{ fontSize: '20px', verticalAlign: 'middle' }} />
                     </Button>

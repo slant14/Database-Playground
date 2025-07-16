@@ -11,12 +11,13 @@ class SaveModal extends React.Component {
       templateName: "",
       templateDescription: "",
       templateAuthor: getCookie("login") || "",
-      templateType: "PSQL",
     }
   }
 
+  
+
   handleSave = () => {
-    const { templateName, templateDescription, templateAuthor, templateType } = this.state;
+    const { templateName, templateDescription, templateAuthor } = this.state;
     if (templateName.trim() === "" || templateDescription.trim() === "") {
       notification.warning({
         message: 'Fields Required',
@@ -55,6 +56,8 @@ class SaveModal extends React.Component {
     }
 
     const combinedName = `${templateName.trim()} | ${templateDescription.trim()}`;
+    const templateType = localStorage.getItem("selectedDB") === "PostgreSQL" ? "PSQL" : "MGDB";
+    console.log("Saving template with data:", { combinedName, templateAuthor, templateType });
     setTemplate(combinedName, templateAuthor, templateType)
       .then(() => {
         notification.success({
@@ -100,7 +103,6 @@ class SaveModal extends React.Component {
               <Input 
                 placeholder="Enter template name"
                 className="login"
-                value={this.state.templateName}
                 onChange={(e) => this.setState({ templateName: e.target.value })}
                 style={{}}
               />
@@ -111,14 +113,16 @@ class SaveModal extends React.Component {
               <Input 
                 placeholder="Enter template description"
                 className="login"
-                value={this.state.templateDescription}
                 onChange={(e) => this.setState({ templateDescription: e.target.value })}
                 style={{}}
               />
             </div>
             
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '4px'}}>
-              <Button onClick={this.props.onCancel} className="my-orange-button-outline">
+              <Button onClick={
+                this.props.onCancel
+    
+                } className="my-orange-button-outline">
                 Cancel
               </Button>
               <Button 

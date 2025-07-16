@@ -1,7 +1,8 @@
 import React from 'react';
 import { getChromaResponse } from '../../api';
 import { getChromaInitialState } from '../../api';
-import { getPostgresTable, createPostgresTable, queryPostgres } from '../../api';
+import { getPostgresTable, queryPostgres } from '../../api';
+import { getMongoCollections, queryMongo } from '../../api';
 import CodeInput from './codeInput';
 import OutputInputs from './output';
 import { Button, FloatButton, Typography, notification } from 'antd';
@@ -15,7 +16,7 @@ class Code extends React.Component {
   constructor(props) {
     super(props);
 
-    const savedDb = localStorage.getItem("selectedDb");
+    const savedDb = localStorage.getItem("selectedDB");
     const chosenDb = savedDb || "Choose DB";
 
     this.state = {
@@ -24,8 +25,10 @@ class Code extends React.Component {
       isModalOpen: false,
       isLoading: false,
       chosenDb: chosenDb,
-      postgresTableInfo: this.props.postgresTableInfo || {},
+      postgresTableInfo: this.props.postgresTableInfo || [],
       postgresResponse: {},
+      mongoResponse: {},
+      mongoCollections: this.props.mongoCollectionInfo || [],
     };
 
     this.getIt = this.getIt.bind(this);
@@ -55,14 +58,17 @@ class Code extends React.Component {
     // Если selectedDB стал null (Create Template), сбрасываем выбор
     if (prevProps.selectedDB !== this.props.selectedDB && this.props.selectedDB === null) {
       this.setState({ chosenDb: "Choose DB" });
-      localStorage.removeItem("selectedDb");
+      localStorage.removeItem("selectedDB");
     }
   }
 
   render() {
     return (
       <div className="code-container">
-        <Button className='my-back-button' style={{ height: '35px', fontSize: '15px' }} onClick={() => this.props.handleButtonClick("template")}>Back</Button>
+        <Button className='my-back-button' style={{ height: '35px', fontSize: '15px' }} onClick={() => {
+          this.props.handleButtonClick("template") 
+          localStorage.removeItem("selectedDB");
+          }}>Back</Button>
         <main>
           <CodeInput
             getIt={(text, chosenDb) => this.getIt(text, chosenDb)}
@@ -81,6 +87,8 @@ class Code extends React.Component {
             chosenDB={this.state.chosenDb}
             postgresTableInfo={this.state.postgresTableInfo}
             postgresResponse={this.state.postgresResponse}
+            mongoCollectionInfo={this.state.mongoCollections}
+            mongoResponse={this.state.mongoResponse}
             setTableModalOpen={this.props.setTableModalOpen}
             outputDBStateRef={this.props.outputDBStateRef}
           />
@@ -157,9 +165,23 @@ class Code extends React.Component {
       })
   }
 
+  mongoCollectionsHandle = () => {
+    if (this.props.isLogin === false) {
+      return;
+    }
+    this.setLoading(true);
+    getMongoCollections()
+      .then(data => {
+        this.setState({ mongoCollections: data.tables });
+        this.setLoading(false);
+      })
+      .catch(error => {
+      })
+  }
+
   handleDbSelection(selectedDb) {
     this.setState({ chosenDb: selectedDb });
-    localStorage.setItem("selectedDb", selectedDb);
+    localStorage.setItem("selectedDB", selectedDb);
     this.loadDbData(selectedDb);
   }
 
@@ -171,6 +193,8 @@ class Code extends React.Component {
       case "PostgreSQL":
         this.postgresTableHandle();
         break;
+      case "MongoDB":
+        this.mongoCollectionsHandle();
       default:
         this.setState({ db_state: {} });
     }
@@ -244,12 +268,37 @@ class Code extends React.Component {
       return;
     }
     if (chosenDb === "MongoDB") {
-      notification.warning({
-        message: 'Database unavailable',
-        description: 'Please select another database',
-        placement: 'bottomRight',
-        duration: 2,
-      });
+      if (this.state.mongoCollections.length === 1 && text.includes("drop")) {
+        notification.warning({
+          message: 'Drop command',
+          description: 'You cannot drop the only collection in MongoDB or you\'re trying to drop a collection that does not exist.',
+          placement: 'bottomRight',
+          duration: 2,
+        });
+        return;
+      }
+      this.setLoading(true);
+      queryMongo(text)
+        .then(data => {
+          if (data === "Error") {
+            this.setState({ mongoResponse: { message: "Error occurred while executing command" } });
+          } else {
+            this.setState({ mongoResponse: data });
+            console.log("MongoDB response:", data);
+          }
+          this.mongoCollectionsHandle();
+          this.setLoading(false);
+        })
+        .catch(error => {
+          this.setState({
+            mongoResponse: {
+              error: true,
+              message: "Error occurred while executing command",
+              details: error.message || error.detail || "Unknown error"
+            }
+          });
+          this.setLoading(false);
+        });
       return;
     }
     if (chosenDb === "Chroma") {
