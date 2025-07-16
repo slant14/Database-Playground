@@ -2,15 +2,22 @@ FROM haskell:9
 
 WORKDIR /app
 
-COPY . /app
+# Копируем только файлы зависимостей
+COPY *.cabal ./
+COPY cabal.project* ./
 
+# Устанавливаем системные зависимости
 RUN apt-get update && apt-get install -y libtinfo-dev xz-utils
 
-RUN stack setup --install-ghc && stack build --copy-bins
+# Обновляем индекс пакетов и устанавливаем зависимости
+RUN cabal update && cabal build --only-dependencies
 
-# Копируем бинарник в рабочую директорию
-RUN cp /root/.local/bin/chroma-parser /app/chroma-parser
+# Теперь копируем исходники
+COPY . /app
+
+# Собираем проект
+RUN cabal build
 
 EXPOSE 8080
 
-CMD ["./chroma-parser"]
+CMD ["cabal", "run", "chroma-parser"]

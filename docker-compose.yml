@@ -62,26 +62,6 @@ services:
     environment:
       - PYTHONPATH=/app
 
-  frontend-37:
-    build: ./frontend-37
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend-37:/app
-      - /app/node_modules
-    environment:
-      VITE_PROD: ${PROD}
-
-  postgres:
-    image: postgres
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_pgdata:/var/lib/postgresql/data
-
   mongodb:
     image: mongo
     ports:
