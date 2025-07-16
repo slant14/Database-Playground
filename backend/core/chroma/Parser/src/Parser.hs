@@ -205,38 +205,38 @@ escapeJson = concatMap esc
 
 parseMultipleToJson :: [Result] -> String
 parseMultipleToJson results =
-    "{" ++ concat (intersperse "," (map resultToJson results)) ++ "}"
+    "[" ++ concat (intersperse "," (map resultToJson results)) ++ "]"
 
 -- Сериализация результата парсинга в JSON-строку
 resultToJson :: Result -> String
 resultToJson (AddResult fileName metadata) =
     "{" ++
-    "\"type\":\"ADD\"," ++
-    "\"fileName\":\"" ++ escapeJson fileName ++ "\"," ++
+    "\"command\":\"ADD\"," ++
+    "\"text\":\"" ++ escapeJson fileName ++ "\"," ++
     "\"metadata\": " ++ metadataListToJson metadata ++ "}"
 resultToJson (DeleteResult fileId) =
     "{" ++
-    "\"type\":\"DELETE\"," ++
-    "\"fileId\":\"" ++ escapeJson fileId ++ "\"}"
+    "\"command\":\"DELETE\"," ++
+    "\"doc_id\":\"" ++ escapeJson fileId ++ "\"}"
 resultToJson (UpdateResult fileId fileName metadata) =
     "{" ++
-    "\"type\":\"UPDATE\"," ++
-    "\"fileId\":\"" ++ escapeJson fileId ++ "\"," ++
-    "\"fileName\":\"" ++ escapeJson fileName ++ "\"," ++
+    "\"command\":\"UPDATE\"," ++
+    "\"doc_id\":\"" ++ escapeJson fileId ++ "\"," ++
+    "\"text\":\"" ++ escapeJson fileName ++ "\"," ++
     "\"metadata\": " ++ metadataListToJson metadata ++ "}"
 resultToJson (GetResult fileId) =
     "{" ++
-    "\"type\":\"GET\"," ++
-    "\"fileId\":\"" ++ escapeJson fileId ++ "\"}"
+    "\"command\":\"GET\"," ++
+    "\"doc_id\":\"" ++ escapeJson fileId ++ "\"}"
 resultToJson (SearchResult fileName count metadata) =
     "{" ++
-    "\"type\":\"SEARCH\"," ++
-    "\"fileName\":\"" ++ escapeJson fileName ++ "\"," ++
-    "\"count\": " ++ show count ++ "," ++
+    "\"command\":\"SEARCH\"," ++
+    "\"query\":\"" ++ escapeJson fileName ++ "\"," ++
+    "\"k\": " ++ show count ++ "," ++
     "\"metadata\": " ++ metadataListToJson metadata ++ "}"
 resultToJson DropResult =
     "{" ++
-    "\"type\":\"DROP\"" ++ "}"
+    "\"command\":\"DROP\"" ++ "}"
     
 -- Сериализация списка метаданных: если пусто — {}, иначе объект с ключами
 metadataListToJson :: [Metadata] -> String

@@ -5,6 +5,7 @@ from rest_framework.parsers import BaseParser
 
 from engines import postgres_engine
 from engines import mongo_engine
+from chroma.ChromaClient import chroma_client
 from engines.exceptions import QueryError
 from engines.shortcuts import db_exists
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -30,28 +31,27 @@ class ChromaQueryParser(APIView):
         data = json.loads(request.body)
         action = data.get('action')
         print(f"Chroma action: {action}")
+
+        data = json.loads(request.body)
+        user_id = request.user.id
+        query_text = data.get("code", "")
         
         if action == 'state':
-            return self.chroma_state(request)
-        else:
-            return self.chroma_query(request)
+            return self.chroma_state(user_id)
+        elif action == 'query':
+            return self.chroma_query(query_text, user_id)
+        else: # Action == 'put'
+            query_text = "DROP; " + query_text
+            return self.chroma_query(query_text, user_id)
     
-    def chroma_query(self, request):
-        try:
-            data = json.loads(request.body)
-            query_text = data.get("code")
-            user_id = request.user.id
-        except Exception:
-            query_text = None
-
+    def chroma_query(self, query_text, user_id):
         if not query_text:
             return Response({"error": "Missing query"}, status=400)
         
-        print(f"Received query: {query_text}")
+        #print(f"Received query: {query_text}")
         
         try:
             start_time = time.time()
-            chroma_client = ChromaClient()
             response = chroma_client.query_parser(user_id, query_text)
             response.raise_for_status()
             result = response.json()
@@ -61,29 +61,63 @@ class ChromaQueryParser(APIView):
             print(result)
             execution_time = time.time() - start_time
             
-            return Response({
-                "command": result.get("command", "UNKNOWN"),
-                "result": result.get("result", {}),
-                "db_state": db_state,
-                "execution_time": f"{execution_time:.4f} seconds",
-                "documents_count": len(db_state)
-            })
+            # Handle multiple results from the new API format
+            if "results" in result:
+                results = result["results"]
+                
+                # Check if there's a parse error
+                if len(results) == 1 and results[0].get("command") == "PARSE_ERROR":
+                    # Single parse error
+                    error_result = results[0]
+                    formatted_response = {
+                        "command": query_text,
+                        "result": error_result
+                    }
+                else:
+                    # Multiple commands
+                    formatted_commands = []
+                    for i, cmd_result in enumerate(results):
+                        formatted_commands.append({
+                            "commandNumber": i + 1,
+                            "command": f"Command {i + 1}",
+                            "result": cmd_result
+                        })
+                    formatted_response = {
+                        "commands": formatted_commands
+                    }
+                
+                print({
+                    **formatted_response,
+                    "db_state": db_state,
+                    "execution_time": f"{execution_time:.4f} seconds",
+                    "documents_count": len(db_state)
+                })
+
+                return Response({
+                    **formatted_response,
+                    "db_state": db_state,
+                    "execution_time": f"{execution_time:.4f} seconds",
+                    "documents_count": len(db_state)
+                })
+            else:
+                # Fallback for single result (backward compatibility)
+                return Response({
+                    "command": result.get("command", "UNKNOWN"),
+                    "result": result.get("result", {}),
+                    "db_state": db_state,
+                    "execution_time": f"{execution_time:.4f} seconds",
+                    "documents_count": len(db_state)
+                })
         
         except Exception as e:
             return Response({"error": str(e)}, status=400)
+            
 
-    def chroma_state(self, request):
-        print("Chroma state request received")
-        try:
-            data = json.loads(request.body)
-            user_id = request.user.id
-        except Exception:
-            user_id = None
+    def chroma_state(self, user_id):
         if not user_id:
             return Response({"error": "Missing user_id"}, status=400)
         
         try:
-            chroma_client = ChromaClient()
             state_response = chroma_client.get_db_state(user_id)
             state = state_response.get("state", [])
             return Response(state_response)

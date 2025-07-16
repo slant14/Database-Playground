@@ -41,6 +41,10 @@ class HintModal extends React.Component {
             <div style={{marginLeft: '20px', marginBottom: '20px'}}>
                 <Typography.Text className='modal-text' > This command deletes a document with given id.</Typography.Text>
             </div>
+            <Typography.Text className='modal-text'> <TbPointFilled style={{position: 'relative', top: '2px'}}/> UPDATE id=<Typography.Text className='modal-text' style={{color: '#51CB63'}}>id of your file here</Typography.Text> <Typography.Text className='modal-text' style={{color: '#51CB63'}}>new text content</Typography.Text> metadata:<Typography.Text className='modal-text' style={{color: '#51CB63'}}>topic</Typography.Text>=<Typography.Text className='modal-text' style={{color: '#51CB63'}}>new topic</Typography.Text></Typography.Text><br/>
+            <div style={{marginLeft: '20px', marginBottom: '20px'}}>
+                <Typography.Text className='modal-text' > This command updates a document with given id, new text content and/or metadata. Text and metadata are optional.</Typography.Text>
+            </div>
 
         </div>
         
