@@ -14,13 +14,10 @@ import { getCookie } from '../../utils';
 class Code extends React.Component {
   constructor(props) {
     super(props);
-    
-    if (this.props.selectedDB == "PostgreSQL") {
-      this.handleDbSelection(this.props.selectedDB);
-    }
+
     const savedDb = localStorage.getItem("selectedDb");
     const chosenDb = savedDb || "Choose DB";
-    
+
     this.state = {
       response: {},
       db_state: {},
@@ -29,15 +26,19 @@ class Code extends React.Component {
       chosenDb: chosenDb,
       postgresTableInfo: this.props.postgresTableInfo || {},
       postgresResponse: {},
-    }
+    };
 
     this.getIt = this.getIt.bind(this);
     this.getInitialState = this.getInitialState.bind(this);
     this.handleDbSelection = this.handleDbSelection.bind(this);
-    this.executeCommandsSequentially = this.executeCommandsSequentially.bind(this);
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.setLoading = this.setLoading.bind(this);
+
+    // Now it is safe to call handleDbSelection
+    if (this.props.selectedDB == "PostgreSQL") {
+      this.handleDbSelection(this.props.selectedDB);
+    }
   }
   componentDidMount() {
     // Загружаем данные для выбранной БД при монтировании компонента
@@ -74,12 +75,12 @@ class Code extends React.Component {
           />
         </main>
         <aside className="code-aside">
-          <OutputInputs 
-            response={this.state.response} 
-            db_state={this.state.db_state} 
-            chosenDB={this.state.chosenDb} 
-            postgresTableInfo={this.state.postgresTableInfo} 
-            postgresResponse={this.state.postgresResponse} 
+          <OutputInputs
+            response={this.state.response}
+            db_state={this.state.db_state}
+            chosenDB={this.state.chosenDb}
+            postgresTableInfo={this.state.postgresTableInfo}
+            postgresResponse={this.state.postgresResponse}
             setTableModalOpen={this.props.setTableModalOpen}
             outputDBStateRef={this.props.outputDBStateRef}
           />
@@ -149,7 +150,7 @@ class Code extends React.Component {
     this.setLoading(true);
     getPostgresTable()
       .then(data => {
-        this.setState({ postgresTableInfo: data.tables});
+        this.setState({ postgresTableInfo: data.tables });
         this.setLoading(false);
       })
       .catch(error => {
@@ -181,58 +182,6 @@ class Code extends React.Component {
       this.loadDbData(this.state.chosenDb);
     }
   };
-
-  async executeCommandsSequentially(commands, error) {
-    this.setLoading(true);
-    let allResults = [];
-
-    for (let i = 0; i < commands.length; i++) {
-      const command = commands[i].trim();
-      if (command === '') continue;
-
-      try {
-        const data = await getChromaResponse(command);
-
-        if (data === "Error") {
-          allResults.push({
-            command: command,
-            result: error,
-            commandNumber: i + 1
-          });
-        } else {
-          allResults.push({
-            command: command,
-            result: data,
-            commandNumber: i + 1
-          });
-        }
-        this.setState({
-          response: {
-            type: 'multiple_commands',
-            commands: allResults,
-            totalCommands: allResults.length
-          }
-        });
-
-      } catch (error) {
-        allResults.push({
-          command: command,
-          result: { message: "Error occurred while executing command" },
-          commandNumber: i + 1
-        });
-
-        this.setState({
-          response: {
-            type: 'multiple_commands',
-            commands: allResults,
-            totalCommands: allResults.length
-          }
-        });
-      }
-    }
-    this.getInitialState("Chroma");
-    this.setLoading(false);
-  }
 
   getIt(text, chosenDb) {
     if (this.props.isLogin === false) {
@@ -266,17 +215,17 @@ class Code extends React.Component {
       queryPostgres(text)
         .then(data => {
           if (data === "Error") {
-            this.setState({postgresResponse: { message: "Error occurred while executing command" } });
+            this.setState({ postgresResponse: { message: "Error occurred while executing command" } });
           } else {
-            this.setState({postgresResponse: data});
+            this.setState({ postgresResponse: data });
           }
           this.postgresTableHandle();
           this.setLoading(false);
         })
         .catch(error => {
           this.setState({
-            postgresResponse: { 
-              error: true, 
+            postgresResponse: {
+              error: true,
               message: "Error occurred while executing command",
               details: error.message || "Unknown error"
             }
@@ -308,48 +257,35 @@ class Code extends React.Component {
       const error = {
         message: "Please try once again, there is an error in your code",
       }
-      if (!text.includes('\n')) {
-        getChromaResponse(text)
-          .then(data => {
-            if (data === "Error") {
-              this.setState({
-                response: {
-                  type: 'single_command',
-                  command: text,
-                  result: error
-                }
-              });
-            } else {
-              this.setState({
-                response: {
-                  type: 'single_command',
-                  command: text,
-                  result: data
-                }
-              });
-            }
-            this.getInitialState(chosenDb);
-            this.setLoading(false);
-          })
-          .catch(error => {
-            this.setLoading(false);
-          });
-      }
-      else {
-        let commands = text.split('\n');
-        this.executeCommandsSequentially(commands, error);
-      }
-
+      getChromaResponse(text)
+        .then(data => {
+          if (data === "Error") {
+            this.setState({
+              response: {
+                type: 'single_command',
+                command: text,
+                result: error
+              }
+            });
+          } else {
+            this.setState({
+              response: {
+                type: 'single_command',
+                command: text,
+                result: data
+              }
+            });
+          }
+          this.getInitialState(chosenDb);
+          this.setLoading(false);
+        })
+        .catch(error => {
+          this.setLoading(false);
+        });
     }
   }
 
-  closeSave = () => {
-    const wasOpen = this.props.isSaveModalOpen;
-    if (this.props.setSaveModalOpen) {
-      this.props.setSaveModalOpen(false);
-    }
-    return wasOpen;
-  }
+
 }
 
 export default Code;
