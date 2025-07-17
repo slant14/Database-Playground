@@ -160,7 +160,7 @@ export async function getClassroomMyAssignments(id) {
   return res.json();
 }
 
-export async function getArticlesInsideClass(id) {
+export async function getArticlesNotInClass(id) {
   const res = await tokenUpdate(`${BASE_URL}/app/articles/all/?classroom_id=${id}`, {
     method: 'GET',
     headers: {
