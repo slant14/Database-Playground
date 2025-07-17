@@ -91,7 +91,7 @@
     font-size: 25px;
     font-weight: 400;
     text-align: left;
-    margin-left: 60px;;
+    margin-left: 60px;
     width: 800px;
 }
 
@@ -315,4 +315,23 @@
     font-weight: 300;
     line-height: 1.4;
     margin-bottom: 10px;
+}
+
+.create-assignment-button {
+    background: #51CB63 !important;
+    color: #fff !important;
+    border-color: #51CB63 !important;
+    font-family: 'Noto Sans', sans-serif;
+    align-self: flex-start;
+    margin-top: 20px;
+    margin-left: 60px;
+}
+
+.create-article-button {
+    background: #51CB63 !important;
+    color: #fff !important;
+    border-color: #51CB63 !important;
+    font-family: 'Noto Sans', sans-serif;
+    align-self: flex-end;
+    margin-top: 20px;
 }

@@ -38,6 +38,8 @@
     font-size: 20px;     
 }
 .assignment-period {
+    display: flex;
+    flex: column;
     font-size: 20px;     
 }
 

@@ -124,11 +124,30 @@ class App extends React.Component {
   };
 
   handlePopState = (event) => {
-    if (this.state.isModalOpen) {
-      this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
-      window.history.pushState({ page: this.state.page }, '', window.location.pathname);
-      return;
-    }
+      if (this.state.isModalOpen) {
+        this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
+        return;
+      }
+      if (this.state.isAddClassroomModalOpen) {
+        this.setState({ isAddClassroomModalOpen: false });
+        return;
+      }
+      if (this.state.isArticleModalOpen) {
+        this.setState({ isArticleModalOpen: false });
+        return;
+      }
+      if (this.state.isAssignmentModalOpen) {
+        this.setState({ isAssignmentModalOpen: false });
+        return;
+      }
+      if (this.state.isCreateAssignmentModalOpen) {
+        this.setState({ isCreateAssignmentModalOpen: false });
+        return;
+      }
+      if (this.state.isCreateArticleModalOpen) {
+        this.setState({ isCreateArticleModalOpen: false });
+        return;
+      }
 
     if (this.state.isHintModalOpen) {
       if (this.codeRef.current) {
@@ -554,18 +573,6 @@ class App extends React.Component {
     });
   }
 
-  setAssignmentModalOpen = (isOpen) => {
-    this.setState({
-      isAssignmentModalOpen: isOpen,
-    });
-  };
-
-  setArticleModalOpen = (isOpen) => {
-    this.setState({
-      isArticleModalOpen: isOpen
-    });
-  }
-
   handleAllArticlesClick = (articles) => {
     this.setState({
       page: "blog",
@@ -573,24 +580,50 @@ class App extends React.Component {
     });
   }
 
+  setAssignmentModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isAssignmentModalOpen) {
+      window.history.pushState({ modalType: 'assignment', page: this.state.page }, '', window.location.pathname);
+    }
+    this.setState({
+      isAssignmentModalOpen: isOpen,
+    });
+  };
+
+  setArticleModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isArticleModalOpen) {
+      window.history.pushState({ modalType: 'article', page: this.state.page }, '', window.location.pathname);
+    }
+    this.setState({
+      isArticleModalOpen: isOpen
+    });
+  }
+
   setAddClassroomModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isAddClassroomModalOpen) {
+      window.history.pushState({ modalType: 'addClassroom', page: this.state.page }, '', window.location.pathname);
+    }
     this.setState({
       isAddClassroomModalOpen: isOpen
     });
   }
 
   setCreateArticleModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isCreateArticleModalOpen) {
+      window.history.pushState({ modalType: 'createArticle', page: this.state.page }, '', window.location.pathname);
+    }
     this.setState({
       isCreateArticleModalOpen: isOpen
     });
   }
 
   setCreateAssignmentModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isCreateAssignmentModalOpen) {
+      window.history.pushState({ modalType: 'createAssignment', page: this.state.page }, '', window.location.pathname);
+    }
     this.setState({
       isCreateAssignmentModalOpen: isOpen
     });
   }
-
-}
+} 
 
 export default App;

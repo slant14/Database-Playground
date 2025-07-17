@@ -51,6 +51,27 @@ class AddClassroom extends React.Component {
 
   async addClassroom() {
     const { title, description, tas, students, primaryInstructor } = this.state;
+
+    // Convert all IDs to strings for comparison
+    const primaryId = String(primaryInstructor);
+    const taIds = tas.map(String);
+    const studentIds = students.map(String);
+
+    // Check for intersection
+    if (
+      taIds.includes(primaryId) ||
+      studentIds.includes(primaryId) ||
+      taIds.some(id => studentIds.includes(id))
+    ) {
+      notification.warning({
+        message: 'Classroom creation failed',
+        description: 'Primary Instructor, TAs, and Students must not overlap.',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+
     if ( title === "") {
       notification.warning({
         message: 'Classroom creation failed',
@@ -83,7 +104,12 @@ class AddClassroom extends React.Component {
       this.props.onClassroomCreated(newClassroom);
       localStorage.removeItem('addClassroomDraft');
     }
-  }
+  };
+
+  cancelAdding = () => {
+    this.props.onClassroomCreated(null);
+    localStorage.removeItem('addClassroomDraft')
+  };
 
   render() {
     const { open, onCancel, currentUserName } = this.props;
@@ -116,14 +142,12 @@ class AddClassroom extends React.Component {
 
           <div className="primary-instructor-row">
             <label>Primary Instructor:</label>
-            <Select
-              disabled
+            <Input
               value={currentUserName}
-              style={{ width: "100%", marginTop: "10px" }}
-              className="primary-instructor-select"
-            >
-              <Option value={currentUserName}>{currentUserName}</Option>
-            </Select>
+              disabled
+              style={{ width: "100%", marginTop: "10px", background: "#191d1a", color: "#a2aab3", border: "1px solid #a2aab3" }}
+              className="primary-instructor-input"
+            />
           </div>
           
           <div className="tas-row">
@@ -161,10 +185,15 @@ class AddClassroom extends React.Component {
           </div>
 
           <div className="add-button-wraper">
+            <Button className="cancel-button"
+              type="primary"
+              onClick={() => this.cancelAdding()}
+            >Cancel</Button>
+
             <Button className="add-button"
               type="primary"
               onClick={() => this.addClassroom()}
-            >Add</Button>
+            >Add</Button>           
           </div>
         </form>
       </Modal>

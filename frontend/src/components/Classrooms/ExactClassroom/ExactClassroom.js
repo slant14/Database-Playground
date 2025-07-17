@@ -8,7 +8,6 @@ import Assignments from './Assignments/Assignments';
 import Articles from './Articles/Articles';
 import CreateArticle from "./CreateArticle/CreateArticle"
 import CreateAssignment from "./CreateAssignment/CreateAssignment";
-import image from "../../../img/WideScreen.jpg"
 import { getMyClassroomClassmates, getClassroomMyAssignments, getMyClassroomArticles } from '../../../api';
 
 const { Title, Paragraph, Text, Link } = Typography;
@@ -149,6 +148,10 @@ class ExactClassroom extends React.Component {
     }
   }
 
+  handleArticleCreated = () => {
+    this.handleArticleModalClose();
+  };
+
   handleCreateAssignmentModalOpen = () => {
     this.setState({isCreateAssignmentModalOpen: true});
     if (this.props.setCreateAssignmentModalOpen) {
@@ -162,6 +165,10 @@ class ExactClassroom extends React.Component {
       this.props.setCreateAssignmentModalOpen(false);
     }
   }
+
+  handleAssignmentCreated = () => {
+    this.handleAssignmentModalClose();
+  };
 
   renderAssignmentsBlock(assignments, type, isActive) {
     const label = type === "Active" ? "Active Assignments" : "Finished Assignments";
@@ -222,8 +229,12 @@ class ExactClassroom extends React.Component {
                 </div>
                 <div className="assignment-info-row">
                   <div className="assignment-info-text">
-                    <div>Open: {el.open_at}</div>
-                    <div>Due: {el.close_at}</div>
+                    <span>
+                      <span>Open:</span> {this.formatDateTime(el.open_at)}
+                    </span>
+                    <span>
+                      <span>Due:</span> {this.formatDateTime(el.close_at)}
+                    </span>
                   </div>
                   <input
                     type="file"
@@ -260,13 +271,19 @@ class ExactClassroom extends React.Component {
     );
   }
 
+  formatDateTime = (dateString) => {
+    if (!dateString) return "";
+    const d = new Date(dateString);
+    const pad = n => n.toString().padStart(2, "0");
+    return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
   render() {
     const classroom = this.props.classroom;
     
     if (!classroom) {
       return (
         <div className="classroom">
-          <img className="wide-image" src={image} style={{}}/>
           <Title style={{
             marginTop: 30,
             color: "#fff",
@@ -285,8 +302,6 @@ class ExactClassroom extends React.Component {
     
     return (
       <div className="whole">
-        <img className="wide-image" src={image} style={{}}/>
-
         <div className="whole-class">
           <div>
             <Title style={{
@@ -310,7 +325,12 @@ class ExactClassroom extends React.Component {
                 <span className="class-label">Number of Students:</span> {classroom.capacity}
               </span>
               <span>
-                <span className="class-label">Created:</span> {classroom.created_date.slice(0, 10).replace(/-/g, "/")}
+                <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {
+                  (() => {
+                    const date = classroom.created_date.slice(0, 10).split("-");
+                    return `${date[2]}/${date[1]}/${date[0]}`;
+                  })()
+                  }
               </span>
             </div>
 
@@ -335,10 +355,10 @@ class ExactClassroom extends React.Component {
           <div className="classroom-assignments">
             {this.renderAssignmentsBlock(this.state.assignmentsActive, "Active", true)}
             {this.renderAssignmentsBlock(this.state.assignmentsFinished, "Finished", false)}
-            <Button className="all-button" onClick={() => this.handleCreateAssignmentModalOpen()}>  
+            <Button className="create-assignment-button" onClick={() => this.handleCreateAssignmentModalOpen()}>  
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                   <span style={{ position: "relative", top: "-1px" }}>
-                      Add Article
+                      Add Assignment
                   </span>
                 </span>
               </Button>
@@ -370,7 +390,7 @@ class ExactClassroom extends React.Component {
               ))}
             </div> 
             
-            <Button className="all-button" onClick={() => this.handleCreateArticleModalOpen()}>  
+            <Button className="create-article-button" onClick={() => this.handleCreateArticleModalOpen()}>  
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                   <span style={{ position: "relative", top: "-1px" }}>
                       Add Article
@@ -400,6 +420,7 @@ class ExactClassroom extends React.Component {
             assignment={this.state.selectedAssignment}
             onAnswerSubmit={this.handleAssignmentFileDirectUpload}
             isActive={this.state.isAssignmentActive}
+            formatDateTime={this.formatDateTime}
           />
         )}
 

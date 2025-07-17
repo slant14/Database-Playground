@@ -3,7 +3,6 @@ import { Typography, Button, Select } from "antd";
 import { getMyClassrooms } from '../../api';
 import './Classrooms.css';
 import AddClassroom from "./AddClassroom"
-import image from "../../img/Screen.jpg"
 
 const { Title, Paragraph, Text, Link } = Typography;
 
@@ -51,15 +50,29 @@ class ClassRooms extends React.Component {
     }
   };  
 
-   handleClassroomCreated = (classroom) => {
+  handleClassroomCreated = (classroom) => {
     this.handleModalClose();
-    this.props.selectClassroom(classroom, this.state.chosenRole);
+    if (classroom) {
+      this.props.selectClassroom(classroom, this.state.chosenRole);
+    }
   };
 
   handlePostLoginUpdate = async () => {
     // Перезагружаем классы после авторизации
     await this.loadClassrooms();
   };
+
+  getBrightColorFromString = (str) => {
+    // Simple hash
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    // Use hash to get hue (0-359)
+    const hue = Math.abs(hash) % 360;
+    // Bright color: high saturation, high lightness
+    return `hsl(${hue}, 85%, 70%)`;
+  }
 
   render() {
     let classroomsToShow = this.state.allClassrooms;
@@ -140,11 +153,22 @@ class ClassRooms extends React.Component {
         <div className="courses">
           {classroomsToShow.map((el, idx) => (
             <div className="card" key={idx} >
-               <img
-                src={image}
-                alt="course"
-                style={{ width: "500px", borderTopLeftRadius: "14px", borderTopRightRadius: "14px", borderBottomLeftRadius: "0", borderBottomRightRadius: "0" }}
-              />
+               <div
+                style={{
+                  width: "500px",
+                  height: "120px",
+                  borderTopLeftRadius: "14px",
+                  borderTopRightRadius: "14px",
+                  borderBottomLeftRadius: "0",
+                  borderBottomRightRadius: "0",
+                  background: this.getBrightColorFromString(el.title),
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                {/* Optionally, show initials or icon here */}
+              </div>
               <Text className="plain-title">
                 {el.title}
               </Text>
@@ -163,7 +187,12 @@ class ClassRooms extends React.Component {
                   </li>
                     <li>
                     <span className="Created-Button">
-                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {el.created_date.slice(0, 10).replace(/-/g, "/")}
+                      <span style={{color:"#51CB63", fontWeight:400}}>Created:</span> {
+                        (() => {
+                          const date = el.created_date.slice(0, 10).split("-");
+                          return `${date[2]}/${date[1]}/${date[0]}`;
+                        })()
+                      }
                       <Button className="view" onClick={() => this.props.selectClassroom(el)}>
                         <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                           <span style={{ position: "relative", top: "-1px" }}>View</span>

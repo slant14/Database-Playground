@@ -103,7 +103,7 @@ class CreateAssignment extends React.Component {
             value={this.state.title}
             onChange={this.handleInputChange}
           />
-
+        
           <p>Classroom Description:</p>
           <Input
             name="description"
@@ -112,7 +112,7 @@ class CreateAssignment extends React.Component {
             value={this.state.description}
             onChange={this.handleInputChange}
           />
-
+        
           <div className="tas-row">
             <label>Authors:</label>
             <Select
@@ -129,28 +129,39 @@ class CreateAssignment extends React.Component {
               ))}
             </Select>
           </div>
-
-          <p>Open Date & Time:</p>
-          <DatePicker
-            showTime
-            style={{ width: "100%", marginBottom: "10px" }}
-            value={this.state.openAt ? dayjs(this.state.openAt) : null}
-            onChange={(_, dateString) => this.setState({ openAt: dateString })}
-          />
-          
-          <p>Close Date & Time:</p>
-          <DatePicker
-            showTime
-            style={{ width: "100%", marginBottom: "10px" }}
-            value={this.state.closeAt ? dayjs(this.state.closeAt) : null}
-            onChange={(_, dateString) => this.setState({ closeAt: dateString })}
-          />
-
+        
+          <div style={{ marginBottom: "10px" }}>
+            <label>Open Date & Time:</label>
+            <DatePicker
+              showTime
+              style={{ width: "100%", marginTop: "10px" }}
+              className="classroomDatePicker"
+              value={this.state.openAt ? dayjs(this.state.openAt) : null}
+              onChange={(_, dateString) => this.setState({ openAt: dateString })}
+            />
+          </div>
+        
+          <div style={{ marginBottom: "10px" }}>
+            <label>Close Date & Time:</label>
+            <DatePicker
+              showTime
+              style={{ width: "100%", marginTop: "10px" }}
+              className="classroomDatePicker"
+              value={this.state.closeAt ? dayjs(this.state.closeAt) : null}
+              onChange={(_, dateString) => this.setState({ closeAt: dateString })}
+            />
+          </div>
+        
           <div className="add-button-wraper">
+            <Button className="cancel-button"
+              type="primary"
+              onClick={() => this.cancelAdding()}
+            >Cancel</Button>
+          
             <Button className="add-button"
               type="primary"
               onClick={() => this.addClassroom()}
-            >Create</Button>
+            >Add</Button>           
           </div>
         </form>
       </Modal>

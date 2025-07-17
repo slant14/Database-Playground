@@ -133,3 +133,17 @@
     border-color: #51CB63 !important;
     font-family: 'Noto Sans', sans-serif;
 }
+
+.cancel-button {
+    background: #191d1a !important;
+    color: #c01619 !important;
+    border-color: #c01619 !important;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.cancel-button:hover {
+    background: #c01619 !important;
+    color: #ffffff !important;
+    border-color: #c01619 !important;
+    font-family: 'Noto Sans', sans-serif;
+}

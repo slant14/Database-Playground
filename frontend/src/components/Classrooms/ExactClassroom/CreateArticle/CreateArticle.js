@@ -128,10 +128,15 @@ class CreateArticle extends React.Component {
           </div>
 
           <div className="add-button-wraper">
+            <Button className="cancel-button"
+              type="primary"
+              onClick={() => this.cancelAdding()}
+            >Cancel</Button>
+                    
             <Button className="add-button"
               type="primary"
               onClick={() => this.addClassroom()}
-            >Create</Button>
+            >Add</Button>           
           </div>
         </form>
       </Modal>

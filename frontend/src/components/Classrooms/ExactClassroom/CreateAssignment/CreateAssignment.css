@@ -121,6 +121,13 @@
     color: #fff !important;
 }
 
+.addClassroom-modal .classroomDatePicker {
+    background: #0d1117 !important;
+    color: #fff !important;
+    border: 1px solid #a2aab3 !important;
+    margin-bottom: 10px;
+}
+
 .add-button-wraper {
     display: flex;
     justify-content: flex-end;
@@ -131,5 +138,19 @@
     background: #51CB63 !important;
     color: #ffffff !important;
     border-color: #51CB63 !important;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.cancel-button {
+    background: #191d1a !important;
+    color: #c01619 !important;
+    border-color: #c01619 !important;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.cancel-button:hover {
+    background: #c01619 !important;
+    color: #ffffff !important;
+    border-color: #c01619 !important;
     font-family: 'Noto Sans', sans-serif;
 }

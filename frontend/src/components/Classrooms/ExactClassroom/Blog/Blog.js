@@ -65,7 +65,7 @@ class AllAssignments extends React.Component {
         <Title style={{
           textAlign: "center",
           marginTop: 30,
-          color: "#51CB63",
+          color: "#ffffffff",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
