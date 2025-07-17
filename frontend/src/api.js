@@ -160,6 +160,18 @@ export async function getClassroomMyAssignments(id) {
   return res.json();
 }
 
+export async function getArticlesNotInClass(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/articles/all/?classroom_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+
 export async function createClassroom(title, description, TA, students, primary_instructor) {
   const res = await tokenUpdate(`${BASE_URL}/app/classrooms/create/`, {
     method: 'POST',
@@ -167,6 +179,30 @@ export async function createClassroom(title, description, TA, students, primary_
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ title, description, TA, students, primary_instructor })  
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function createAssignment(title, description, open_at, close_at, classroom_id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/assignments/create/?classroom_id=${classroom_id}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, description, open_at, close_at })  
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function createArticle(title, author, description, file, classroom_id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/articles/create/?classroom_id=${classroom_id}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, author, description, file})  
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -182,7 +218,6 @@ export async function getProfiles() {
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
-
 
 export async function getTemplateList() {
   const res = await tokenUpdate(`${BASE_URL}/template/`, {

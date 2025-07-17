@@ -75,15 +75,9 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 #        fields = '__all__'
 
 class AssignmentSerializer(serializers.ModelSerializer):
-    #available = serializers.SerializerMethodField()
-
     class Meta:
         model = Assignment
         fields = '__all__'
-    
-    #def get_available(self, obj):
-    #    now = timezone.now()
-    #    return obj.open_at <= now <= obj.close_at
 
 class SubmissionSerializer(serializers.ModelSerializer):
     student_name = serializers.CharField(source='student.user.name', read_only=True)
@@ -94,9 +88,10 @@ class SubmissionSerializer(serializers.ModelSerializer):
         fields = ['id', 'student', 'student_name', 'student_email', 'assignment', 'query', 'feedback', 'created_at']
 
 class  ArticleSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.user.name', read_only=True)
     class Meta:
         model = Article
-        fields = '__all__'
+        fields = ['id', 'title', 'author', 'author_name', 'description', 'file']
 
 class ProfileSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.name', read_only=True)

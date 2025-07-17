@@ -1,5 +1,5 @@
 from rest_framework import routers
-from backend_db.views import UserViewSet, ClassroomViewSet, EnrollmentViewSet, AssignmentViewSet, SubmissionViewSet, ProfileViewSet
+from backend_db.views import UserViewSet, ClassroomViewSet, EnrollmentViewSet, AssignmentViewSet, SubmissionViewSet, ProfileViewSet, ArticleViewSet
 from schema.views import DBSchemaModelViewSet
 
 router = routers.DefaultRouter()
@@ -11,5 +11,6 @@ router.register(r'enrollments', EnrollmentViewSet)
 router.register(r'assignments', AssignmentViewSet)
 router.register(r'submissions', SubmissionViewSet)
 router.register(r'schema', DBSchemaModelViewSet)
+router.register(r'articles', ArticleViewSet)
 
 urlpatterns = router.urls

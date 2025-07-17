@@ -92,7 +92,7 @@ class ClassroomViewSet(viewsets.ModelViewSet):
 
         ta_ids = data.get('TA', [])
         student_ids = data.get('students', [])
-        primary_instructor_id = data.get('primary_instructor')
+        #primary_instructor_id = data.get('primary_instructor')
         
         if not isinstance(ta_ids, list):
             ta_ids = [ta_ids] if ta_ids else []
@@ -100,8 +100,7 @@ class ClassroomViewSet(viewsets.ModelViewSet):
             student_ids = [student_ids] if student_ids else []
         #if user_profile.id not in ta_ids:
         #    ta_ids.append(user_profile.id)
-        if not data.get('primary_instructor'):
-            primary_instructor_id = user_profile.id
+        primary_instructor_id = user_profile.id
 
         data['TA'] = ta_ids
         data['primary_instructor'] = primary_instructor_id
@@ -142,16 +141,16 @@ class ClassroomViewSet(viewsets.ModelViewSet):
 
         primary_classrooms = Classroom.objects.filter(primary_instructor=user_profile)
 
-        classrooms = (student_classrooms | TA_classrooms | primary_classrooms).distinct()
+        #classrooms = (student_classrooms | TA_classrooms | primary_classrooms).distinct()
 
-        serializer = self.get_serializer(classrooms, many=True)
-        return Response(serializer.data)
+        #serializer = self.get_serializer(classrooms, many=True)
+        #return Response(serializer.data)
 
-        #return Response({
-        #    'student': ClassroomSerializer(student_classrooms, many=True).data,
-        #    'TA': ClassroomSerializer(TA_classrooms, many=True).data,
-        #    'primary_instructor': ClassroomSerializer(primary_classrooms, many=True).data,
-        #})
+        return Response({
+            'student': ClassroomSerializer(student_classrooms, many=True).data,
+            'TA': ClassroomSerializer(TA_classrooms, many=True).data,
+            'primary_instructor': ClassroomSerializer(primary_classrooms, many=True).data,
+        })
     
 
     @action(detail=False, methods=['get'], url_path='my/role')
@@ -209,7 +208,6 @@ class ClassroomViewSet(viewsets.ModelViewSet):
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
 
-
     @action(detail=False, methods=['get'], url_path='all', permission_classes=[AllowAny])
     def all_classes(self, request):
         classrooms = Classroom.objects.all()
@@ -248,15 +246,23 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     serializer_class = AssignmentSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['get'], url_path='by_course')
-    def assignments_by_classroom(self, request):
+    @action(detail=False, methods=['post'], url_path='create')
+    def create_assignment(self, request):
         classroom_id = request.query_params.get('classroom_id')
-        if not course_id:
-            return Response({'error': 'classroom_id is required'}, status=400)
-        assignments = Assignment.objects.filter(classroom_id=classroom_id)
-        serializer = self.get_serializer(assignments, many=True)
-        return Response(serializer.data)
 
+        if not classroom_id:
+            return Response({'error': 'classroom_id is required'}, status=400)
+        try:
+            classroom = Classroom.objects.get(id=classroom_id)
+        except Classroom.DoesNotExist:
+            return Response({'error': 'Classroom not found'}, status=404)
+
+        data = request.data.copy()
+        data['classroom_id'] = classroom_id
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        assignments = serializer.save()
+        return Response(self.get_serializer(assignments).data, status=status.HTTP_201_CREATED)
     
     @action(detail=False, methods=['get'], url_path='my')
     def my_assignments(self, request):
@@ -321,3 +327,43 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
+
+class ArticleViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=['post'], url_path='create')
+    def create_article(self, request):
+        classroom_id = request.query_params.get('classroom_id')
+        if not classroom_id:
+            return Response({'error': 'classroom_id is required'}, status=400)
+
+        data = request.data.copy()
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        article = serializer.save()
+
+        Classroom.objects.assign_article(
+            classroom_id=classroom_id,
+            article=article
+        )
+        
+        classroom = Classroom.objects.get(id=classroom_id)
+        classroom.articles.add(article)
+
+        return Response(self.get_serializer(article).data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=False, methods=['get'], url_path='all')
+    def all_articles(self, request):
+        classroom_id = request.query_params.get('classroom_id')
+        if not classroom_id:
+            return Response({'error': 'classroom_id is required'}, status=400)
+
+        existing_articles_ids = list(Article.objects.filter(classrooms=classroom_id).values_list('id', flat=True))
+
+        articles = Article.objects.all()
+        articles = articles.exclude(id__in=existing_articles_ids)
+        serializer = self.get_serializer(articles, many=True)
+
+        return Response(serializer.data)
