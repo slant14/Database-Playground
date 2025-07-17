@@ -42,7 +42,9 @@ class MongoEngine(DBEngine):
                 raise DBExists
             db = client.get_database(db_name)
             db.create_collection("collection")
-            self._apply_dump(db, dump or DEFAULT_DUMP)
+            if not dump:
+                dump = DEFAULT_DUMP
+            self._apply_dump(db, dump)
 
     def drop_db(self, db_name: str):
         with self._connect() as client:

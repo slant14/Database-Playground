@@ -308,6 +308,7 @@ class Code extends React.Component {
       }
       getChromaResponse(text)
         .then(data => {
+          console.log("Chroma response1:", data);
           if (data === "Error") {
             this.setState({
               response: {
