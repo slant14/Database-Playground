@@ -1,11 +1,23 @@
 import React from "react";
 import { Button, Typography } from "antd";
+import { getMyProfile } from '../../api'
 
 import "./Account.css";
 
 const { Title, Paragraph, Text, Link } = Typography;
 
 class Account extends React.Component {
+
+  getProfie = () => {
+    getMyProfile()
+      .then(data => {
+        console.log("RAAAAR", data)
+      })
+      .catch(error => {
+        console.log("Error getting profiel", error)
+      })
+  }
+
   render() {
     return (
       <div className="account-container">
@@ -61,6 +73,7 @@ class Account extends React.Component {
           Press <Text keyboard className="account-text">Esc</Text> to exit...
         </Paragraph>
         <Button variant="solid" className="my-danger-button" onClick={this.props.logOut}>Log out</Button>
+        <Button variant="solid" className="my-danger-button" onClick={this.getProfie}>Get Profile</Button>
       </div>
     );
   }
