@@ -22,7 +22,7 @@ services:
     environment:
       - DEBUG=True
       - ALLOWED_HOSTS=*
-      - SECRET_KEY=replace-this-in-prod
+      - SECRET_KEY=${SECRET_KEY}
       - POSTGRES_DB=backend_db
       - POSTGRES_HOST=backend-db
       - POSTGRES_PORT=5432

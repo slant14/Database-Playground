@@ -208,13 +208,13 @@ export async function createAssignment(title, description, open_at, close_at, cl
   return res.json();
 }
 
-export async function createArticle(title, author, description, classroom_id) {
+export async function createArticle(title, authors, description, classroom_id) {
   const res = await tokenUpdate(`${BASE_URL}/app/articles/create/?classroom_id=${classroom_id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, author, description})  
+    body: JSON.stringify({ title, authors, description })  
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();

@@ -69,5 +69,9 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'description', 'file')
+    list_display = ('title', 'get_authors', 'description', 'file')
     list_filter = ('title',)
+
+    def get_authors(self, obj):
+        return ", ".join([profile.user.name for profile in obj.authors.all()])
+    get_authors.short_description = 'Authors'
