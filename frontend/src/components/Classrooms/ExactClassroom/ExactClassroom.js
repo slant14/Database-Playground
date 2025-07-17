@@ -148,8 +148,18 @@ class ExactClassroom extends React.Component {
     }
   }
 
-  handleArticleCreated = () => {
-    this.handleArticleModalClose();
+  handleArticleCreated = async () => {
+    this.handleCreatedArticleModalClose();
+    if (this.props.classroom && this.props.classroom.id) {
+      try {
+        const allArticles = await getMyClassroomArticles(this.props.classroom.id);
+        this.setState({
+          articles: allArticles
+        });
+      } catch (error) {
+        console.error("Failed to reload articles:", error);
+      }
+    }
   };
 
   handleCreateAssignmentModalOpen = () => {
@@ -166,9 +176,21 @@ class ExactClassroom extends React.Component {
     }
   }
 
-  handleAssignmentCreated = () => {
-    this.handleAssignmentModalClose();
+  handleAssignmentCreated = async () => {
+    this.handleCreateAssignmentModalClose();
+    if (this.props.classroom && this.props.classroom.id) {
+      try {
+        const allAssignments = await getClassroomMyAssignments(this.props.classroom.id);
+        this.setState({
+          assignmentsActive: allAssignments.not_submitted,
+          assignmentsFinished: allAssignments.finished,
+        });
+      } catch (error) {
+        console.error("Failed to reload assignments:", error);
+      }
+    }
   };
+
 
   renderAssignmentsBlock(assignments, type, isActive) {
     const label = type === "Active" ? "Active Assignments" : "Finished Assignments";
@@ -424,6 +446,16 @@ class ExactClassroom extends React.Component {
           />
         )}
 
+        {this.state.isCreateAssignmentModalOpen && (
+          <CreateAssignment
+            open={this.state.isCreateAssignmentModalOpen}
+            onCancel={this.handleCreateAssignmentModalClose}
+            classroomID={this.props.classroom.id}
+            onAssignmentCreated={this.handleAssignmentCreated}
+            onAsignmentClose={this.handleCreateAssignmentModalClose}
+          />
+        )}
+
         {this.state.isArticleModalOpen && this.state.selectedArticle && (
           <Articles
             open={this.state.isArticleModalOpen}
@@ -437,20 +469,8 @@ class ExactClassroom extends React.Component {
             open={this.state.isCreateArticleModalOpen}
             onCancel={this.handleCreateArticleModalClose}
             classroomID={this.props.classroom.id}
-            onArticleCreated={this.props.handleArticleCreated}
-            //onClassroomCreated={this.handleClassroomCreated}
-            //currentUserName={this.props.currentUserName}
-          />
-        )}
-
-        {this.state.isCreateAssignmentModalOpen && (
-          <CreateAssignment
-            open={this.state.isCreateAssignmentModalOpen}
-            onCancel={this.handleCreateAssignmentModalClose}
-            classroomID={this.props.classroom.id}
-            onAssignmentCreated={this.props.handleAssignmentCreated}
-            //onClassroomCreated={this.handleClassroomCreated}
-            //currentUserName={this.props.currentUserName}
+            onArticleCreated={this.handleArticleCreated}
+            onArticleClose={this.handleCreateArticleModalClose}
           />
         )}
 

@@ -340,8 +340,10 @@ class ArticleViewSet(viewsets.ModelViewSet):
         classroom_id = request.query_params.get('classroom_id')
         if not classroom_id:
             return Response({'error': 'classroom_id is required'}, status=400)
-
+        
         data = request.data.copy()
+        author_id = data.get('author')
+        data['author'] = author_id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         article = serializer.save()
