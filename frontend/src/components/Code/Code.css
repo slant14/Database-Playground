@@ -339,9 +339,28 @@ textarea:active {
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
+    scrollbar-color: #2a2a2a transparent;
     min-height: 32px;
     overflow-x: auto;
     overflow-y: hidden;
+}
+
+.code-table-list::-webkit-scrollbar {
+    height: 2px;
+}
+.code-table-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.code-table-list::-webkit-scrollbar-thumb {
+    background: #a2aab3 !important;
+    border-radius: 8px;
+    border: 1px solid #191d1a;
+}
+.code-table-list::-webkit-scrollbar-thumb:hover {
+    background: #5d6063 !important;
+}
+.code-table-list::-webkit-scrollbar-corner {
+    background: #191d1a !important;
 }
 
 .ant-table-cell::before {
