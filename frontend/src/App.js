@@ -1,6 +1,7 @@
 import React from "react";
 import { getPostgresTable, createPostgresTable } from './api';
 import { createMongoCollections, getMongoCollections } from './api';
+import { chromaApplyDump } from './api';
 import Footer from "./components/LayOut/footer";
 import Header from "./components/LayOut/Header/Header";
 import Account from "./components/Account/Account";
@@ -424,6 +425,15 @@ class App extends React.Component {
           .catch(error => {
             console.error("Error creating MongoDB collections:", error);
           });
+        chromaApplyDump({})
+          .then(() => {
+
+          })
+          .catch(error => {
+            console.error("Error getting Chroma initial state:", error);
+          });
+
+
       }
       if (db === "MGDB") {
         this.setState({ selectedDB: "MongoDB" });
@@ -453,6 +463,13 @@ class App extends React.Component {
           .catch(error => {
             console.error("Error creating database:", error);
           });
+        chromaApplyDump({})
+          .then(() => {
+
+          })
+          .catch(error => {
+            console.error("Error getting Chroma initial state:", error);
+          });
       }
     } else {
       // Для создания нового шаблона - сбрасываем выбор БД
@@ -479,6 +496,14 @@ class App extends React.Component {
         })
         .catch(error => {
           console.error("Error creating MongoDB collections:", error);
+        });
+
+      chromaApplyDump({})
+        .then(() => {
+
+        })
+        .catch(error => {
+          console.error("Error getting Chroma initial state:", error);
         });
     }
 

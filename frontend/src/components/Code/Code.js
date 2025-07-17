@@ -141,6 +141,7 @@ class Code extends React.Component {
       return;
     }
     this.setLoading(true);
+    console.log("Fetching initial state for ChromaAAAAAAAAAAAA");
     getChromaInitialState()
       .then(data => {
         this.setState({ db_state: data });

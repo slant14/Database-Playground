@@ -17,6 +17,20 @@ export async function getChromaResponse(text) {
   return res.json();
 }
 
+export async function getDump() {
+  const res = await tokenUpdate(`${BASE_URL}/db/chroma/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ action: 'dump' }),
+  });
+  if (!res.ok) {
+    return "Error";
+  };
+  return res.json();
+}
+
 export async function getChromaInitialState() {
   const res = await tokenUpdate(`${BASE_URL}/db/chroma/`, {
     method: 'POST',
@@ -28,6 +42,19 @@ export async function getChromaInitialState() {
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
+
+export async function chromaApplyDump(payload = {}) {
+  const res = await tokenUpdate(`${BASE_URL}/db/chroma/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({...payload, action: 'put' }),
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
 
 export async function getPostgresTable() {
   const res = await tokenUpdate(`${BASE_URL}/db/schema/`, {

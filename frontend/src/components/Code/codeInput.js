@@ -2,6 +2,7 @@ import React from "react"
 import { Button, Select, Upload, notification } from "antd";
 import { FaSave } from 'react-icons/fa';
 import { UploadOutlined } from '@ant-design/icons';
+import { getDump } from "../../api";
 import SaveModal from './modalSave';
 import './codeInput.css';
 
@@ -184,6 +185,28 @@ class CodeInput extends React.Component {
                 </div>
 
                 <div className='code-buttons' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'right' }}>
+                    <Button onClick={() => {
+                        getDump()
+                        .then(dump => {
+                            console.log("Dump fetched:", dump);
+                            notification.success({
+                                message: 'Dump fetched successfully',
+                                description: 'You can now use this dump in your code.',
+                                placement: 'bottomRight',
+                                duration: 2
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Error fetching dump:", error);
+                            notification.error({
+                                message: 'Error fetching dump',
+                                description: 'There was an error fetching the dump.',
+                                placement: 'bottomRight',
+                                duration: 2
+                            });
+                        });
+
+                    }} className="my-orange-button-outline" disabled={localStorage.getItem("selectedDB") !== "Chroma"}/>
                     <Select
                         className='code-select'
                         value={this.state.chosenDb}
