@@ -12,7 +12,6 @@ class Add extends React.Component {
                     <div className="code-output-item">
                         <Typography.Text className='code-text'>Success! </Typography.Text> <br />
                         <Typography.Text className='code-text'>Status: <Typography.Text className='code-text' style={{ color: '#fff' }}>Added</Typography.Text></Typography.Text> <br />
-                        <Typography.Text className='code-text'>Execution time: <Typography.Text className='code-text' style={{ color: '#fff' }}>{this.props.response.execution_time}</Typography.Text></Typography.Text><br />
                         <Typography.Text className='code-text'> ID: <Typography.Text className='code-text' style={{ color: '#fff' }}>{this.props.response.doc_id}</Typography.Text></Typography.Text> <br />
                     </div>
                 }

@@ -16,6 +16,7 @@ class ChromaResult extends React.Component {
         const hasParseError = response && response.result && response.result.result && response.result.result.command === 'PARSE_ERROR';
         return (
             <div>
+                {response && response.result && response.result.execution_time ? <div> <Typography.Text className='code-text' style={{ color: '#51CB63', fontSize: '14px' }}>Execution time: <Typography.Text className='code-text' style={{ color: '#fff', fontSize: '14px' }}>{response.result.execution_time}</Typography.Text></Typography.Text><br /> </div> : null}
                 {hasCommands ? (
                     <div className="code-output-item">
                         <div>

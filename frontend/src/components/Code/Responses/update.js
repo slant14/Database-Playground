@@ -17,7 +17,6 @@ class Update extends React.Component {
                             <div>
                                 <Typography.Text className='code-text'>Success! </Typography.Text> <br />
                                 <Typography.Text className='code-text'>Status: <Typography.Text className='code-text' style={{ color: '#fff' }}>Updated</Typography.Text></Typography.Text> <br />
-                                <Typography.Text className='code-text'>Execution time: <Typography.Text className='code-text' style={{ color: '#fff' }}>{this.props.response.execution_time}</Typography.Text></Typography.Text><br />
                             </div>
                         }
                     </div>

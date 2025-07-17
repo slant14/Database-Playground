@@ -130,9 +130,6 @@ class Template extends React.Component {
       <div className="template-container">
         <div className="template-list">
           <span className='template-preview'><Typography.Text className="template-starting-text"> Choose <Typography.Text className="template-starting-text" style={{ color: '#51CB63' }}>template</Typography.Text> from the list above or </Typography.Text> <Button className='my-orange-button-outline' style={{ position: 'relative', top: '-2px', height: '40px', fontSize: '18px' }} onClick={this.handleTemplateClick}>Create Template</Button> </span>
-          <SingleTemplate template={this.state.predefined_template[0]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
-          <SingleTemplate template={this.state.predefined_template[1]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
-          <SingleTemplate template={this.state.predefined_template[2]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
           {this.state.templates && this.state.templates.length > 0 && this.state.templates.map((template, index) => (
             <SingleTemplate
               key={index}
@@ -142,6 +139,9 @@ class Template extends React.Component {
               isLogin={this.props.isLogin}
             />
           ))}
+          <SingleTemplate template={this.state.predefined_template[0]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
+          <SingleTemplate template={this.state.predefined_template[1]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
+          <SingleTemplate template={this.state.predefined_template[2]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
         </div>
       </div>
     );
