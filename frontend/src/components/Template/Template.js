@@ -21,7 +21,48 @@ class Template extends React.Component {
           name: "Guide Collection | Stores guides with title, author, year, and tags.",
           author: "DPP",
           type: "MGDB",
-          dump: "'{\n  \"db\": {\n  \"books\": [\n      {\n        \"_id\": {\n          \"$oid\": \"68785d0c387dd8e340e53628\"\n        },\n        \"title\": \"Clean Code\",\n        \"author\": \"Robert C. Martin\",\n        \"year\": 2008.0,\n        \"tags\": [\n          \"programming\",\n          \"best practices\"\n        ]\n      },\n      {\n        \"_id\": {\n          \"$oid\": \"68785d0c387dd8e340e53629\"\n        },\n        \"title\": \"The Pragmatic Programmer\",\n        \"author\": \"Andrew Hunt\",\n        \"year\": 1999.0,\n        \"tags\": [\n          \"programming\",\n          \"career\"\n        ]\n      },\n      {\n        \"_id\": {\n          \"$oid\": \"68785d0c387dd8e340e5362a\"\n        },\n        \"title\": \"Refactoring\",\n        \"author\": \"Martin Fowler\",\n        \"year\": 2018.0,\n        \"tags\": [\n          \"programming\",\n          \"refactoring\"\n        ]\n      }\n    ]\n  }\n}'"
+          dump: `{
+  "db": {
+    "books": [
+      {
+        "_id": {
+          "$oid": "68785d0c387dd8e340e53628"
+        },
+        "title": "Clean Code",
+        "author": "Robert C. Martin",
+        "year": 2008,
+        "tags": [
+          "programming",
+          "best practices"
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "68785d0c387dd8e340e53629"
+        },
+        "title": "The Pragmatic Programmer",
+        "author": "Andrew Hunt",
+        "year": 1999,
+        "tags": [
+          "programming",
+          "career"
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "68785d0c387dd8e340e5362a"
+        },
+        "title": "Refactoring",
+        "author": "Martin Fowler",
+        "year": 2018,
+        "tags": [
+          "programming",
+          "refactoring"
+        ]
+      }
+    ]
+  }
+}`
         }
       ],
       templates: []
