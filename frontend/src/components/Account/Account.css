@@ -1,3 +1,191 @@
+/* Основные стили страницы аккаунта */
+.account-page {
+    height: 100hv;
+    background: linear-gradient(135deg, #0d1117 0%, #0a0f0d 25%, #0c1712 50%, #0e1e15 75%, #101f17 100%);
+    background-attachment: fixed;
+    font-family: 'Noto Sans', sans-serif;
+    padding: 40px 30px;
+    box-sizing: border-box;
+}
+
+/* Убираем отдельный хедер - теперь все на едином фоне */
+.account-header {
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+    padding: 0;
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Аватар */
+.avatar-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-avatar {
+    border: 4px solid rgba(81, 203, 99, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.avatar-edit-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #51CB63;
+    color: #fff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.avatar-edit-button:hover {
+    background: #45b056;
+}
+
+/* Информация о пользователе в хедере */
+.user-info {
+    color: #fff;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.user-name {
+    color: #fff !important;
+    margin-bottom: 8px !important;
+    font-size: 36px !important;
+    font-weight: 600 !important;
+    font-family: 'Noto Sans', sans-serif !important;
+}
+
+.user-email {
+    display: block;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 16px;
+    margin-bottom: 4px;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+/* Основной контент */
+.account-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Карточки - единый стиль */
+.info-card,
+.stats-card {
+    background: #191d1a !important;
+    border: 2px solid #a2aab3 !important;
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.info-card .ant-card-head,
+.stats-card .ant-card-head {
+    background: #333a35 !important;
+    border-bottom: 2px solid #a2aab3 !important;
+}
+
+.info-card .ant-card-head-title,
+.stats-card .ant-card-head-title {
+    color: #fff !important;
+    font-weight: 600;
+    font-family: 'Noto Sans', sans-serif !important;
+}
+
+.info-card .ant-card-body,
+.stats-card .ant-card-body {
+    background: #191d1a !important;
+}
+
+.stats-card .ant-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.gauge-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.gauge-title {
+    color: #fff !important;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'Noto Sans', sans-serif;
+    margin-bottom: 10px;
+}
+
+.gauge-value {
+    color: #51CB63 !important;
+    font-size: 24px;
+    font-weight: 600;
+    font-family: 'Noto Sans', sans-serif;
+    margin-top: 10px;
+}
+
+/* Элементы информации */
+.info-item {
+    margin-bottom: 16px;
+}
+
+.info-label {
+    display: block;
+    color: #51CB63 !important;
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.info-value {
+    display: block;
+    color: #fff !important;
+    font-size: 16px;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+/* Разделители */
+.ant-divider {
+    border-color: #a2aab3 !important;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .account-header {
+        padding: 15px 10px;
+        margin-bottom: 15px;
+    }
+    
+    .account-content {
+        padding: 0 10px;
+    }
+    
+    .user-name {
+        font-size: 24px !important;
+    }
+    
+    .account-page {
+        padding: 20px 15px;
+    }
+}
+
+/* Устаревшие стили (для совместимости) */
 .my-danger-button {
     background-color: #0d1117 !important;
     color: #c01619 !important;
@@ -11,6 +199,7 @@
     color: #fff !important;
     border-color: #c01619 !important;
 }
+
 .account-container {
     margin-top: 20px;
     margin-left: 20px;

@@ -10,6 +10,7 @@ import { FaCode } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
 
 
+
 const { Title, Paragraph, Text } = Typography;
 
 class Home extends React.Component {
