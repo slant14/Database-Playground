@@ -185,35 +185,12 @@ class CodeInput extends React.Component {
                 </div>
 
                 <div className='code-buttons' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'right' }}>
-                    <Button onClick={() => {
-                        getDump()
-                        .then(dump => {
-                            console.log("Dump fetched:", dump);
-                            notification.success({
-                                message: 'Dump fetched successfully',
-                                description: 'You can now use this dump in your code.',
-                                placement: 'bottomRight',
-                                duration: 2
-                            });
-                        })
-                        .catch(error => {
-                            console.error("Error fetching dump:", error);
-                            notification.error({
-                                message: 'Error fetching dump',
-                                description: 'There was an error fetching the dump.',
-                                placement: 'bottomRight',
-                                duration: 2
-                            });
-                        });
-
-                    }} className="my-orange-button-outline" disabled={localStorage.getItem("selectedDB") !== "Chroma"}/>
                     <Select
                         className='code-select'
                         value={this.state.chosenDb}
                         style={{ width: 190, marginTop: '10px' }}
                         options={[
                             { value: 'PostgreSQL', label: 'PostgreSQL' },
-                            { value: 'SQLite', label: 'SQLite' },
                             { value: 'MongoDB', label: 'MongoDB' },
                             { value: 'Chroma', label: 'Chroma' },
                         ]}
@@ -230,7 +207,7 @@ class CodeInput extends React.Component {
                         style={{ marginTop: '10px', marginRight: '10px' }}
                         onClick={() => this.props.openSave && this.props.openSave()}
                         chosenDb={this.state.chosenDb}
-                        disabled={!(this.state.chosenDb === "PostgreSQL" || this.state.chosenDb === "MongoDB")}
+                        disabled={!(this.state.chosenDb === "PostgreSQL" || this.state.chosenDb === "MongoDB" || this.state.chosenDb === "Chroma")}
                     >
                         <FaSave style={{ fontSize: '20px', verticalAlign: 'middle' }} />
                     </Button>
