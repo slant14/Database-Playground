@@ -37,6 +37,9 @@ class QueryParseRequest(BaseModel):
     user_id: int
     code: str
 
+class GetDumpRequest(BaseModel):
+    user_id: int
+
 @app.post("/add_document")
 async def add_document(request: AddDocumentRequest):
     try:
@@ -109,6 +112,15 @@ async def get_db_state(request: dict):
         engine = ChromaEngine(user_id)
         state = engine.get_db_state()
         return {"state": state}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/get_creation_dump")
+async def get_creation_dump(request: GetDumpRequest):
+    try:
+        engine = ChromaEngine(request.user_id)
+        dump = engine.get_creation_dump()
+        return {"dump": dump}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
