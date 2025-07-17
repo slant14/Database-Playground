@@ -1,7 +1,7 @@
 import React from "react"
 import './CreateArticle.css';
-//import { getProfiles, createClassroom } from '../../api';
-import { Modal, Input, Typography, Select, Button, notification } from "antd";
+import { getProfiles, createArticle } from "../../../../api";
+import { Modal, Input, Select, Button, notification } from "antd";
 
 const { Option } = Select;
 
@@ -11,12 +11,11 @@ class CreateArticle extends React.Component {
     this.state = {
       title: "",
       description: "",
-      authors: [],
+      author: "",
       users: [],
     }
   }
 
-  /*
   async componentDidMount() {
     const draft = localStorage.getItem('createArticleDraft');
     if (draft) {
@@ -34,18 +33,17 @@ class CreateArticle extends React.Component {
   saveDraft = () => {
     localStorage.setItem('createArticleDraft', JSON.stringify(this.state));
   }
-    */
+
   handleInputChange = (e) => {
     this.setState({ [e.target.name]: e.target.value }, this.saveDraft);
   }
 
-  handleAuthorssChange = value => {
-    this.setState({ authors: value }, this.saveDraft);
+  handleAuthorChange = value => {
+    this.setState({ author: value }, this.saveDraft);
   };
 
-  /*
-  async addClassroom() {
-    const { title, description, tas, students, primaryInstructor } = this.state;
+  async addArticle() {
+    const { title, description, author } = this.state;
     if ( title === "") {
       notification.warning({
         message: 'Classroom creation failed',
@@ -64,22 +62,17 @@ class CreateArticle extends React.Component {
       });
       return;
     } 
-    if (!tas || tas.length === 0) {
-      notification.warning({
-        message: 'Classroom creation failed',
-        description: 'Please, specify at least 1 TA',
-        placement: 'bottomRight',
-        duration: 3,
-      });
-      return;
-    }
-    const newClassroom = await createClassroom(title, description, tas, students, primaryInstructor);
-    if (newClassroom && this.props.onClassroomCreated) {
-      this.props.onClassroomCreated(newClassroom);
-      localStorage.removeItem('addClassroomDraft');
+    const newArticle = await createArticle(title, description, author, this.props.classroomID);
+    if (newArticle && this.props.onArticleCreated) {
+      this.props.onArticleCreated();
+      localStorage.removeItem('createArticleDraft');
     }
   }
-    */
+
+  cancelAdding = () => {
+    this.props.onArticleClose();
+    localStorage.removeItem('createArticleDraft')
+  };
 
   render() {
     const { open, onCancel} = this.props;
@@ -111,13 +104,12 @@ class CreateArticle extends React.Component {
           />
 
           <div className="tas-row">
-            <label>Authors:</label>
+            <label>Author:</label>
             <Select
-              placeholder="Select teacher assistants"
-              mode="multiple"
+              placeholder="Select author"
               style={{ width: "100%" }}
-              value={this.state.authors}
-              onChange={this.handleAuthorsChange}
+              value={this.state.author}
+              onChange={this.handleAuthorChange}
               showSearch
               optionFilterProp="children"
             >
@@ -135,7 +127,7 @@ class CreateArticle extends React.Component {
                     
             <Button className="add-button"
               type="primary"
-              onClick={() => this.addClassroom()}
+              onClick={() => this.addArticle()}
             >Add</Button>           
           </div>
         </form>

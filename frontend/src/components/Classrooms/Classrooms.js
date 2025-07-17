@@ -54,6 +54,24 @@ class ClassRooms extends React.Component {
       console.error("Failed to fetch classrooms:", error);
     }
   }
+
+  handleModalOpen = () => {
+    this.setState({
+      isModalOpen: true,
+    });
+    if (this.props.setAddClassroomModalOpen) {
+      this.props.setAddClassroomModalOpen(true);
+    }
+  }
+
+  handleModalClose = () => {
+    this.setState({
+      isModalOpen: false,
+    });
+    if (this.props.setAddClassroomModalOpen) {
+      this.props.setAddClassroomModalOpen(false);
+    }
+  };  
   
   handleModalClose = () => {
     this.setState({
