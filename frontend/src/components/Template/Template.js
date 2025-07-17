@@ -142,6 +142,9 @@ class Template extends React.Component {
           <SingleTemplate template={this.state.predefined_template[0]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
           <SingleTemplate template={this.state.predefined_template[1]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
           <SingleTemplate template={this.state.predefined_template[2]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
+          <SingleTemplate template={this.state.predefined_template[3]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
+          <SingleTemplate template={this.state.predefined_template[4]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
+          <SingleTemplate template={this.state.predefined_template[5]} onTemplateClick={this.handleUseTemplate} isLogin={this.props.isLogin} />
         </div>
       </div>
     );
