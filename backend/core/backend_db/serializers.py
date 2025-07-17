@@ -49,7 +49,7 @@ class ClassroomSerializer(serializers.ModelSerializer):
     #capacity = serializers.IntegerField(read_only=True)
     class Meta:
         model = Classroom
-        fields = ['id', 'title', 'description', 'TA', 'primary_instructor', 'created_date', 'capacity', 'TA_names', 'primary_instructor_name']
+        fields = ['id', 'title', 'description', 'TA', 'primary_instructor', 'created_date', 'capacity', 'TA_names', 'primary_instructor_name', 'image']
 
     def get_TA_names(self, obj):
         return [ta.user.name for ta in obj.TA.all()]
