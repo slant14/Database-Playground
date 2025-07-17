@@ -110,7 +110,7 @@ class ChromaEngine:
                 commands.append(command)
             
             print(commands)
-            return "\n".join(commands)
+            return "".join(commands)
             
         except Exception as e:
             print(f"Error generating creation dump: {e}")
