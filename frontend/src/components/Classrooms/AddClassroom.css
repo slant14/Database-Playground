@@ -55,10 +55,87 @@
     border: 1px solid #a2aab3 !important;
 }
 
-
 .addClassroom-modal input::placeholder {
     color: #fff !important;
     opacity: 0.3;
+}
+
+.addClassroom-modal label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 400;
+    color: #fff;
+}
+
+.addClassroom-modal .classroomTitle,
+.addClassroom-modal .classroomDescription,
+.addClassroom-modal .primary-instructor-select,
+.addClassroom-modal .ant-select,
+.addClassroom-modal .ant-input {
+    margin-top: 10px;
+}
+
+.addClassroom-modal .ant-select-selection-placeholder {
+    color: #fff !important;
+    opacity: 0.7;
+}
+
+.addClassroom-modal .ant-select-clear {
+    color: #fff !important;
+}
+
+.addClassroom-modal .ant-select-item-option-selected .anticon-check {
+    color: #51CB63 !important;
+    fill: #51CB63 !important;
+}
+
+/* Make the typed search text in Select white */
+.addClassroom-modal .ant-select-selection-search-input {
+    color: #fff !important;
+}
+
+/* Make the X (remove tag) icons white */
+.addClassroom-modal .ant-select-selection-item-remove,
+.addClassroom-modal .anticon-close {
+    color: #fff !important;
+    opacity: 0.8;
+}
+
+.addClassroom-modal .ant-select-dropdown .ant-select-item {
+    color: #a2aab3 !important;
+}
+.addClassroom-modal .ant-select-dropdown .ant-select-item-option-active {
+    color: #fff !important;
+    background: #232826 !important;
+}
+.addClassroom-modal .ant-select-dropdown .ant-select-item-option-selected {
+    color: #51CB63 !important;
+    background: #232826 !important;
+}
+.addClassroom-modal .ant-select-dropdown .ant-select-item-option-content {
+    color: #ffffff !important;
+}
+.addClassroom-modal .ant-select-dropdown .ant-select-item-option-active .ant-select-item-option-content {
+    color: #fff !important;
+}
+
+.primary-instructor-input {
+    background: #191d1a !important;
+    color: #a2aab3 !important;
+    border: 1px solid #a2aab3 !important;
+    font-family: 'Noto Sans', sans-serif;
+    padding: 6px 12px;
+    border-radius: 4px;
+    width: 750px; /* limit width */
+    height: 28;
+    cursor: not-allowed;
+    margin-bottom: 10px;
+}
+
+.add-button-wraper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
 }
 
 .add-button {
@@ -66,5 +143,4 @@
     color: #ffffff !important;
     border-color: #51CB63 !important;
     font-family: 'Noto Sans', sans-serif;
-    align-self: flex-end;
 }

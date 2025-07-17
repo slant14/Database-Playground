@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Button } from "antd";
+import { Typography, Button, Select } from "antd";
 import { getMyClassrooms } from '../../api';
 import './Classrooms.css';
 import AddClassroom from "./AddClassroom"
@@ -12,7 +12,12 @@ class ClassRooms extends React.Component {
     super(props)
     this.state = {
       classrooms: [],
+      allClassrooms: [],
+      classroomsPrimaryInstructor: [],
+      classroomsTA: [],
+      classroomsStudents: [],
       isModalOpen:false,
+      chosenRole: null
     }
   }
 
@@ -22,8 +27,8 @@ class ClassRooms extends React.Component {
 
   async loadClassrooms() {
     try {
-      const classrooms = await getMyClassrooms();
-      this.setState({ classrooms });
+      const allClassrooms = await getMyClassrooms();
+      this.setState({ allClassrooms });
     } catch (error) {
       console.error("Failed to fetch classrooms:", error);
     }
@@ -48,72 +53,92 @@ class ClassRooms extends React.Component {
 
    handleClassroomCreated = (classroom) => {
     this.handleModalClose();
-    this.props.selectClassroom(classroom);
+    this.props.selectClassroom(classroom, this.state.chosenRole);
   };
 
   handlePostLoginUpdate = async () => {
     // Перезагружаем классы после авторизации
     await this.loadClassrooms();
   };
-  
+
   render() {
-    if (this.state.classrooms.length === 0) {
+    let classroomsToShow = this.state.allClassrooms;
+    if (this.state.chosenRole === "Primary Instructor") {
+      classroomsToShow = this.state.classroomsPrimaryInstructor;
+    } else if (this.state.chosenRole === "TA") {
+      classroomsToShow = this.state.classroomsTA;
+    } else if (this.state.chosenRole === "Student") {
+      classroomsToShow = this.state.classroomsStudents;
+    }
+
+    if (classroomsToShow.length === 0) {
       return (
-        <div className="classrooms">
-          <Title style={{
-            marginTop: 30,
-            color: "#fff",
-            fontSize: 45,
-            fontFamily: "'Noto Sans', sans-serif",
-            fontWeight: 600,
-            marginBottom: 0
-          }}>There are no <Text style={{
-            color: "#51CB63",
-            fontSize: 45,
-            fontFamily: "'Noto Sans', sans-serif",
-            fontWeight: 600,
-            marginBottom: 0
-          }}>classrooms yet</Text>
-          </Title>
-          <Button className="add-classroom" onClick={this.handleModalOpen}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-            <span style={{ position: "relative", top: "-1px" }}>Add Classroom</span>
-          </span>
-        </Button>
-        {this.state.isModalOpen && (
-          <AddClassroom
-            open={this.state.isModalOpen}
-            onCancel={this.handleModalClose}
-          />
-        )}
+        <div className="classrooms-header">
+          <div className="classrooms-header-left" />
+
+          <div className="classrooms-header-center">
+            <Title className="classrooms-title">There are no classrooms yet</Title>
+          </div>
+
+          <div className="classrooms-header-right">
+            <Select
+              className="role-select"
+              value={this.state.chosenRole}
+              style={{ width: 150, marginRight: '20px' }}
+              options={[
+                { value: "All Classrooms", label: "All Classrooms" },
+                { value: "Primary Instructor", label: "Primary Instructor" },
+                { value: "TA", label: "TA" },
+                { value: "Student", label: "Student" },
+              ]}
+              onChange={value => {
+                this.setState({ chosenRole: value });
+              }}
+            />
+            <Button className="add-classroom" onClick={this.handleModalOpen}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ position: "relative", top: "-1px" }}>Add Classroom</span>
+              </span>
+            </Button>
+          </div>
         </div>
       );
     }
 
     return (
       <div className="classrooms">
-        <Title style={{
-          marginTop: 30,
-          color: "#51CB63",
-          fontSize: 45,
-          fontFamily: "'Noto Sans', sans-serif",
-          fontWeight: 600,
-          marginBottom: 0
-        }}>Class<Text style={{
-          color: "#fff",
-          fontSize: 45,
-          fontFamily: "'Noto Sans', sans-serif",
-          fontWeight: 600,
-          marginBottom: 0
-        }}>rooms</Text>
-        </Title>
-        <Button className="add-classroom" onClick={this.handleModalOpen}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-            <span style={{ position: "relative", top: "-1px" }}>Add Classroom</span>
-          </span>
-        </Button>
+        
+        <div className="classrooms-header">
+          <div className="classrooms-header-left" />
+
+          <div className="classrooms-header-center">
+            <Title className="classrooms-title">Classrooms</Title>
+          </div>
+
+          <div className="classrooms-header-right">
+            <Select
+              className="role-select"
+              value={this.state.chosenRole}
+              style={{ width: 150, marginRight: '20px' }}
+              options={[
+                { value: "Primary Instructor", label: "Primary Instructor" },
+                { value: "TA", label: "TA" },
+                { value: "Student", label: "Student" },
+              ]}
+              onChange={value => {
+                this.setState({ chosenRole: value });
+              }}
+            />
+            <Button className="add-classroom" onClick={this.handleModalOpen}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ position: "relative", top: "-1px" }}>Add Classroom</span>
+              </span>
+            </Button>
+          </div>
+        </div>
+        
         <div className="courses">
-          {this.state.classrooms.map((el, idx) => (
+          {classroomsToShow.map((el, idx) => (
             <div className="card" key={idx} >
                <img
                 src={image}
@@ -156,6 +181,7 @@ class ClassRooms extends React.Component {
           open={this.state.isModalOpen}
           onCancel={this.handleModalClose}
           onClassroomCreated={this.handleClassroomCreated}
+          currentUserName={this.props.currentUserName}
         />
       )}
       </div>

@@ -1,7 +1,7 @@
 import React from "react"
 import './AddClassroom.css';
 import { getProfiles, createClassroom } from '../../api';
-import { Modal, Input, Typography, Select, Button } from "antd";
+import { Modal, Input, Typography, Select, Button, notification } from "antd";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -12,49 +12,81 @@ class AddClassroom extends React.Component {
     this.state = {
       title: "",
       description: "",
-      primaryInstructor: props.currentUser || null,
+      primaryInstructor: this.props.id,
       tas: [],
       students: [],
       users: [],
-      
     }
   }
 
   async componentDidMount() {
-      try {
-        const users = await getProfiles();
-        this.setState({ users });
-      } catch (error) {
-        console.error("Failed to fetch users:", error);
-      }
+    const draft = localStorage.getItem('addClassroomDraft');
+    if (draft) {
+      this.setState(JSON.parse(draft));
     }
-  
-  async addClassroom() {
-    const { title, description, tas, students, primaryInstructor} = this.state;
-    const newClassroom = await createClassroom(title, description, tas, students, primaryInstructor);
-    if (newClassroom && this.props.onClassroomCreated) {
-      this.props.onClassroomCreated(newClassroom);
+
+    try {
+      const users = await getProfiles();
+      this.setState({ users });
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
     }
   }
 
-  handlePrimaryInstructorChange = value => {
-    this.setState({ primaryInstructor: value });
-  };
-  /*
-  handleAutoSelectMe = () => {
-    this.setState({ primaryInstructor: this.props.currentUser });
-  };
-  */  
+  saveDraft = () => {
+    localStorage.setItem('addClassroomDraft', JSON.stringify(this.state));
+  }
+
+  handleInputChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value }, this.saveDraft);
+  }
+
   handleTAsChange = value => {
-    this.setState({ tas: value });
+    this.setState({ tas: value }, this.saveDraft);
   };
 
   handleStudentsChange = value => {
-    this.setState({ students: value });
+    this.setState({ students: value }, this.saveDraft);
   };
 
+  async addClassroom() {
+    const { title, description, tas, students, primaryInstructor } = this.state;
+    if ( title === "") {
+      notification.warning({
+        message: 'Classroom creation failed',
+        description: 'Please, specify Classroom name',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    } 
+    if (description === "") {
+      notification.warning({
+        message: 'Classroom creation failed',
+        description: 'Please, specify Classroom description',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    } 
+    if (!tas || tas.length === 0) {
+      notification.warning({
+        message: 'Classroom creation failed',
+        description: 'Please, specify at least 1 TA',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+    const newClassroom = await createClassroom(title, description, tas, students, primaryInstructor);
+    if (newClassroom && this.props.onClassroomCreated) {
+      this.props.onClassroomCreated(newClassroom);
+      localStorage.removeItem('addClassroomDraft');
+    }
+  }
+
   render() {
-    const { open, onCancel} = this.props;
+    const { open, onCancel, currentUserName } = this.props;
     return (
       <Modal
         className="addClassroom-modal"
@@ -66,68 +98,74 @@ class AddClassroom extends React.Component {
         <form ref={el => this.myForm = el}>
           <p>Classroom Title:</p>
           <Input
+            name="title"
             placeholder="Title"
             className="classroomTitle"
             value={this.state.title}
-            onChange={e => this.setState({ title: e.target.value })}
+            onChange={this.handleInputChange}
           />
 
           <p>Classroom Description:</p>
           <Input
+            name="description"
             placeholder="Description"
             className="classroomDescription"
             value={this.state.description}
-            onChange={e => this.setState({ description: e.target.value })}
+            onChange={this.handleInputChange}
           />
 
-          <p>Primary Instructor:</p>
-          <Select
-            placeholder="Select primary instructor"
-            style={{ width: "100%" }}
-            value={this.state.primaryInstructor}
-            onChange={this.handlePrimaryInstructorChange}
-          >
-            {this.state.users.map(instr => (
-              <Option key={instr.id} value={instr.id}>{instr.user_name}</Option>
-            ))}
-          </Select>
-          {/*
-          <Button style={{ marginTop: 8 }} onClick={this.handleAutoSelectMe} type="link">
-            Auto-select myself
-          </Button>
-            */}
-          <p>Teacher Assistants:</p>
-          <Select
-            placeholder="Select teaching assistants"
-            mode="multiple"
-            style={{ width: "100%" }}
-            value={this.state.tas}
-            onChange={this.handleTAsChange}
-          >
-            {this.state.users.map(ta => (
-              <Option key={ta.id} value={ta.id}>{ta.user_name}</Option>
-            ))}
-          </Select>
+          <div className="primary-instructor-row">
+            <label>Primary Instructor:</label>
+            <Select
+              disabled
+              value={currentUserName}
+              style={{ width: "100%", marginTop: "10px" }}
+              className="primary-instructor-select"
+            >
+              <Option value={currentUserName}>{currentUserName}</Option>
+            </Select>
+          </div>
+          
+          <div className="tas-row">
+            <label>Teacher Assistants:</label>
+            <Select
+              placeholder="Select teacher assistants"
+              mode="multiple"
+              style={{ width: "100%" }}
+              value={this.state.tas}
+              onChange={this.handleTAsChange}
+              showSearch
+              optionFilterProp="children"
+            >
+              {this.state.users.map(ta => (
+                <Option key={ta.id} value={ta.id}>{ta.user_name}</Option>
+              ))}
+            </Select>
+          </div>
+          
+          <div className="students-row">
+            <label>Students:</label>
+              <Select
+              placeholder="Add students"
+              mode="multiple"
+              style={{ width: "100%" }}
+              value={this.state.students}
+              onChange={this.handleStudentsChange}
+              showSearch
+              optionFilterProp="children"
+            >
+              {this.state.users.map(student => (
+                <Option key={student.id} value={student.id}>{student.user_name}</Option>
+              ))}
+            </Select>
+          </div>
 
-          <p>Students:</p>
-          <Select
-            placeholder="Add students"
-            mode="multiple"
-            style={{ width: "100%" }}
-            value={this.state.students}
-            onChange={this.handleStudentsChange}
-          >
-            {this.state.users.map(student => (
-              <Option key={student.id} value={student.id}>{student.user_name}</Option>
-            ))}
-          </Select>
-
-          <Button className="add-button"
-            type="primary" 
-            onClick={() => {
-              this.addClassroom()
-            }}>Add</Button>  
-            
+          <div className="add-button-wraper">
+            <Button className="add-button"
+              type="primary"
+              onClick={() => this.addClassroom()}
+            >Add</Button>
+          </div>
         </form>
       </Modal>
     );

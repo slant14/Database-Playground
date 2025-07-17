@@ -5,13 +5,54 @@
     text-align: center;
 }
 
+.classrooms-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.classrooms-header-left {
+  flex: 1;
+}
+
+.classrooms-header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.classrooms-title {
+  text-align: center;
+  font-size: 45px !important;
+  font-family: 'Noto Sans', sans-serif !important;
+  font-weight: 600 !important;
+  color: #51CB63 !important;
+  margin: 0;
+}
+
+.classrooms-header-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+}
+
+.role-select {
+  margin-right: 0 !important;
+}
+
+
 .add-classroom {
     background: #51CB63 !important;
     color: #ffffff !important;
     border-color: #51CB63 !important;
     font-family: 'Noto Sans', sans-serif;
-    align-self: flex-end;
-    margin-right: 40px;
+    margin-left: o;
+    margin-right: 20px;
+    margin-top: 0 !important;  
 }
 
 .courses {

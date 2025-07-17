@@ -55,6 +55,7 @@ class App extends React.Component {
       isModalOpen: false,
       activeButton: lastPage || 'home',
       selectedClassroom: selectedClassroom,
+      roleInClassroom: null,
       isAddClassroomModalOpen: false,
       allAssignments: [],
       postgresTableInfo: null,
@@ -172,6 +173,12 @@ class App extends React.Component {
     } else if (this.state.page === "exactClassroom") {
       this.setState({ page: "classrooms", activeButton: "classrooms" });
       setToLocalStorage("lastPage", "classrooms");
+    } else if (this.state.page === "allAssignments") {
+      this.setState({ page: "exactClassroom", activeButton: "classrooms" });
+      setToLocalStorage("lastPage", "exactClassroom");
+    } else if (this.state.page === "blog") {
+      this.setState({ page: "exactClassroom", activeButton: "classrooms" });
+      setToLocalStorage("lastPage", "exactClassroom");
     } else if (event.state && event.state.page) {
       this.setState({ page: event.state.page, activeButton: event.state.page });
       setToLocalStorage("lastPage", event.state.page);
@@ -215,7 +222,12 @@ class App extends React.Component {
       case "classrooms":
         return (
           <div>
-            <ClassRooms ref={this.classroomsRef} selectClassroom={this.selectClassroom} />
+            <ClassRooms 
+              ref={this.classroomsRef} 
+              selectClassroom={this.selectClassroom}
+              setAddClassroomModalOpen={this.setAddClassroomModalOpen}
+              currentUserName={this.state.user.login} 
+             />
           </div>);
       case "exactClassroom":
         if (!this.state.selectedClassroom) {
@@ -238,7 +250,6 @@ class App extends React.Component {
             <div>
               <ExactClassroom 
                 classroom={null}
-                setAddClassroomModalOpen={this.setAddClassroomModalOpen}
               />
             </div>
           );
@@ -247,6 +258,7 @@ class App extends React.Component {
           <div>
             <ExactClassroom 
               classroom={this.state.selectedClassroom}
+              chosenRole={this.state.roleInClassroom}
               handleAllAssignmentsClick={this.handleAllAssignmentsClick}              
               handleAllArticlesClick={this.handleAllArticlesClick}
               setAssignmentModalOpen={this.setAssignmentModalOpen}
@@ -257,13 +269,13 @@ class App extends React.Component {
       case "allAssignments":
         return (
           <div>
-            <AllAssignments 
+            <AllAssignments
               assignments={this.state.allAssignments}
               isActive={this.state.allAssignmentsIsActive}
             />
           </div>
         )
-      case "Blog":
+      case "blog":
         return (
           <div>
             <Blog 
@@ -518,10 +530,10 @@ class App extends React.Component {
     return Math.floor(Math.random() * max);
   }
 
-  selectClassroom = (classroom) => {
+  selectClassroom = (classroom, chosenRole) => {
     console.log('Selecting classroom:', classroom);
     if (classroom && classroom.id) {
-      this.setState({ selectedClassroom: classroom });
+      this.setState({ selectedClassroom: classroom, roleInClassroom: chosenRole });
       setToLocalStorage("selectedClassroom", classroom);
       this.setPage("exactClassroom");
       setToLocalStorage("lastPage", "exactClassroom");
@@ -552,7 +564,7 @@ class App extends React.Component {
 
   handleAllArticlesClick = (articles) => {
     this.setState({
-      page: "Blog",
+      page: "blog",
       blog: articles,
     });
   }

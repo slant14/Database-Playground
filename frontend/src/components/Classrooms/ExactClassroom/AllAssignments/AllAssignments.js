@@ -72,6 +72,7 @@ class AllAssignments extends React.Component {
     return (
       <div className="allAssignments">
         <Title style={{
+          textAlign: "center",
           marginTop: 30,
           color: "#51CB63",
           fontSize: 45,

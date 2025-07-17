@@ -131,6 +131,103 @@ class ExactClassroom extends React.Component {
     }
   };
 
+    renderAssignmentsBlock(assignments, type, isActive) {
+    const label = type === "Active" ? "Active Assignments" : "Finished Assignments";
+    const emptyLabel = type === "Active"
+      ? "There are no Active Assignments"
+      : "There are no Finished Assignments";
+    const sectionRef = isActive ? this.assignmentSectionActiveRef : this.assignmentSectionFinishedRef;
+    const scrollLeft = () => this.scrollAssignmentsLeft(isActive);
+    const scrollRight = () => this.scrollAssignmentsRight(isActive);
+    const handleAllClick = () => this.handleAllAssignmentsClick(assignments, isActive);
+  
+    if (assignments.length === 0) {
+      return (
+        <Text className="assignment-label">{emptyLabel}</Text>
+      );
+    }
+  
+    return (
+      <div className={`${type.toLowerCase()}-assignments`}>
+        <div className="assignments-header">
+          <Text className="assignment-label">{label}</Text>
+          <span className="see-more"
+            style={{ cursor: "pointer" }}
+            onClick={handleAllClick}
+          >See more</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Button
+            className="scroll-right-btn"
+            style={{ marginRight: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
+            onClick={scrollLeft}
+          >
+            <GoTriangleLeft size={32} />
+          </Button>
+          <div
+            className="assignment-section"
+            ref={sectionRef}
+            style={{ flex: 1 }}
+          >
+            {assignments.slice(0, 5).map((el, idx) => (
+              <div className="assignment-card"
+                key={idx}
+                onClick={e => {
+                  if (
+                    e.target.tagName === "BUTTON" ||
+                    e.target.tagName === "INPUT" ||
+                    e.target.closest('.all-button')
+                  ) {
+                    return;
+                  }
+                  this.handleAssignmentTitleClick(el, isActive);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="assignment-header">
+                  <FaRegFileCode className="assignment-icon"/>
+                  <span className="assignment-title">{el.title}</span>
+                </div>
+                <div className="assignment-info-row">
+                  <div className="assignment-info-text">
+                    <div>Open: {el.open_at}</div>
+                    <div>Due: {el.close_at}</div>
+                  </div>
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    ref={ref => this[isActive ? `fileInputActive${idx}` : `fileInputFinished${idx}`] = ref}
+                    onChange={e => this.handleAssignmentFileDirectUpload(e, el)}
+                  />
+                  <Button
+                    className="all-button"
+                    onClick={e => {
+                      e.stopPropagation();
+                      this[isActive ? `fileInputActive${idx}` : `fileInputFinished${idx}`].click();
+                    }}
+                  >
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ position: "relative", top: "-1px" }}>
+                        {isActive ? "Submit" : "Review"}
+                      </span>
+                    </span>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <Button
+            className="scroll-right-btn"
+            style={{ marginLeft: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
+            onClick={scrollRight}
+          >
+            <GoTriangleRight size={32} />
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const classroom = this.props.classroom;
     
@@ -204,161 +301,8 @@ class ExactClassroom extends React.Component {
           </div>
           
           <div className="classroom-assignments">
-            <div className="active-assignments">
-              <div className="assignments-header">
-                <Text className="assignment-label">Active Assignments</Text>
-                <span className="see-more" 
-                  style={{ cursor: "pointer" }}
-                  onClick={() => this.handleAllAssignmentsClick(this.state.assignmentsActive, true)}
-                >See more</span>
-              </div>
-
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Button
-                  className="scroll-right-btn"
-                  style={{ marginRight: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
-                  onClick={() => this.scrollAssignmentsLeft(true)}
-                >
-                  <GoTriangleLeft size={32} />
-                </Button>
-
-                <div
-                  className="assignment-section"
-                  ref={this.assignmentSectionActiveRef}
-                  style={{ flex: 1 }}
-                >
-                  {this.state.assignmentsActive.slice(0, 5).map((el, idx) => (
-                    <div
-                      className="assignment-card"
-                      key={idx}
-                      onClick={e => {
-                        if (
-                          e.target.tagName === "BUTTON" ||
-                          e.target.tagName === "INPUT" ||
-                          e.target.closest('.all-button')
-                        ) {
-                          return;
-                        }
-                        this.handleAssignmentTitleClick(el, true);
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <div className="assignment-header">
-                        <FaRegFileCode className="assignment-icon"/>
-                        <span className="assignment-title">{el.title}</span>
-                      </div>
-                      <div className="assignment-info-row">
-                        <div className="assignment-info-text">
-                          <div>Open: {el.open_at}</div>
-                          <div>Due: {el.close_at}</div>
-                        </div>
-                        <input
-                          type="file"
-                          style={{ display: "none" }}
-                          ref={ref => this[`fileInputActive${idx}`] = ref}
-                          onChange={e => this.handleAssignmentFileDirectUpload(e, el)}
-                        />
-                        <Button
-                          className="all-button"
-                          onClick={e => {
-                            e.stopPropagation();
-                            this[`fileInputActive${idx}`].click();
-                          }}
-                        >
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                            <span style={{ position: "relative", top: "-1px" }}>Submit</span>
-                          </span>
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Button
-                  className="scroll-right-btn"
-                  style={{ marginLeft: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
-                  onClick={() => this.scrollAssignmentsRight(true)}
-                >
-                  <GoTriangleRight size={32} />
-                </Button>
-              </div>
-            </div>
-
-            <div className="finished-assignments">
-              <div className="assignments-header">
-                <Text className="assignment-label">Finished Assignments</Text>
-                <span className="see-more"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => this.handleAllAssignmentsClick(this.state.assignmentsFinished, false)}
-                >See more</span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Button
-                  className="scroll-right-btn"
-                  style={{ marginRight: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
-                  onClick={() => this.scrollAssignmentsLeft(false)}
-                >
-                  <GoTriangleLeft size={32} />
-                </Button>
-
-                <div
-                  className="assignment-section"
-                  ref={this.assignmentSectionFinishedRef}
-                  style={{ flex: 1 }}
-                >
-                  {this.state.assignmentsFinished.slice(0, 5).map((el, idx) => (
-                    <div className="assignment-card" 
-                      key={idx}
-                      onClick={e => {
-                        if (
-                          e.target.tagName === "BUTTON" ||
-                          e.target.tagName === "INPUT" ||
-                          e.target.closest('.all-button')
-                        ) {
-                          return;
-                        }
-                        this.handleAssignmentTitleClick(el, false);
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <div className="assignment-header">
-                        <FaRegFileCode className="assignment-icon"/>
-                        <span className="assignment-title">{el.title}</span>
-                      </div>
-                      <div className="assignment-info-row">
-                        <div className="assignment-info-text">
-                          <div>Open: {el.open}</div>
-                          <div>Due: {el.due}</div>
-                        </div>
-                        <input
-                          type="file"
-                          style={{ display: "none" }}
-                          ref={ref => this[`fileInputFinished${idx}`] = ref}
-                          onChange={e => this.handleAssignmentFileDirectUpload(e, el)}
-                        />
-                        <Button
-                          className="all-button"
-                          onClick={e => {
-                            e.stopPropagation();
-                            this[`fileInputFinished${idx}`].click();
-                          }}
-                        >
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                            <span style={{ position: "relative", top: "-1px" }}>Review</span>
-                          </span>
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Button
-                  className="scroll-right-btn"
-                  style={{ marginLeft: 10, height: 60, width: 60, display: "flex", alignItems: "center", justifyContent: "center" }}
-                  onClick={() => this.scrollAssignmentsRight(false)}
-                >
-                  <GoTriangleRight size={32} />
-                </Button>
-              </div>
-            </div>
+            {this.renderAssignmentsBlock(this.state.assignmentsActive, "Active", true)}
+            {this.renderAssignmentsBlock(this.state.assignmentsFinished, "Finished", false)}
           </div>
 
           <div className="blog-section">
@@ -386,6 +330,17 @@ class ExactClassroom extends React.Component {
                 </div>  
               ))}
             </div> 
+
+            {(this.props.chosenRole === "Primary Intructor" || this.props.chosenRole === "TA") && (
+              <Button className="all-button">  
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ position: "relative", top: "-1px" }}>
+                      Add Article
+                  </span>
+                </span>
+              </Button>
+            )}
+
           </div>
         </div>
 
