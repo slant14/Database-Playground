@@ -436,6 +436,8 @@ class ExactClassroom extends React.Component {
           <CreateArticle
             open={this.state.isCreateArticleModalOpen}
             onCancel={this.handleCreateArticleModalClose}
+            classroomID={this.props.classroom.id}
+            onArticleCreated={this.props.handleArticleCreated}
             //onClassroomCreated={this.handleClassroomCreated}
             //currentUserName={this.props.currentUserName}
           />
@@ -445,6 +447,8 @@ class ExactClassroom extends React.Component {
           <CreateAssignment
             open={this.state.isCreateAssignmentModalOpen}
             onCancel={this.handleCreateAssignmentModalClose}
+            classroomID={this.props.classroom.id}
+            onAssignmentCreated={this.props.handleAssignmentCreated}
             //onClassroomCreated={this.handleClassroomCreated}
             //currentUserName={this.props.currentUserName}
           />

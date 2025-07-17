@@ -16,7 +16,7 @@ class ClassRooms extends React.Component {
       classroomsTA: [],
       classroomsStudents: [],
       isModalOpen:false,
-      chosenRole: null
+      chosenRole: "All Classrooms"
     }
   }
 
@@ -27,17 +27,31 @@ class ClassRooms extends React.Component {
   async loadClassrooms() {
     try {
       const allClassrooms = await getMyClassrooms();
-      this.setState({ allClassrooms });
+      const classroomsPrimaryInstructor = allClassrooms.primary_instructor || [];
+      const classroomsTA = allClassrooms.TA || [];
+      const classroomsStudents = allClassrooms.student || [];
+  
+      // Accumulate all classrooms and remove duplicates by id
+      const all = [
+        ...classroomsPrimaryInstructor,
+        ...classroomsTA,
+        ...classroomsStudents
+      ];
+      const seen = new Set();
+      const allClassroomsUnique = all.filter(c => {
+        if (seen.has(c.id)) return false;
+        seen.add(c.id);
+        return true;
+      });
+  
+      this.setState({
+        classroomsPrimaryInstructor,
+        classroomsTA,
+        classroomsStudents,
+        allClassrooms: allClassroomsUnique
+      });
     } catch (error) {
       console.error("Failed to fetch classrooms:", error);
-    }
-  }
-  handleModalOpen = () => {
-    this.setState({
-      isModalOpen: true,
-    });
-    if (this.props.setAddClassroomModalOpen) {
-      this.props.setAddClassroomModalOpen(true);
     }
   }
   
