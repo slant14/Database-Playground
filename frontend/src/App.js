@@ -471,6 +471,40 @@ class App extends React.Component {
             console.error("Error getting Chroma initial state:", error);
           });
       }
+      if (db === "CHRM") {
+        this.setState({ selectedDB: "Chroma" });
+
+        localStorage.setItem("selectedDB", "Chroma");
+
+        const payload = { dump: code };
+        chromaApplyDump(payload)
+          .then(() => {
+            // Здесь можно добавить логику после успешного применения дампа
+          })
+          .catch(error => {
+            console.error("Error applying Chroma dump:", error);
+          });
+        createPostgresTable({})
+          .then(() => {
+            return getPostgresTable();
+          })
+          .then(data => {
+            this.setState({ postgresTableInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating database:", error);
+          });
+        createMongoCollections({})
+          .then(() => {
+            return getMongoCollections();
+          })
+          .then(data => {
+            this.setState({ mongoCollectionInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating MongoDB collections:", error);
+          });
+      }
     } else {
       // Для создания нового шаблона - сбрасываем выбор БД
       this.setState({ selectedDB: "Choose DB" });

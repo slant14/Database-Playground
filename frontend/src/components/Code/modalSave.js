@@ -56,7 +56,14 @@ class SaveModal extends React.Component {
     }
 
     const combinedName = `${templateName.trim()} | ${templateDescription.trim()}`;
-    const templateType = localStorage.getItem("selectedDB") === "PostgreSQL" ? "PSQL" : "MGDB";
+    let templateType;
+    if (localStorage.getItem("selectedDB") === "PostgreSQL"){
+      templateType = "PSQL";
+    } else if (localStorage.getItem("selectedDB") === "Chroma") {
+      templateType = "CHRM";
+    } else {
+      templateType = "MGDB";
+    }
     console.log("Saving template with data:", { combinedName, templateAuthor, templateType });
     setTemplate(combinedName, templateAuthor, templateType)
       .then(() => {
