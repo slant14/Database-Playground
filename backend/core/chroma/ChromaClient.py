@@ -65,6 +65,11 @@ class ChromaClient:
         response = requests.post(f"{self.base_url}/get_db_state", json=data)
         return response.json()
     
+    def get_creation_dump(self, user_id: int) -> Dict:
+        data = {"user_id": user_id}
+        response = requests.post(f"{self.base_url}/get_creation_dump", json=data)
+        return response.json()
+    
     def query_parser(self, user_id: int, code: str) -> Dict:
         data = {
             "user_id": user_id,
