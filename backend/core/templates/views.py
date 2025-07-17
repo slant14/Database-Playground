@@ -46,9 +46,8 @@ class TemplateListCreateView(mixins.ListModelMixin,
         print(f"Template data received: {data}")
         
         try:
-            if data.get("type") == "CHRM":
+            if data["type"] == "CHRM":
                 dump = chroma_client.get_creation_dump(user_id)
-                print(F"Recieved dump from Chroma: {dump[:100]}...")
                 data['dump'] = dump['dump']
             else:
                 engine = get_db_engine(data.get("type"))
@@ -66,6 +65,7 @@ class TemplateListCreateView(mixins.ListModelMixin,
             print(f"Using fallback dump: {data['dump'][:100]}...")
 
         serializer = TemplateSerializer(data=data)
+        #print(serializer)
         if not serializer.is_valid():
             print(f"Template serializer validation errors: {serializer.errors}")
         serializer.is_valid(raise_exception=True)

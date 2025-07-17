@@ -35,8 +35,10 @@ class ChromaQueryParser(APIView):
         data = json.loads(request.body)
         user_id = request.user.id
         query_text = data.get("code", "")
+        dump_text = data.get("dump", "")
         
         if action == 'state':
+            print("Chroma state requested")
             return self.chroma_state(user_id)
         elif action == 'dump':
             try:
@@ -47,8 +49,9 @@ class ChromaQueryParser(APIView):
         elif action == 'query':
             return self.chroma_query(query_text, user_id)
         else: # Action == 'put'
-            query_text = "DROP; " + query_text
-            return self.chroma_query(query_text, user_id)
+            dump_text = "DROP; " + dump_text
+            print("Chroma put action requested with query: ", dump_text)
+            return self.chroma_query(dump_text, user_id)
     
     def chroma_query(self, query_text, user_id):
         if not query_text:
