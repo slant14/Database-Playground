@@ -171,6 +171,19 @@ export async function loginUser(name=null, password, role = "student") {
   return res.json();
 }
 
+export async function getMyProfile() {
+
+  const res = await tokenUpdate(`${BASE_URL}/app/profile/me/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+
 export async function getMyClassrooms() {
   //const token = getCookie("access");
   const res = await tokenUpdate(`${BASE_URL}/app/classrooms/my/`, {

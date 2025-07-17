@@ -101,7 +101,8 @@ class  ArticleSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.name', read_only=True)
     user_email = serializers.CharField(source='user.email', read_only=True)
-    
+    user_created_date = serializers.DateTimeField(source='user.created_date', read_only=True)
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'user_name', 'user_email', 'school', 'avatar']
+        fields = ['id', 'user', 'user_name', 'user_email', 'school', 'avatar', 'user_created_date']
+
