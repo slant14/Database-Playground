@@ -49,7 +49,7 @@ class TemplateListCreateView(mixins.ListModelMixin,
             if data.get("type") == "CHRM":
                 dump = chroma_client.get_creation_dump(user_id)
                 print(F"Recieved dump from Chroma: {dump[:100]}...")
-                data['dump'] = dump
+                data['dump'] = dump['dump']
             else:
                 engine = get_db_engine(data.get("type"))
                 print(f"Using engine: {engine}")

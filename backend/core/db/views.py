@@ -39,7 +39,11 @@ class ChromaQueryParser(APIView):
         if action == 'state':
             return self.chroma_state(user_id)
         elif action == 'dump':
-            return chroma_client.get_creation_dump(user_id)
+            try:
+                dump_response = chroma_client.get_creation_dump(user_id)
+                return Response(dump_response)
+            except Exception as e:
+                return Response({"error": str(e)}, status=500)
         elif action == 'query':
             return self.chroma_query(query_text, user_id)
         else: # Action == 'put'

@@ -93,64 +93,28 @@ class ChromaEngine:
             return []
     
     def get_creation_dump(self) -> str:
-        """
-        Generate a dump of ADD commands that can recreate the current ChromaDB collection.
-        Returns a string of ADD commands in the format:
-        ADD content of your file here metadata:topic=history,author=Alex;
-        """
         try:
             results = self.collection.get()
             commands = []
             
-            # Add header comment
-            commands.append("# ChromaDB Collection Creation Dump")
-            commands.append(f"# Collection: {self.collection_name}")
-            commands.append(f"# User ID: {self.user_id}")
-            commands.append(f"# Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}")
-            commands.append(f"# Total documents: {len(results['ids'])}")
-            commands.append("")
-            
-            # Generate ADD commands for each document
             for i in range(len(results["ids"])):
-                doc_id = results["ids"][i]
                 document = results["documents"][i]
                 metadata = results["metadatas"][i] if results["metadatas"] and results["metadatas"][i] else {}
                 
-                # Escape special characters in document content
-                escaped_content = self._escape_content_for_dump(document)
-                
-                # Build ADD command
                 if metadata:
-                    # Format metadata as key=value,key2=value2
                     metadata_str = self._format_metadata_for_dump(metadata)
-                    command = f'ADD {escaped_content} metadata:{metadata_str};'
+                    command = f'ADD {document} metadata:{metadata_str};'
                 else:
-                    command = f'ADD {escaped_content};'
+                    command = f'ADD {document};'
                 
                 commands.append(command)
             
+            print(commands)
             return "\n".join(commands)
             
         except Exception as e:
             print(f"Error generating creation dump: {e}")
             return f"# Error generating dump: {str(e)}"
-    
-    def _escape_content_for_dump(self, content: str) -> str:
-        """Escape special characters in content for dump format."""
-        if not content:
-            return ""
-        
-        # Replace problematic characters that might interfere with command parsing
-        escaped = content.replace('\\', '\\\\')  # Escape backslashes first
-        escaped = escaped.replace('\n', ' ')     # Replace newlines with spaces
-        escaped = escaped.replace('\r', ' ')     # Replace carriage returns with spaces
-        escaped = escaped.replace('\t', ' ')     # Replace tabs with spaces
-        escaped = escaped.replace(';', '\\;')    # Escape semicolons (command delimiters)
-        
-        # Remove multiple spaces
-        escaped = re.sub(r'\s+', ' ', escaped).strip()
-        
-        return escaped
     
     def _format_metadata_for_dump(self, metadata: dict) -> str:
         """Format metadata dictionary as key=value,key2=value2 for dump."""
