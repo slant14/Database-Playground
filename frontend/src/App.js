@@ -64,6 +64,8 @@ class App extends React.Component {
       isAssignmentModalOpen: false,
       isArticleModalOpen: false,
       blog: [],
+      isCreateAssignmentModalOpen: false,
+      isCreateArticleModalOpen: false,
       isHintModalOpen: false,
       isTableModalOpen: false,
       isSaveModalOpen: false,
@@ -263,6 +265,8 @@ class App extends React.Component {
               handleAllArticlesClick={this.handleAllArticlesClick}
               setAssignmentModalOpen={this.setAssignmentModalOpen}
               setArticleModalOpen={this.setArticleModalOpen}
+              setCreateArticleModalOpen={this.setCreateArticleModalOpen}
+              setCreateAssignmentModalOpen={this.setCreateAssignmentModalOpen}
               />
           </div>
         )
@@ -572,6 +576,18 @@ class App extends React.Component {
   setAddClassroomModalOpen = (isOpen) => {
     this.setState({
       isAddClassroomModalOpen: isOpen
+    });
+  }
+
+  setCreateArticleModalOpen = (isOpen) => {
+    this.setState({
+      isCreateArticleModalOpen: isOpen
+    });
+  }
+
+  setCreateAssignmentModalOpen = (isOpen) => {
+    this.setState({
+      isCreateAssignmentModalOpen: isOpen
     });
   }
 

@@ -10,7 +10,6 @@
   align-items: center;
   width: 100%;
   margin-top: 30px;
-  margin-bottom: 30px;
 }
 
 .classrooms-header-left {
@@ -63,6 +62,9 @@
     grid-template-columns: repeat(3, 1fr); 
     gap: 40px; 
     justify-items: center;
+    overflow-y: auto;  
+    scrollbar-color: #a2aab3 #191d1a !important;
+    scrollbar-width: thin !important;      
 }
 
 .plain-title {

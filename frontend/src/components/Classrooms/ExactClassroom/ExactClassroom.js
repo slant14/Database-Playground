@@ -6,6 +6,8 @@ import { MdOutlineArticle } from "react-icons/md";
 import './ExactClassroom.css';
 import Assignments from './Assignments/Assignments';
 import Articles from './Articles/Articles';
+import CreateArticle from "./CreateArticle/CreateArticle"
+import CreateAssignment from "./CreateAssignment/CreateAssignment";
 import image from "../../../img/WideScreen.jpg"
 import { getMyClassroomClassmates, getClassroomMyAssignments, getMyClassroomArticles } from '../../../api';
 
@@ -22,9 +24,11 @@ class ExactClassroom extends React.Component {
       isAssignmentModalOpen: false,
       selectedAssignment: null,
       isAssignmentActive: true,
+      isCreateAssignmentModalOpen: false,
       articles: [],
       isArticleModalOpen: false,
       selectedArticle: null,
+      isCreateArticleModalOpen: false,
     }
 
     this.assignmentSectionActiveRef = React.createRef();
@@ -131,7 +135,35 @@ class ExactClassroom extends React.Component {
     }
   };
 
-    renderAssignmentsBlock(assignments, type, isActive) {
+  handleCreateArticleModalOpen = () => {
+    this.setState({isCreateArticleModalOpen: true});
+    if (this.props.setCreateArticleModalOpen) {
+      this.props.setCreateArticleModalOpen(true);
+    }
+  }
+
+  handleCreateArticleModalClose = () => {
+    this.setState({isCreateArticleModalOpen: false});
+    if (this.props.setCreateArticleModalOpen) {
+      this.props.setCreateArticleModalOpen(false);
+    }
+  }
+
+  handleCreateAssignmentModalOpen = () => {
+    this.setState({isCreateAssignmentModalOpen: true});
+    if (this.props.setCreateAssignmentModalOpen) {
+      this.props.setCreateAssignmentModalOpen(true);
+    }
+  }
+
+  handleCreateAssignmentModalClose = () => {
+    this.setState({isCreateAssignmentModalOpen: false});
+    if (this.props.setCreateAssignmentModalOpen) {
+      this.props.setCreateAssignmentModalOpen(false);
+    }
+  }
+
+  renderAssignmentsBlock(assignments, type, isActive) {
     const label = type === "Active" ? "Active Assignments" : "Finished Assignments";
     const emptyLabel = type === "Active"
       ? "There are no Active Assignments"
@@ -143,7 +175,7 @@ class ExactClassroom extends React.Component {
   
     if (assignments.length === 0) {
       return (
-        <Text className="assignment-label">{emptyLabel}</Text>
+        <Text className="assignment-label-no">{emptyLabel}</Text>
       );
     }
   
@@ -303,6 +335,13 @@ class ExactClassroom extends React.Component {
           <div className="classroom-assignments">
             {this.renderAssignmentsBlock(this.state.assignmentsActive, "Active", true)}
             {this.renderAssignmentsBlock(this.state.assignmentsFinished, "Finished", false)}
+            <Button className="all-button" onClick={() => this.handleCreateAssignmentModalOpen()}>  
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ position: "relative", top: "-1px" }}>
+                      Add Article
+                  </span>
+                </span>
+              </Button>
           </div>
 
           <div className="blog-section">
@@ -330,7 +369,16 @@ class ExactClassroom extends React.Component {
                 </div>  
               ))}
             </div> 
+            
+            <Button className="all-button" onClick={() => this.handleCreateArticleModalOpen()}>  
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ position: "relative", top: "-1px" }}>
+                      Add Article
+                  </span>
+                </span>
+              </Button>
 
+            {/*
             {(this.props.chosenRole === "Primary Intructor" || this.props.chosenRole === "TA") && (
               <Button className="all-button">  
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
@@ -340,6 +388,7 @@ class ExactClassroom extends React.Component {
                 </span>
               </Button>
             )}
+              */}
 
           </div>
         </div>
@@ -361,6 +410,25 @@ class ExactClassroom extends React.Component {
             article={this.state.selectedArticle}
           />
         )}
+
+        {this.state.isCreateArticleModalOpen && (
+          <CreateArticle
+            open={this.state.isCreateArticleModalOpen}
+            onCancel={this.handleCreateArticleModalClose}
+            //onClassroomCreated={this.handleClassroomCreated}
+            //currentUserName={this.props.currentUserName}
+          />
+        )}
+
+        {this.state.isCreateAssignmentModalOpen && (
+          <CreateAssignment
+            open={this.state.isCreateAssignmentModalOpen}
+            onCancel={this.handleCreateAssignmentModalClose}
+            //onClassroomCreated={this.handleClassroomCreated}
+            //currentUserName={this.props.currentUserName}
+          />
+        )}
+
        </div>
     );
   }

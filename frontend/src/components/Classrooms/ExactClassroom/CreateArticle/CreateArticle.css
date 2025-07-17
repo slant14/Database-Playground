@@ -68,7 +68,6 @@
 
 .addClassroom-modal .classroomTitle,
 .addClassroom-modal .classroomDescription,
-.addClassroom-modal .primary-instructor-select,
 .addClassroom-modal .ant-select,
 .addClassroom-modal .ant-input {
     margin-top: 10px;
@@ -120,19 +119,6 @@
 }
 .addClassroom-modal .ant-select-dropdown .ant-select-item-option-active .ant-select-item-option-content {
     color: #fff !important;
-}
-
-.primary-instructor-input {
-    background: #191d1a !important;
-    color: #a2aab3 !important;
-    border: 1px solid #a2aab3 !important;
-    font-family: 'Noto Sans', sans-serif;
-    padding: 6px 12px;
-    border-radius: 4px;
-    width: 750px; /* limit width */
-    height: 28;
-    cursor: not-allowed;
-    margin-bottom: 10px;
 }
 
 .add-button-wraper {
