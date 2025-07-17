@@ -16,27 +16,40 @@ type Parser = Parsec Void String
 
 data Command = ADD | DELETE | UPDATE | GET | SEARCH | DROP
     deriving (Show, Eq)
+-- Meatadata - simple key-value pair of strings
 type Metadata = (String, String)
-data Result = AddResult String [Metadata]
-            | DeleteResult String
-            | UpdateResult String String [Metadata]
-            | GetResult String
-            | SearchResult String Int [Metadata]
-            | DropResult
+data Query = AddQuery String [Metadata] -- FileContent [Metadata]
+            | DeleteQuery String -- File ID
+            | UpdateQuery String String [Metadata] -- File ID, FileContent, [Metadata]
+            | GetQuery String -- File ID
+            | SearchQuery String Int [Metadata] -- FileContent, Count, [Metadata]
+            | DropQuery
     deriving (Show, Eq)
+type UnexpectedPartOfError = String
+type ExpectingPartOfError = String
 
+
+-- Consumes whitespace in the parser.
 spaceConsumer :: Parser ()
 spaceConsumer = L.space space1 empty empty
 
+
+-- Wraps a parser to consume trailing whitespace.
 lexeme :: Parser a -> Parser a
 lexeme = L.lexeme spaceConsumer
 
+
+-- Parses a given symbol and consumes trailing whitespace.
 symbol :: String -> Parser String
 symbol = L.symbol spaceConsumer
 
+
+-- Parses required whitespace before another parser.
 spaceReq :: Parser a -> Parser a
 spaceReq p = space1 *> p
 
+
+-- Parses and leaves one space after the parser.
 lexemeLeaveOneSpace :: Parser a -> Parser a
 lexemeLeaveOneSpace p = do
     x <- p
@@ -44,23 +57,30 @@ lexemeLeaveOneSpace p = do
     return x
 
 
-parseAllQueries :: Parser [Result]
+-- Parses multiple queries from input until EOF.
+parseAllQueries :: Parser [Query]
 parseAllQueries = many parseQuery <* eof
 
-runParseAllQueries :: String -> [Result]
+
+-- Runs the parser on input and returns results or throws error.
+runParseAllQueries :: String -> [Query]
 runParseAllQueries input =
     case runParser parseAllQueries "" input of
         Left err -> handleError err
         Right results -> results
 
--- Alternative function that returns error information instead of throwing
-runParseAllQueriesWithError :: String -> Either (String, String) [Result]
+
+-- Runs the parser and returns either error info or results.
+runParseAllQueriesWithError ::
+  String
+  -> Either (UnexpectedPartOfError, ExpectingPartOfError) [Query]
 runParseAllQueriesWithError input =
     case runParser parseAllQueries "" input of
         Left err -> Left (parseErrorParts err)
         Right results -> Right results
 
--- Function that returns JSON string for both success and error cases
+
+-- Runs the parser and returns results or error as a JSON string.
 runParseAllQueriesAsJson :: String -> String
 runParseAllQueriesAsJson input =
     case runParser parseAllQueries "" input of
@@ -68,11 +88,15 @@ runParseAllQueriesAsJson input =
         Right results -> parseMultipleToJson results
 
 
-handleError :: ParseErrorBundle String Void -> [Result]
+-- Throws a formatted parse error.
+handleError :: ParseErrorBundle String Void -> [Query]
 handleError err = error (errorBundlePretty err)
 
--- Extract unexpected and expecting parts from error message
-parseErrorParts :: ParseErrorBundle String Void -> (String, String)
+
+-- Extracts unexpected and expecting parts from a parse error.
+parseErrorParts ::
+  ParseErrorBundle String Void
+  -> (UnexpectedPartOfError, ExpectingPartOfError)
 parseErrorParts err = 
     let errorMsg = errorBundlePretty err
         errorLines = lines errorMsg
@@ -80,26 +104,32 @@ parseErrorParts err =
         expectingPart = extractExpecting errorLines
     in (unexpectedPart, expectingPart)
 
+
+-- Extracts the unexpected part from error lines.
 extractUnexpected :: [String] -> String
 extractUnexpected errorLines = 
     case find ("unexpected " `isPrefixOf`) errorLines of
         Just line -> line
         Nothing -> "unknown"
 
+
+-- Extracts the expecting part from error lines.
 extractExpecting :: [String] -> String
 extractExpecting errorLines = 
     case find ("expecting " `isPrefixOf`) errorLines of
         Just line -> line
         Nothing -> "unknown"
 
--- Convert error to JSON format
+
+-- Converts a parse error to a JSON string.
 errorToJson :: ParseErrorBundle String Void -> String
 errorToJson err = 
     let (unexpected, expecting) = parseErrorParts err
     in "{\"error\":\"" ++ escapeJson unexpected ++ " -> " ++ escapeJson expecting ++ "\"}"
 
 
-parseQuery :: Parser Result
+-- Parses a single query command.
+parseQuery :: Parser Query
 parseQuery = choice
     [ parseAdd
     , parseDelete
@@ -109,82 +139,108 @@ parseQuery = choice
     , parseDrop
     ]
 
-parseAdd :: Parser Result
+
+-- Parses an ADD query.
+parseAdd :: Parser Query
 parseAdd = do
     _ <- string "ADD" <?> "'ADD' command"
     fileName <- spaceReq parseFileName
     metadata <- option [] (try parseMetadata)
     _ <- symbol ";" <?> "';' at the end of ADD command"
-    return (AddResult fileName metadata)
+    return (AddQuery fileName metadata)
 
-parseDelete :: Parser Result
+
+-- Parses a DELETE query.
+parseDelete :: Parser Query
 parseDelete = do
     _ <- symbol "DELETE" <?> "'DELETE' command"
     fileId <- parseFileId
     _ <- symbol ";" <?> "';' at the end of DELETE command"
-    return (DeleteResult fileId)
+    return (DeleteQuery fileId)
 
-parseUpdate :: Parser Result
+
+-- Parses an UPDATE query.
+parseUpdate :: Parser Query
 parseUpdate = do
     _ <- symbol "UPDATE" <?> "'UPDATE' command"
     fileId <- parseFileId
     fileName <- spaceReq parseFileName
     metadata <- option [] (try parseMetadata)
     _ <- symbol ";" <?> "';' at the end of UPDATE command"
-    return (UpdateResult fileId fileName metadata)
+    return (UpdateQuery fileId fileName metadata)
 
-parseGet :: Parser Result
+
+-- Parses a GET query.
+parseGet :: Parser Query
 parseGet = do
     _ <- symbol "GET" <?> "'GET' command"
     fileId <- parseFileId
     _ <- symbol ";" <?> "';' at the end of GET command"
-    return (GetResult fileId)
+    return (GetQuery fileId)
 
-parseSearch :: Parser Result
+
+-- Parses a SEARCH query.
+parseSearch :: Parser Query
 parseSearch = do
     _ <- symbol "SEARCH" <?> "'SEARCH' command"
     countFiles <- parseCount
     fileName <- spaceReq parseFileName
     metadata <- option [] (try parseMetadata)
     _ <- symbol ";" <?> "';' at the end of SEARCH command"
-    return (SearchResult fileName countFiles metadata)
+    return (SearchQuery fileName countFiles metadata)
 
-parseDrop :: Parser Result
+
+-- Parses a DROP query.
+parseDrop :: Parser Query
 parseDrop = do
     _ <- symbol "DROP" <?> "'DROP' command"
     _ <- symbol ";" <?> "';' at the end of DROP command"
-    return DropResult
+    return DropQuery
 
 
+-- Parses a file name.
 parseFileName :: Parser String
 parseFileName = lexeme $ do
-    fileName <- manyTill anySingle (try (lookAhead (void (space1 *> string "metadata:"))) <|> try (lookAhead (void (char ';'))))
+    fileName <- manyTill anySingle (try (lookAhead (void (space1 *> string "metadata:")))
+      <|> try (lookAhead (void (char ';')))) <?> "'metadata:' or ';' after file name"
     return (dropWhileEnd isSpace fileName)
 
+
+-- Parses a file ID.
 parseFileId :: Parser String
 parseFileId = do
     _ <- symbol "->" <?> "'->' before file ID"
-    prefix <- lexeme $ some alphaNumChar
-    when (prefix /= "doc") $ fail "File ID must start with 'doc'"
+    prefix <- some alphaNumChar
+    when (prefix /= "doc") $
+      fail ("unexpected '" ++ prefix ++ "'" ++ "\nexpecting 'doc' before file ID")
     _ <- char '_' <?> "'_' after prefix 'doc' in file ID"
     fileId <- some digitChar
     return (prefix ++ "_" ++ fileId)
 
+
+-- Parses metadata key-value pairs.
 parseMetadata :: Parser [Metadata]
 parseMetadata = do
     _ <- symbol "metadata:" <?> "'metadata:' keyword"
     parseMetadataList
 
+
+-- Parses a list of metadata pairs.
 parseMetadataList :: Parser [Metadata]
 parseMetadataList = sepBy1 parseKeyValue (symbol ",")
 
+
+-- Parses a single metadata key-value pair.
 parseKeyValue :: Parser Metadata
 parseKeyValue = do
     key <- lexeme (some alphaNumChar <?> "metadata key")
     _ <- symbol "=" <?> "'=' after metadata key"
-    value <- lexeme (manyTill anySingle (try (lookAhead (void (char ','))) <|> try (lookAhead (void (char ';'))))) <?> "metadata value"
+    value <- lexeme (manyTill anySingle (try (lookAhead (void (char ',')))
+      <|> try (lookAhead (void (char ';'))))) <?> "metadata value"
     return (key, value)
 
+
+-- Parses a count value.
 parseCount :: Parser Int
 parseCount = do
     _ <- symbol "->" <?> "'->' before number of files"
@@ -192,7 +248,7 @@ parseCount = do
     return (read countNum)
 
 
--- Экранирование спецсимволов для корректного вывода JSON
+-- Escapes special characters for JSON output.
 escapeJson :: String -> String
 escapeJson = concatMap esc
   where
@@ -203,56 +259,58 @@ escapeJson = concatMap esc
     esc '\t' = "\\t"
     esc c    = [c]
 
-parseMultipleToJson :: [Result] -> String
+
+-- Converts a list of queries to a JSON array string.
+parseMultipleToJson :: [Query] -> String
 parseMultipleToJson results =
     "[" ++ concat (intersperse "," (map resultToJson results)) ++ "]"
 
--- Сериализация результата парсинга в JSON-строку
-resultToJson :: Result -> String
-resultToJson (AddResult fileName metadata) =
+
+-- Converts a single query result to a JSON object string.
+resultToJson :: Query -> String
+resultToJson (AddQuery fileName metadata) =
     "{" ++
     "\"command\":\"ADD\"," ++
     "\"text\":\"" ++ escapeJson fileName ++ "\"," ++
     "\"metadata\": " ++ metadataListToJson metadata ++ "}"
-resultToJson (DeleteResult fileId) =
+resultToJson (DeleteQuery fileId) =
     "{" ++
     "\"command\":\"DELETE\"," ++
     "\"doc_id\":\"" ++ escapeJson fileId ++ "\"}"
-resultToJson (UpdateResult fileId fileName metadata) =
+resultToJson (UpdateQuery fileId fileName metadata) =
     "{" ++
     "\"command\":\"UPDATE\"," ++
     "\"doc_id\":\"" ++ escapeJson fileId ++ "\"," ++
     "\"text\":\"" ++ escapeJson fileName ++ "\"," ++
     "\"metadata\": " ++ metadataListToJson metadata ++ "}"
-resultToJson (GetResult fileId) =
+resultToJson (GetQuery fileId) =
     "{" ++
     "\"command\":\"GET\"," ++
     "\"doc_id\":\"" ++ escapeJson fileId ++ "\"}"
-resultToJson (SearchResult fileName count metadata) =
+resultToJson (SearchQuery fileName count metadata) =
     "{" ++
     "\"command\":\"SEARCH\"," ++
     "\"query\":\"" ++ escapeJson fileName ++ "\"," ++
     "\"k\": " ++ show count ++ "," ++
     "\"metadata\": " ++ metadataListToJson metadata ++ "}"
-resultToJson DropResult =
+resultToJson DropQuery =
     "{" ++
     "\"command\":\"DROP\"" ++ "}"
-    
--- Сериализация списка метаданных: если пусто — {}, иначе объект с ключами
+
+
+-- Converts a list of metadata to a JSON object string.
 metadataListToJson :: [Metadata] -> String
 metadataListToJson [] = "{}"
 metadataListToJson ms = "{" ++ (concat $ intersperse "," (map pairToJson ms)) ++ "}"
 
 
--- Сериализация одной пары метаданных (ключ:значение)
+-- Converts a metadata key-value pair to a JSON string.
 pairToJson :: Metadata -> String
 pairToJson (k, v) = "\"" ++ escapeJson k ++ "\":\"" ++ escapeJson v ++ "\""
 
 
-
--- Вспомогательная функция для вставки разделителя между элементами списка
+-- Inserts a separator between elements of a list.
 intersperse :: a -> [a] -> [a]
 intersperse _ [] = []
 intersperse _ [x] = [x]
 intersperse sep (x:xs) = x : sep : intersperse sep xs
-
