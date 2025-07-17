@@ -9,7 +9,7 @@ import { Button, FloatButton, Typography, notification } from 'antd';
 import { FaRegLightbulb } from "react-icons/fa";
 import HintModal from './hintModal';
 import HintModalPS from './hintModalPS';
-import HintModalMGDB from './hintModalMGDB.JS';
+import HintModalMGDB from './hintModalMDB';
 import './Code.css';
 import { getCookie } from '../../utils';
 
@@ -94,10 +94,10 @@ class Code extends React.Component {
             outputDBStateRef={this.props.outputDBStateRef}
           />
         </aside>
-        {this.state.chosenDb === "Chroma" || this.state.chosenDb === "PostgreSQL" ? <FloatButton icon={<FaRegLightbulb />} type="basic" className='lamp' onClick={this.open} tooltip="Command Tips" /> : null}
-        {this.state.chosenDb === "Chroma" ? <HintModal title={<Typography.Text className='modal-title'>Types of command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>Chroma</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
-        {this.state.chosenDb === "PostgreSQL" ? <HintModalPS title={<Typography.Text className='modal-title'>Types of command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>PostgreSQL</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
-        {this.state.chosenDb === "MongoDB" ? <HintModalMGDB title={<Typography.Text className='modal-title'>Types of command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>MongoDB</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
+        {this.state.chosenDb === "Chroma" || this.state.chosenDb === "PostgreSQL" || this.state.chosenDb === "MongoDB" ? <FloatButton icon={<FaRegLightbulb />} type="basic" className='lamp' onClick={this.open} tooltip="Command Tips" /> : null}
+        {this.state.chosenDb === "Chroma" ? <HintModal title={<Typography.Text className='modal-title'>Documentation for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>Chroma</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
+        {this.state.chosenDb === "PostgreSQL" ? <HintModalPS title={<Typography.Text className='modal-title'>Documentation command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>PostgreSQL</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
+        {this.state.chosenDb === "MongoDB" ? <HintModalMGDB title={<Typography.Text className='modal-title'>Documentation command for <Typography.Text className='modal-title' style={{ color: '#51CB63' }}>MongoDB</Typography.Text> </Typography.Text>} onCancel={this.close} open={this.state.isModalOpen} /> : null}
       </div>
     );
   }

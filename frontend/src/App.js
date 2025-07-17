@@ -214,7 +214,8 @@ class App extends React.Component {
               isModalOpen={this.state.isModalOpen}
               handleButtonClick={this.handleButtonClick}
               handleCancel={this.handleCancel}
-              login={this.login} />
+              login={this.login}
+              onTemplateClick={this.onTemplateClick} />
           </div>
         );
       case "classrooms":
@@ -339,6 +340,7 @@ class App extends React.Component {
                       handleButtonClick={this.handleButtonClick}
                       handleCancel={this.handleCancel}
                       login={this.login}
+                      onTemplateClick={this.onTemplateClick}
                     />
                   )}
                   <div ref={nodeRef} style={{ position: "absolute", width: "100%" }}>
@@ -509,6 +511,7 @@ class App extends React.Component {
       // Для создания нового шаблона - сбрасываем выбор БД
       this.setState({ selectedDB: "Choose DB" });
 
+      localStorage.removeItem("selectedDB");
       // Создаем пустую базу данных
       createPostgresTable({})
         .then(() => {

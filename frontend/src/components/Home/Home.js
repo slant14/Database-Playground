@@ -1,9 +1,7 @@
 import React from "react";
 import { Typography, Button } from "antd";
 import "./Home.css";
-import { SiSqlite } from "react-icons/si";
-import { BiLogoPostgresql } from "react-icons/bi";
-import { SiMongodb } from "react-icons/si";
+import { FaSave } from "react-icons/fa";
 import { FaDatabase } from "react-icons/fa";
 import MyModal from "../LayOut/Header/modal";
 import RegisterModal from "../LayOut/Header/registerModal";
@@ -47,9 +45,14 @@ class Home extends React.Component {
             margin: 0
           }}><span style={{ color: "#51CB63" }}>Database</span> Playground</Title>
           <span className="button-row">
+            <Button className="myButton" onClick={() => this.props.onTemplateClick()}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ position: "relative", top: "-1px" }}>Code Runner </span> <FaCode />
+              </span>
+            </Button>
             <Button className="myButton" onClick={() => this.props.handleButtonClick("template")}>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span style={{ position: "relative", top: "-1px" }}>Template </span> <FaCode />
+                <span style={{ position: "relative", top: "-1px" }}>Templates </span> <FaSave />
               </span>
             </Button>
             <Button className="myButton" onClick={() => this.props.handleButtonClick("classrooms")}>
@@ -91,7 +94,7 @@ class Home extends React.Component {
         </div>
         <div className="icon-row icon-first-row">
           <div className="iconText">
-            <FaCode className="icon" size={130} onClick={() => this.props.handleButtonClick("template")}/>
+            <FaSave className="icon" size={130} onClick={() => this.props.handleButtonClick("template")}/>
             <div className="text-container">
               <Text className="title">Templates</Text>
               <Text className="description">
@@ -139,10 +142,7 @@ class Home extends React.Component {
                 </a>,{' '}
                 <a href="https://www.trychroma.com/" target="_blank" rel="noopener noreferrer" className="db-link">
                   Chroma
-                </a>,{' '}
-                <a href="https://www.mysql.com/" target="_blank" rel="noopener noreferrer" className="db-link">
-                  MySQL
-                </a> and{' '}
+                </a>,{' '}and{' '}
                 <a href="https://www.mongodb.com/" target="_blank" rel="noopener noreferrer" className="db-link">
                   MongoDB
                 </a>.{' '}

@@ -257,7 +257,8 @@ textarea:active {
     font-weight: 400;
 }
 
-.modal-text {
+.modal-text,
+.modal-text code {
     color: #fff;
     font-size: 15px;
     font-family: 'Noto Sans', sans-serif;

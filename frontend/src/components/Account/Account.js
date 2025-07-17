@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Typography } from "antd";
-import { createMongoCollections, getMongoCollections, queryMongo } from "../../api";
 
 import "./Account.css";
 
