@@ -11,7 +11,7 @@ class CreateArticle extends React.Component {
     this.state = {
       title: "",
       description: "",
-      author: "",
+      authors: [],
       users: [],
     }
   }
@@ -38,12 +38,13 @@ class CreateArticle extends React.Component {
     this.setState({ [e.target.name]: e.target.value }, this.saveDraft);
   }
 
-  handleAuthorChange = value => {
-    this.setState({ author: value }, this.saveDraft);
+  handleAuthorsChange = value => {
+    this.setState({ authors: value }, this.saveDraft);
   };
 
   async addArticle() {
-    const { title, description, author } = this.state;
+    const { title, description, authors } = this.state;
+    console.log({ title, description, authors });
     if ( title === "") {
       notification.warning({
         message: 'Classroom creation failed',
@@ -62,7 +63,8 @@ class CreateArticle extends React.Component {
       });
       return;
     } 
-    const newArticle = await createArticle(title, description, author, this.props.classroomID);
+    console.log("Перед отправкой:", { title, description, authors, type: typeof authors, isArray: Array.isArray(authors) });
+    const newArticle = await createArticle(title, authors, description, this.props.classroomID);
     if (newArticle && this.props.onArticleCreated) {
       this.props.onArticleCreated();
       localStorage.removeItem('createArticleDraft');
@@ -84,7 +86,10 @@ class CreateArticle extends React.Component {
         footer={null}
         width={800}
       >
-        <form ref={el => this.myForm = el}>
+        <form 
+          ref={el => this.myForm = el}
+          onSubmit={e => { e.preventDefault(); this.addArticle(); }}
+        >
           <p>Classroom Title:</p>
           <Input
             name="title"
@@ -104,12 +109,13 @@ class CreateArticle extends React.Component {
           />
 
           <div className="tas-row">
-            <label>Author:</label>
+            <label>Authors:</label>
             <Select
-              placeholder="Select author"
+              placeholder="Select teacher assistants"
+              mode="multiple"
               style={{ width: "100%" }}
-              value={this.state.author}
-              onChange={this.handleAuthorChange}
+              value={this.state.authors}
+              onChange={this.handleAuthorsChange}
               showSearch
               optionFilterProp="children"
             >
@@ -119,6 +125,7 @@ class CreateArticle extends React.Component {
             </Select>
           </div>
 
+
           <div className="add-button-wraper">
             <Button className="cancel-button"
               type="primary"
@@ -127,7 +134,7 @@ class CreateArticle extends React.Component {
                     
             <Button className="add-button"
               type="primary"
-              onClick={() => this.addArticle()}
+              htmlType="submit"
             >Add</Button>           
           </div>
         </form>

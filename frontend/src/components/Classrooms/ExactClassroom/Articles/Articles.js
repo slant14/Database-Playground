@@ -18,7 +18,7 @@ class Articles extends React.Component {
       >
         <Title className="inner-article-title">{article.title}</Title>
         <div className="inner-article-author">
-            {article.author}
+            {article.authors}
         </div>
         <div className="inner-article-decription">
             {article.description}

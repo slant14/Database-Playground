@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils import timezone
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 User = get_user_model()
@@ -29,11 +30,9 @@ User = get_user_model()
 #    return render(request, 'school/assignment_detail.html', {'assignment': assignment})
 
 
-
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
 
     @action(detail=False, methods=['post'], url_path='login', permission_classes=[AllowAny])
     def login(self, request, *args, **kwargs):
@@ -86,7 +85,6 @@ class UserViewSet(viewsets.ModelViewSet):
         #    raise PermissionDenied("Only staff can create admin users.")
 
 
-
 class ClassroomViewSet(viewsets.ModelViewSet):
     queryset = Classroom.objects.all()
     serializer_class = ClassroomSerializer
@@ -127,14 +125,13 @@ class ClassroomViewSet(viewsets.ModelViewSet):
 
         all_participant_ids = set(ta_ids + student_ids + [primary_instructor_id])
 
-
         for participant_id in all_participant_ids:
             try:
                 participant_profile = Profile.objects.get(id=participant_id)
                 # participant_user = participant_profile.user
 
                 # participant_user = participant_profile.user
-
+                print(participant_profile.user.name)
                 Enrollment.objects.get_or_create(
                     student=participant_profile,
                     classroom=classroom
@@ -152,7 +149,6 @@ class ClassroomViewSet(viewsets.ModelViewSet):
         except Profile.DoesNotExist:
             return Response({'error': 'User profile not found'}, status=400)
 
-
         student_classrooms = Classroom.objects.filter(enrollments__student=user_profile)
 
         TA_classrooms = Classroom.objects.filter(TA=user_profile)
@@ -162,6 +158,11 @@ class ClassroomViewSet(viewsets.ModelViewSet):
         # classrooms = (student_classrooms | TA_classrooms | primary_classrooms).distinct()
         # classrooms = (student_classrooms | TA_classrooms | primary_classrooms).distinct()
 
+        student_classrooms = student_classrooms.exclude(
+            id__in=TA_classrooms.values_list('id', flat=True)
+        ).exclude(
+            id__in=primary_classrooms.values_list('id', flat=True)
+        )
         # serializer = self.get_serializer(classrooms, many=True)
         # return Response(serializer.data)
         # serializer = self.get_serializer(classrooms, many=True)
@@ -182,7 +183,6 @@ class ClassroomViewSet(viewsets.ModelViewSet):
         except Profile.DoesNotExist:
             return Response({'error': 'User profile not found'}, status=400)
 
-
         classroom = Classroom.objects.get(id=classroom_id)
         students = User.objects.filter(enrollments__classroom=classroom_id)
         TAs = classroom.TA
@@ -196,7 +196,6 @@ class ClassroomViewSet(viewsets.ModelViewSet):
         if user in TAs:
             roles.append('TA')
 
-
         if user in primary_instructor:
             roles.append('primary_instructor')
 
@@ -208,9 +207,7 @@ class ClassroomViewSet(viewsets.ModelViewSet):
         if not classroom_id:
             return Response({'error': 'classroom_id is required'}, status=400)
 
-
         classroom = Classroom.objects.get(id=classroom_id)
-
 
         users = Profile.objects.filter(enrollments__classroom=classroom_id)
 
@@ -242,7 +239,6 @@ class ClassroomViewSet(viewsets.ModelViewSet):
 class EnrollmentViewSet(viewsets.ModelViewSet):
     queryset = Enrollment.objects.all()
     serializer_class = EnrollmentSerializer
-
 
 
 # class CourseViewSet(viewsets.ModelViewSet):
@@ -294,7 +290,6 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         assignments = serializer.save()
         return Response(self.get_serializer(assignments).data, status=status.HTTP_201_CREATED)
 
-
     @action(detail=False, methods=['get'], url_path='my')
     def my_assignments(self, request):
         user = request.user
@@ -309,7 +304,6 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(assignments, many=True)
         return Response(serializer.data)
 
-
     @action(detail=False, methods=['get'], url_path='submitted')
     def submitted_assignments(self, request):
         user = request.user
@@ -321,7 +315,6 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         assignments = Assignment.objects.filter(id__in=assignment_ids)
         serializer = self.get_serializer(assignments, many=True)
         return Response(serializer.data)
-
 
     @action(detail=False, methods=['get'], url_path='my/classroom')
     def classroom_my_assignments(self, request):
@@ -356,17 +349,16 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         })
 
 
-
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
-
 
 
 class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
 
     @action(detail=False, methods=['get'], url_path='me', permission_classes=[IsAuthenticated])
     def me(self, request):
@@ -377,37 +369,88 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = self.get_serializer(profile)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['put'], url_path='edit/avatar', permission_classes=[IsAuthenticated])
+    def edit_avatar(self, request):
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            return Response({'error': 'User profile not found'}, status=400)
+
+        avatar = request.data.get('avatar')
+        if not avatar:
+            return Response({'error': 'No avatar provided'}, status=400)
+
+        profile.avatar = avatar
+        profile.save()
+        serializer = self.get_serializer(profile)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['put'], url_path='edit/info', permission_classes=[IsAuthenticated])
+    def edit_all(self, request):
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            return Response({'error': 'User profile not found'}, status=400)
+
+        name = request.data.get('name')
+        email = request.data.get('email')
+        school = request.data.get('school')
+        if not (name and email):
+            return Response({'error': 'Name or email data not provided'}, status=400)
+
+        if User.objects.filter(name=name).exclude(pk=profile.user.pk).exists():
+            return Response({"error": "302"}, status=status.HTTP_302_FOUND)
+        profile.user.name = name
+
+        if User.objects.filter(email=email).exclude(pk=profile.user.pk).exists():
+            return Response({"error": "302"}, status=status.HTTP_302_FOUND)
+        profile.user.email = email
+
+        profile.school = school
+
+        profile.user.save()
+        profile.save()
+        serializer = self.get_serializer(profile)
+        return Response(serializer.data)
+
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['post'], url_path='create')
+    @action(detail=False, methods=['post'], url_path='create', permission_classes=[IsAuthenticated])
     def create_article(self, request):
+        user = request.user
+        data = request.data.copy()
+        try:
+            user_profile = user.profile
+        except Profile.DoesNotExist:
+            return Response({'error': 'User profile not found'}, status=status.HTTP_400_BAD_REQUEST)
+
         classroom_id = request.query_params.get('classroom_id')
         if not classroom_id:
             return Response({'error': 'classroom_id is required'}, status=400)
-        
-        data = request.data.copy()
-        authors = data.pop('authors', [])
+
+        author_ids = data.get('authors', [])
+        print(author_ids)
+        data['authors'] = author_ids
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         article = serializer.save()
-        if authors:
-            article.authors.set(authors)
 
-        Classroom.objects.assign_article(
-            classroom_id=classroom_id,
-            article=article
-        )
+        article.authors.set(author_ids)
 
+        # Classroom.objects.assign_article(
+        #    classroom_id=classroom_id,
+        #    article=article
+        # )
 
         classroom = Classroom.objects.get(id=classroom_id)
         classroom.articles.add(article)
 
         return Response(self.get_serializer(article).data, status=status.HTTP_201_CREATED)
-
 
     @action(detail=False, methods=['get'], url_path='all')
     def all_articles(self, request):

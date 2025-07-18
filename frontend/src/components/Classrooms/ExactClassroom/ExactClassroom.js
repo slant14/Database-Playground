@@ -149,7 +149,7 @@ class ExactClassroom extends React.Component {
   }
 
   handleArticleCreated = async () => {
-    this.handleCreatedArticleModalClose();
+    this.handleCreateArticleModalClose();
     if (this.props.classroom && this.props.classroom.id) {
       try {
         const allArticles = await getMyClassroomArticles(this.props.classroom.id);
@@ -403,7 +403,7 @@ class ExactClassroom extends React.Component {
                     <span className="article-title">{el.title}</span>
                   </div>  
                   <Text className="article-author">
-                    {el.author}
+                    {el.authors}
                   </Text>
                   <Text className="article-description">
                     {el.description}

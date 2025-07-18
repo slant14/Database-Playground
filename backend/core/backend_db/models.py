@@ -63,7 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(blank=True, upload_to='profile_images')
-    school = models.CharField(blank=True, null=True)
+    school = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.user.name
@@ -86,7 +86,7 @@ class Article(models.Model):
     authors = models.ManyToManyField(Profile, related_name='articles')
     description = models.TextField()
     file = models.FileField(blank=True, upload_to='article_images')
-    # created_date = models.DateTimeField(auto_now_add = True)
+    created_date = models.DateTimeField(auto_now_add=True)
     # classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='articles')
 
     def __str__(self):
