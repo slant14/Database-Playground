@@ -87,34 +87,43 @@ class ClassRooms extends React.Component {
 
     if (classroomsToShow.length === 0) {
       return (
-        <div className="classrooms-header">
-          <div className="classrooms-header-left" />
+        <div className="classrooms">
+          <div className="classrooms-header">
+            <div className="classrooms-header-left" />
 
-          <div className="classrooms-header-center">
-            <Title className="classrooms-title">There are no classrooms yet</Title>
-          </div>
+            <div className="classrooms-header-center">
+              <Title className="classrooms-title">There are no classrooms yet</Title>
+            </div>
 
-          <div className="classrooms-header-right">
-            <Select
-              className="role-select"
-              value={this.state.chosenRole}
-              style={{ width: 150, marginRight: '20px' }}
-              options={[
-                { value: "All Classrooms", label: "All Classrooms" },
-                { value: "Primary Instructor", label: "Primary Instructor" },
-                { value: "TA", label: "TA" },
-                { value: "Student", label: "Student" },
-              ]}
-              onChange={value => {
-                this.setState({ chosenRole: value });
-              }}
-            />
-            <Button className="add-classroom" onClick={this.handleModalOpen}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span style={{ position: "relative", top: "-1px" }}>Add Classroom</span>
-              </span>
-            </Button>
+            <div className="classrooms-header-right">
+              <Select
+                className="role-select"
+                value={this.state.chosenRole}
+                style={{ width: 150, marginRight: '20px' }}
+                options={[
+                  { value: "All Classrooms", label: "All Classrooms" },
+                  { value: "Primary Instructor", label: "Primary Instructor" },
+                  { value: "TA", label: "TA" },
+                  { value: "Student", label: "Student" },
+                ]}
+                onChange={value => {
+                  this.setState({ chosenRole: value });
+                }}
+              />
+              <Button className="add-classroom" onClick={this.handleModalOpen}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ position: "relative", top: "-1px" }}>Add Classroom</span>
+                </span>
+              </Button>
+            </div>
           </div>
+          
+          <AddClassroom
+            open={this.state.isModalOpen}
+            onCancel={this.handleModalClose}
+            onClassroomCreated={this.handleClassroomCreated}
+            currentUserName={this.props.currentUserName}
+          />
         </div>
       );
     }
