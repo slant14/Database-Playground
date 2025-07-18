@@ -329,12 +329,14 @@ class AssignmentViewSet(viewsets.ModelViewSet):
             return Response({'error': 'classroom_id is required'}, status=400)
 
         now = timezone.now()
-
         assignments = Assignment.objects.filter(classroom_id=classroom_id)
+        print("now:", now)
+        for a in assignments:
+            print(a.id, a.open_at, a.close_at)
+
         submitted_ids = Submission.objects.filter(
-            student=user_profile, assignment__classroom_id=classroom_id).values_list('assignment_id', flat=True)
-        submitted_ids = Submission.objects.filter(
-            student=user_profile, assignment__classroom_id=classroom_id).values_list('assignment_id', flat=True)
+            student=user_profile, assignment__classroom_id=classroom_id
+        ).values_list('assignment_id', flat=True)
 
         closed = assignments.filter(close_at__lt=now)
         submitted = assignments.filter(id__in=submitted_ids)
@@ -343,11 +345,15 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         available = assignments.filter(open_at__lte=now, close_at__gte=now)
         not_submitted = available.exclude(id__in=submitted_ids)
 
+        print("assignments", assignments.count())
+        print("availiable", available.count())
+        print("closed", closed.count())
+        print("submitted", submitted.count())
+
         return Response({
             'finished': AssignmentSerializer(finished, many=True).data,
             'not_submitted': AssignmentSerializer(not_submitted, many=True).data,
         })
-
 
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
@@ -395,6 +401,7 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
         name = request.data.get('name')
         email = request.data.get('email')
         school = request.data.get('school')
+        description = request.data.get('description')
         if not (name and email):
             return Response({'error': 'Name or email data not provided'}, status=400)
 
@@ -407,7 +414,8 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
         profile.user.email = email
 
         profile.school = school
-
+        profile.description = description
+        
         profile.user.save()
         profile.save()
         serializer = self.get_serializer(profile)

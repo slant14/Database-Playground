@@ -133,6 +133,14 @@ class ClassRooms extends React.Component {
               </span>
             </Button>
           </div>
+          {this.state.isModalOpen && (
+            <AddClassroom
+              open={this.state.isModalOpen}
+              onCancel={this.handleModalClose}
+              onClassroomCreated={this.handleClassroomCreated}
+              currentUserName={this.props.currentUserName}
+            />
+          )}
         </div>
 
         {this.state.isModalOpen && (
