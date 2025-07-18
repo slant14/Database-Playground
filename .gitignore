@@ -191,3 +191,11 @@ mongo_data
 .idea
 
 /backend/playground/
+
+# Ignore all migration files except __init__.py
+**/migrations/[0-9][0-9][0-9][0-9]_*.py
+**/migrations/[0-9][0-9][0-9][0-9]_*.pyc
+
+#media files
+/backend/core/media/*
+!/backend/core/media/.gitkeep

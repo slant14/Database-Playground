@@ -10,6 +10,7 @@ services:
       - "7000:5432"
     volumes:
       - backend_pgdata:/var/lib/postgresql/data
+      - ./backend/core/media:/app/backend/core/media
 
   backend:
     build: ./backend/
