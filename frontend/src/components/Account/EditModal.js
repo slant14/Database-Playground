@@ -10,6 +10,7 @@ class EditModal extends React.Component {
       name: "",
       email: "",
       school: "",
+      description: "",
     }
   }
 
@@ -21,11 +22,13 @@ class EditModal extends React.Component {
         name: this.props.profile.user_name || "",
         email: this.props.profile.user_email || "",
         school: this.props.profile.school || "",
+        description: this.props.profile.description || "",
       });
       console.log("EditModal state updated in componentDidMount:", {
         name: this.props.profile.user_name || "",
         email: this.props.profile.user_email || "",
         school: this.props.profile.school || "",
+        description: this.props.profile.description || "",
       });
     }
   }
@@ -45,6 +48,7 @@ class EditModal extends React.Component {
         name: this.props.profile.user_name || "",
         email: this.props.profile.user_email || "",
         school: this.props.profile.school || "",
+        description: this.props.profile.description || "",
       });
     }
     
@@ -55,6 +59,7 @@ class EditModal extends React.Component {
         name: this.props.profile.user_name || "",
         email: this.props.profile.user_email || "",
         school: this.props.profile.school || "",
+        description: this.props.profile.description || "",
       });
     }
     
@@ -65,14 +70,15 @@ class EditModal extends React.Component {
         name: this.props.profile.user_name || "",
         email: this.props.profile.user_email || "",
         school: this.props.profile.school || "",
+        description: this.props.profile.description || "",
       });
     }
   }
 
   handleSave = () => {
-    const { name, email, school } = this.state;
+    const { name, email, school, description } = this.state;
     
-    console.log("EditModal handleSave called with:", { name, email, school });
+    console.log("EditModal handleSave called with:", { name, email, school, description });
     
     if (name.trim() === "") {
       console.log("Validation failed: name is empty");
@@ -117,10 +123,20 @@ class EditModal extends React.Component {
       return;
     }
 
-    if (school && school.length > 100) {
+    if (school && school.length > 50) {
       notification.warning({
         message: 'School Name Too Long',
-        description: 'School name must be no more than 100 characters.',
+        description: 'School name must be no more than 50 characters.',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+
+    if (description && description.length > 100) {
+      notification.warning({
+        message: 'Description Too Long',
+        description: 'Description must be no more than 500 characters.',
         placement: 'bottomRight',
         duration: 3,
       });
@@ -128,8 +144,8 @@ class EditModal extends React.Component {
     }
 
     // Обновляем информацию профиля
-    console.log("Calling editInfo API with:", { name: name.trim(), email: email.trim(), school: school.trim() });
-    editInfo(name.trim(), email.trim(), school.trim() || null)
+    console.log("Calling editInfo API with:", { name: name.trim(), email: email.trim(), school: school.trim(), description: description.trim() });
+    editInfo(name.trim(), email.trim(), school.trim() || null, description.trim() || null)
       .then((response) => {
         console.log("Profile updated successfully", response);
         notification.success({
@@ -171,9 +187,9 @@ class EditModal extends React.Component {
   }
 
   render() {
-    const { name, email, school } = this.state;
+    const { name, email, school, description } = this.state;
     
-    console.log("EditModal render, current state:", { name, email, school });
+    console.log("EditModal render, current state:", { name, email, school, description });
     console.log("EditModal render, props:", { profile: this.props.profile, open: this.props.open });
 
     return (
@@ -226,7 +242,7 @@ class EditModal extends React.Component {
           </div>
 
           {/* School Field */}
-          <div style={{ marginBottom: '20px' }}>
+          <div style={{ marginBottom: '15px' }}>
             <Typography.Text className='modal-text' style={{ display: 'block' }}>
               School (optional, no more than 100 characters)
             </Typography.Text>
@@ -235,6 +251,22 @@ class EditModal extends React.Component {
               className="login"
               value={school}
               onChange={(e) => this.setState({ school: e.target.value })}
+            />
+          </div>
+
+          {/* Description Field */}
+          <div style={{ marginBottom: '20px' }}>
+            <Typography.Text className='modal-text' style={{ display: 'block' }}>
+              Description (optional, no more than 500 characters)
+            </Typography.Text>
+            <Input.TextArea
+              placeholder="Tell us about yourself..."
+              className="login"
+              value={description}
+              onChange={(e) => this.setState({ description: e.target.value })}
+              rows={4}
+              showCount
+              maxLength={500}
             />
           </div>
 

@@ -184,6 +184,12 @@ class Account extends React.Component {
                       <Text className="info-value">{profile?.school || 'Not specified'}</Text>
                     </div>
                   </Col>
+                  <Col span={24}>
+                    <div className="info-item">
+                      <Text strong className="info-label">Description:</Text>
+                      <Text className="info-value">{profile?.description || 'Not specified'}</Text>
+                    </div>
+                  </Col>
                   <Col span={24} style={{ marginTop: '20px' }}>
                     <div style={{ 
                       textAlign: 'center', 
