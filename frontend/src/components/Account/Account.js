@@ -190,29 +190,7 @@ class Account extends React.Component {
                       <Text className="info-value">{profile?.description || 'Not specified'}</Text>
                     </div>
                   </Col>
-                  <Col span={24} style={{  }}>
-                    <div style={{ 
-                      textAlign: 'center', 
-                      padding: '15px',
-                      backgroundColor: 'transparent !important',
-                      borderRadius: '8px',
-                      
-                    }}>
-                      <Text style={{ 
-                        color: '#fff', 
-                        fontSize: '18px', 
-                        fontWeight: 600,
-                        fontFamily: 'Noto Sans, sans-serif'
-                      }}>
-                        Happy Hacking, <Text style={{ 
-                        color: '#51CB63', 
-                        fontSize: '18px', 
-                        fontWeight: 600,
-                        fontFamily: 'Noto Sans, sans-serif'
-                      }}>{profile?.user_name || user?.login || 'User'}</Text>!
-                      </Text>
-                    </div>
-                  </Col>
+                  
                 </Row>
               </Card>
             </Col>
@@ -220,7 +198,11 @@ class Account extends React.Component {
             {/* Расширенный блок статистики с диаграммой-датчиком */}
             <Col span={14}>
               <Card className="stats-card" title="GPA" style={{ height: '100%' }}>
-                <div className="gauge-container">
+                <div className="gauge-container" style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
                   <Text className="gauge-title">GPA</Text>
                   
                   {/* Круговая диаграмма GPA */}
