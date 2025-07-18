@@ -65,7 +65,7 @@ class AllAssignments extends React.Component {
         <Title style={{
           textAlign: "center",
           marginTop: 30,
-          color: "#51CB63",
+          color: "#ffffffff",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
@@ -77,11 +77,11 @@ class AllAssignments extends React.Component {
             <div className="allArticle-card" key={idx} onClick={() => this.handleArticleClick(el)}>
               <div className="allArticle-header">
                 <MdOutlineArticle className="allArticle-icon" />
-                <span className="allArticle-title">{el.title}</span>
+                <span className="article-title article-title-one-line">{el.title}</span>
               </div>  
-              <Text className="allArticle-author">
-                {el.author}
-              </Text>
+              <Text className="article-author article-author-one-line">
+                {el.author_names.join(', ')}
+              </Text>    
               <Text className="allArticle-description">
                 {el.description}
                </Text>

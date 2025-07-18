@@ -40,6 +40,7 @@ admin.site.register(Profile)
 class ClassroomAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'primary_instructor', 'capacity', 'created_date')
     search_fields = ('title',)
+    exclude = ('image',)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "TA":
@@ -69,5 +70,9 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'description', 'file')
+    list_display = ('title', 'get_authors', 'description', 'file')
     list_filter = ('title',)
+
+    def get_authors(self, obj):
+        return ", ".join([profile.user.name for profile in obj.authors.all()])
+    get_authors.short_description = 'Authors'

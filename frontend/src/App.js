@@ -55,6 +55,7 @@ class App extends React.Component {
       isModalOpen: false,
       activeButton: lastPage || 'home',
       selectedClassroom: selectedClassroom,
+      roleInClassroom: null,
       isAddClassroomModalOpen: false,
       allAssignments: [],
       postgresTableInfo: [],
@@ -64,6 +65,8 @@ class App extends React.Component {
       isAssignmentModalOpen: false,
       isArticleModalOpen: false,
       blog: [],
+      isCreateAssignmentModalOpen: false,
+      isCreateArticleModalOpen: false,
       isHintModalOpen: false,
       isTableModalOpen: false,
       isSaveModalOpen: false,
@@ -123,11 +126,30 @@ class App extends React.Component {
   };
 
   handlePopState = (event) => {
-    if (this.state.isModalOpen) {
-      this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
-      window.history.pushState({ page: this.state.page }, '', window.location.pathname);
-      return;
-    }
+      if (this.state.isModalOpen) {
+        this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
+        return;
+      }
+      if (this.state.isAddClassroomModalOpen) {
+        this.setState({ isAddClassroomModalOpen: false });
+        return;
+      }
+      if (this.state.isArticleModalOpen) {
+        this.setState({ isArticleModalOpen: false });
+        return;
+      }
+      if (this.state.isAssignmentModalOpen) {
+        this.setState({ isAssignmentModalOpen: false });
+        return;
+      }
+      if (this.state.isCreateAssignmentModalOpen) {
+        this.setState({ isCreateAssignmentModalOpen: false });
+        return;
+      }
+      if (this.state.isCreateArticleModalOpen) {
+        this.setState({ isCreateArticleModalOpen: false });
+        return;
+      }
 
     if (this.state.isHintModalOpen) {
       if (this.codeRef.current) {
@@ -181,6 +203,12 @@ class App extends React.Component {
     } else if (this.state.page === "exactClassroom") {
       this.setState({ page: "classrooms", activeButton: "classrooms" });
       setToLocalStorage("lastPage", "classrooms");
+    } else if (this.state.page === "allAssignments") {
+      this.setState({ page: "exactClassroom", activeButton: "classrooms" });
+      setToLocalStorage("lastPage", "exactClassroom");
+    } else if (this.state.page === "blog") {
+      this.setState({ page: "exactClassroom", activeButton: "classrooms" });
+      setToLocalStorage("lastPage", "exactClassroom");
     } else if (event.state && event.state.page) {
       this.setState({ page: event.state.page, activeButton: event.state.page });
       setToLocalStorage("lastPage", event.state.page);
@@ -225,7 +253,12 @@ class App extends React.Component {
       case "classrooms":
         return (
           <div>
-            <ClassRooms ref={this.classroomsRef} selectClassroom={this.selectClassroom} />
+            <ClassRooms 
+              ref={this.classroomsRef} 
+              selectClassroom={this.selectClassroom}
+              setAddClassroomModalOpen={this.setAddClassroomModalOpen}
+              currentUserName={this.state.user.login} 
+             />
           </div>);
       case "exactClassroom":
         if (!this.state.selectedClassroom) {
@@ -248,7 +281,6 @@ class App extends React.Component {
             <div>
               <ExactClassroom
                 classroom={null}
-                setAddClassroomModalOpen={this.setAddClassroomModalOpen}
               />
             </div>
           );
@@ -257,11 +289,14 @@ class App extends React.Component {
           <div>
             <ExactClassroom
               classroom={this.state.selectedClassroom}
-              handleAllAssignmentsClick={this.handleAllAssignmentsClick}
+              chosenRole={this.state.roleInClassroom}
+              handleAllAssignmentsClick={this.handleAllAssignmentsClick}              
               handleAllArticlesClick={this.handleAllArticlesClick}
               setAssignmentModalOpen={this.setAssignmentModalOpen}
               setArticleModalOpen={this.setArticleModalOpen}
-            />
+              setCreateArticleModalOpen={this.setCreateArticleModalOpen}
+              setCreateAssignmentModalOpen={this.setCreateAssignmentModalOpen}
+              />
           </div>
         )
       case "allAssignments":
@@ -273,7 +308,7 @@ class App extends React.Component {
             />
           </div>
         )
-      case "Blog":
+      case "blog":
         return (
           <div>
             <Blog
@@ -644,10 +679,10 @@ class App extends React.Component {
     return Math.floor(Math.random() * max);
   }
 
-  selectClassroom = (classroom) => {
+  selectClassroom = (classroom, chosenRole) => {
     console.log('Selecting classroom:', classroom);
     if (classroom && classroom.id) {
-      this.setState({ selectedClassroom: classroom });
+      this.setState({ selectedClassroom: classroom, roleInClassroom: chosenRole });
       setToLocalStorage("selectedClassroom", classroom);
       this.setPage("exactClassroom");
       setToLocalStorage("lastPage", "exactClassroom");
@@ -664,31 +699,57 @@ class App extends React.Component {
     });
   }
 
+  handleAllArticlesClick = (articles) => {
+    this.setState({
+      page: "blog",
+      blog: articles,
+    });
+  }
+
   setAssignmentModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isAssignmentModalOpen) {
+      window.history.pushState({ modalType: 'assignment', page: this.state.page }, '', window.location.pathname);
+    }
     this.setState({
       isAssignmentModalOpen: isOpen,
     });
   };
 
   setArticleModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isArticleModalOpen) {
+      window.history.pushState({ modalType: 'article', page: this.state.page }, '', window.location.pathname);
+    }
     this.setState({
       isArticleModalOpen: isOpen
     });
   }
 
-  handleAllArticlesClick = (articles) => {
-    this.setState({
-      page: "Blog",
-      blog: articles,
-    });
-  }
-
   setAddClassroomModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isAddClassroomModalOpen) {
+      window.history.pushState({ modalType: 'addClassroom', page: this.state.page }, '', window.location.pathname);
+    }
     this.setState({
       isAddClassroomModalOpen: isOpen
     });
   }
 
-}
+  setCreateArticleModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isCreateArticleModalOpen) {
+      window.history.pushState({ modalType: 'createArticle', page: this.state.page }, '', window.location.pathname);
+    }
+    this.setState({
+      isCreateArticleModalOpen: isOpen
+    });
+  }
+
+  setCreateAssignmentModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isCreateAssignmentModalOpen) {
+      window.history.pushState({ modalType: 'createAssignment', page: this.state.page }, '', window.location.pathname);
+    }
+    this.setState({
+      isCreateAssignmentModalOpen: isOpen
+    });
+  }
+} 
 
 export default App;

@@ -44,6 +44,13 @@ class AllAssignments extends React.Component {
     e.target.value = "";
   };
 
+  formatDateTime = (dateString) => {
+    if (!dateString) return "";
+    const d = new Date(dateString);
+    const pad = n => n.toString().padStart(2, "0");
+    return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
   render() {
     const { assignments, isActive } = this.props;
     const { isAssignmentModalOpen, selectedAssignment, isAssignmentActive } = this.state;
@@ -72,8 +79,9 @@ class AllAssignments extends React.Component {
     return (
       <div className="allAssignments">
         <Title style={{
+          textAlign: "center",
           marginTop: 30,
-          color: "#51CB63",
+          color: "#fff",
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
@@ -100,12 +108,16 @@ class AllAssignments extends React.Component {
             >
               <div className="allAssignment-header">
                 <FaRegFileCode className="allAssignment-icon"/>
-                <span className="allAssignment-title">{el.title}</span>
+                <span className="assignment-title">{el.title}</span>
               </div>
               <div className="allAssignment-info-row">
                 <div className="allAssignment-info-text">
-                  <div>Open: {el.open}</div>
-                  <div>Due: {el.due}</div>
+                  <span>
+                      <span>Open:</span> {this.formatDateTime(el.open_at)}
+                    </span>
+                    <span>
+                      <span>Due:</span> {this.formatDateTime(el.close_at)}
+                    </span>
                 </div>
                 <input
                   type="file"
@@ -151,6 +163,7 @@ class AllAssignments extends React.Component {
             assignment={selectedAssignment}
             onAnswerSubmit={this.handleAssignmentFileDirectUpload}
             isActive={isAssignmentActive}
+            formatDateTime={this.formatDateTime}
           />
         )}
       </div>

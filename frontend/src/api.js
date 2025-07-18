@@ -273,6 +273,18 @@ export async function getClassroomMyAssignments(id) {
   return res.json();
 }
 
+export async function getArticlesNotInClass(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/articles/all/?classroom_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+
 export async function createClassroom(title, description, TA, students, primary_instructor) {
   const res = await tokenUpdate(`${BASE_URL}/app/classrooms/create/`, {
     method: 'POST',
@@ -280,6 +292,34 @@ export async function createClassroom(title, description, TA, students, primary_
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ title, description, TA, students, primary_instructor })  
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function createAssignment(title, description, open_at, close_at, classroom_id) {
+  const localopen = new Date(open_at);
+  const localclose = new Date(close_at);
+  const utcopen = localopen.toISOString();
+  const utcclose = localclose.toISOString();
+  const res = await tokenUpdate(`${BASE_URL}/app/assignments/create/?classroom_id=${classroom_id}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, description, open_at: utcopen, close_at: utcclose })  
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function createArticle(title, authors, description, classroom_id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/articles/create/?classroom_id=${classroom_id}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, authors, description })  
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -295,7 +335,6 @@ export async function getProfiles() {
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
-
 
 export async function getTemplateList() {
   const res = await tokenUpdate(`${BASE_URL}/template/`, {
