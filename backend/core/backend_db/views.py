@@ -333,15 +333,18 @@ class AssignmentViewSet(viewsets.ModelViewSet):
         assignments = Assignment.objects.filter(classroom_id=classroom_id)
         submitted_ids = Submission.objects.filter(
             student=user_profile, assignment__classroom_id=classroom_id).values_list('assignment_id', flat=True)
-        submitted_ids = Submission.objects.filter(
-            student=user_profile, assignment__classroom_id=classroom_id).values_list('assignment_id', flat=True)
-
+        
         closed = assignments.filter(close_at__lt=now)
         submitted = assignments.filter(id__in=submitted_ids)
         finished = (closed | submitted).distinct()
 
         available = assignments.filter(open_at__lte=now, close_at__gte=now)
         not_submitted = available.exclude(id__in=submitted_ids)
+
+        print("assingments", assignments.count())
+        print("closed", closed.count())
+        print("submitted", submitted.count())
+        print("finished", finished.count())
 
         return Response({
             'finished': AssignmentSerializer(finished, many=True).data,

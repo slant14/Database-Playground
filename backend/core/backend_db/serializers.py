@@ -57,7 +57,6 @@ class ClassroomSerializer(serializers.ModelSerializer):
     def get_TA_names(self, obj):
         return [ta.user.name for ta in obj.TA.all()]
 
-
 # class TopicSerializer(serializers.ModelSerializer):
 #    class Meta:
 #        model = Topic
