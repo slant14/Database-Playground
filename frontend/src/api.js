@@ -183,6 +183,30 @@ export async function getMyProfile() {
   return res.json();
 }
 
+export async function editInfo(name, email, school=null) {
+  const res = await tokenUpdate(`${BASE_URL}/app/profile/edit/info/`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name, email, school }),
+  });
+  return res.json();
+}
+
+export async function editAvatar(avatar) {
+  const res = await tokenUpdate(`${BASE_URL}/app/profile/edit/avatar/`, {
+    method: 'PUT',
+    headers: {
+    },
+    body: (() => {
+      const formData = new FormData();
+      formData.append('avatar', avatar);
+      return formData;
+    })(),
+  });
+  return res.json();
+}
 
 export async function getMyClassrooms() {
   //const token = getCookie("access");

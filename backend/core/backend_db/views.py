@@ -12,6 +12,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
 from django.utils import timezone  
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 User = get_user_model()
@@ -321,6 +322,8 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+
 
     @action(detail=False, methods=['get'], url_path='me', permission_classes=[IsAuthenticated])
     def me(self, request):
@@ -330,3 +333,48 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
             return Response({'error': 'User profile not found'}, status=400)
         serializer = self.get_serializer(profile)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['put'], url_path='edit/avatar', permission_classes=[IsAuthenticated])
+    def edit_avatar(self, request):
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            return Response({'error': 'User profile not found'}, status=400)
+
+        avatar = request.data.get('avatar')
+        if not avatar:
+            return Response({'error': 'No avatar provided'}, status=400)
+
+        profile.avatar = avatar
+        profile.save()
+        serializer = self.get_serializer(profile)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['put'], url_path='edit/info', permission_classes=[IsAuthenticated])
+    def edit_all(self, request):
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            return Response({'error': 'User profile not found'}, status=400)
+
+        name = request.data.get('name')
+        email = request.data.get('email')
+        school = request.data.get('school')
+        if not (name and email):
+            return Response({'error': 'Name or email data not provided'}, status=400)
+
+        if User.objects.filter(name=name).exclude(pk=profile.user.pk).exists():
+            return Response({"error": "302"}, status=status.HTTP_302_FOUND)
+        profile.user.name = name
+
+        if User.objects.filter(email=email).exclude(pk=profile.user.pk).exists():
+            return Response({"error": "302"}, status=status.HTTP_302_FOUND)
+        profile.user.email = email
+
+        profile.school = school
+
+        profile.user.save()
+        profile.save()
+        serializer = self.get_serializer(profile)
+        return Response(serializer.data)
+
