@@ -183,13 +183,13 @@ export async function getMyProfile() {
   return res.json();
 }
 
-export async function editInfo(name, email, school=null) {
+export async function editInfo(name, email, school=null, description=null) {
   const res = await tokenUpdate(`${BASE_URL}/app/profile/edit/info/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ name, email, school }),
+    body: JSON.stringify({ name, email, school,  description }),
   });
   
   const data = await res.json();

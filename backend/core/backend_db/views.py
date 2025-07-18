@@ -360,6 +360,7 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
         name = request.data.get('name')
         email = request.data.get('email')
         school = request.data.get('school')
+        description = request.data.get('description')
         if not (name and email):
             return Response({'error': 'Name or email data not provided'}, status=400)
 
@@ -374,6 +375,7 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
         profile.user.name = name
         profile.user.email = email
         profile.school = school
+        profile.description = description
 
         profile.user.save()
         profile.save()
