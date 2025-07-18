@@ -177,7 +177,6 @@ class ClassRooms extends React.Component {
                   justifyContent: "center"
                 }}
               >
-                {/* Optionally, show initials or icon here */}
               </div>
               <Text className="plain-title card-title-one-line">
                 {el.title}
