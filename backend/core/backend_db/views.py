@@ -12,7 +12,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
 from django.utils import timezone  
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 
 User = get_user_model()
@@ -322,7 +322,7 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
 
     @action(detail=False, methods=['get'], url_path='me', permission_classes=[IsAuthenticated])
@@ -363,14 +363,16 @@ class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
         if not (name and email):
             return Response({'error': 'Name or email data not provided'}, status=400)
 
+        # Проверяем дубликаты ПЕРЕД сохранением
         if User.objects.filter(name=name).exclude(pk=profile.user.pk).exists():
             return Response({"error": "302"}, status=status.HTTP_302_FOUND)
-        profile.user.name = name
 
         if User.objects.filter(email=email).exclude(pk=profile.user.pk).exists():
             return Response({"error": "302"}, status=status.HTTP_302_FOUND)
-        profile.user.email = email
 
+        # Если проверки прошли успешно, обновляем данные
+        profile.user.name = name
+        profile.user.email = email
         profile.school = school
 
         profile.user.save()

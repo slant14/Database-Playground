@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, Typography, Avatar, Card, Row, Col, Progress } from "antd";
+import { Button, Typography, Avatar, Card, Row, Col, Progress, notification } from "antd";
 import { UserOutlined, EditOutlined, DatabaseOutlined, CodeOutlined, SearchOutlined } from "@ant-design/icons";
-import { getMyProfile } from '../../api'
+import { getMyProfile, editAvatar } from '../../api'
 import { MdAssignment } from "react-icons/md";
+import EditModal from "./EditModal";
 
 import "./Account.css";
 
@@ -22,15 +23,87 @@ class Account extends React.Component {
   }
 
   getProfile = () => {
+    console.log("Account: getProfile called");
     getMyProfile()
       .then(data => {
-        console.log("Profile data:", data);
+        console.log("Account: Profile data received:", data);
         this.setState({ profile: data, loading: false });
       })
       .catch(error => {
-        console.log("Error getting profile", error);
+        console.log("Account: Error getting profile", error);
         this.setState({ loading: false });
       })
+  }
+
+  handleEditClick = () => {
+    console.log("Account: Edit button clicked, current profile:", this.state.profile);
+    if (this.props.setEditModalOpen) {
+      this.props.setEditModalOpen(true);
+    }
+  }
+
+  handleEditModalClose = () => {
+    console.log("Account: Edit modal closing");
+    if (this.props.setEditModalOpen) {
+      this.props.setEditModalOpen(false);
+    }
+  }
+
+  handleProfileUpdate = () => {
+    console.log("Account: Profile update requested");
+    // Обновляем профиль после редактирования
+    this.getProfile();
+  }
+
+  handleAvatarClick = () => {
+    // Создаём скрытый input для выбора файла
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        this.handleAvatarUpload(file);
+      }
+    };
+    input.click();
+  }
+
+  handleAvatarUpload = (file) => {
+    // Проверяем тип файла
+    if (!file.type.startsWith('image/')) {
+      notification.error({
+        message: 'Invalid File Type',
+        description: 'Please select an image file.',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+
+    console.log("Account: Uploading avatar file:", file.name);
+    
+    editAvatar(file)
+      .then((response) => {
+        console.log("Avatar updated successfully", response);
+        notification.success({
+          message: 'Avatar Updated',
+          description: 'Your avatar has been updated successfully.',
+          placement: 'bottomRight',
+          duration: 2,
+        });
+        // Обновляем профиль для получения нового аватара
+        this.getProfile();
+      })
+      .catch(error => {
+        console.error('Error updating avatar:', error);
+        notification.error({
+          message: 'Error Updating Avatar',
+          description: 'There was an error updating your avatar. Please try again.',
+          placement: 'bottomRight',
+          duration: 3,
+        });
+      });
   }
 
   render() {
@@ -55,7 +128,7 @@ class Account extends React.Component {
                     className="user-avatar"
                     src={profile?.avatar}
                   />
-                  <div className="avatar-edit-button">
+                  <div className="avatar-edit-button" onClick={this.handleAvatarClick} style={{ cursor: 'pointer' }}>
                     <EditOutlined />
                   </div>
                 </div>
@@ -79,7 +152,7 @@ class Account extends React.Component {
           <Row gutter={[24, 24]}>
             {/* Информация о пользователе - уменьшенный блок */}
             <Col span={10}>
-              <Card className="info-card" title="User information" style={{ height: '100%' }} extra={<Button type="primary" icon={<EditOutlined />} className="my-orange-button-outline" onClick={() => {/* добавить вашу логику редактирования профиля */}} >Edit</Button>}>
+              <Card className="info-card" title="User information" style={{ height: '100%' }} extra={<Button type="primary" icon={<EditOutlined />} className="my-orange-button-outline" onClick={this.handleEditClick} >Edit</Button>}>
                 <Row gutter={[16, 16]}>
                   <Col span={24}>
                     <div className="info-item">
@@ -210,6 +283,18 @@ class Account extends React.Component {
             </Col>
           </Row>
         </div>
+
+        {/* Edit Modal */}
+        <EditModal
+          open={this.props.isEditModalOpen}
+          onCancel={this.handleEditModalClose}
+          profile={profile}
+          onProfileUpdate={this.handleProfileUpdate}
+        />
+        {console.log("Account: Rendering EditModal with props:", { 
+          open: this.props.isEditModalOpen, 
+          profile: profile 
+        })}
       </div>
     );
   }

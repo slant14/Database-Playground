@@ -67,6 +67,7 @@ class App extends React.Component {
       isHintModalOpen: false,
       isTableModalOpen: false,
       isSaveModalOpen: false,
+      isEditModalOpen: false,
       isInitialized: false, // Флаг для отслеживания завершения инициализации
     };
     this.setPage = this.setPage.bind(this);
@@ -164,6 +165,12 @@ class App extends React.Component {
         this.setState({ isSaveModalOpen: false });
         window.history.pushState({ page: 'code' }, '', window.location.pathname);
       }
+      return;
+    }
+
+    if (this.state.isEditModalOpen) {
+      this.setState({ isEditModalOpen: false });
+      window.history.pushState({ page: this.state.page }, '', window.location.pathname);
       return;
     }
 
@@ -296,7 +303,12 @@ class App extends React.Component {
       case "acc":
         return (
           <div>
-            <Account user={this.state.user} logOut={this.logOut} />
+            <Account 
+              user={this.state.user} 
+              logOut={this.logOut}
+              setEditModalOpen={this.setEditModalOpen}
+              isEditModalOpen={this.state.isEditModalOpen}
+            />
           </div>);
       case "template":
         return (
@@ -613,6 +625,13 @@ class App extends React.Component {
 
   setSaveModalOpen = (isOpen) => {
     this.setState({ isSaveModalOpen: isOpen });
+  };
+
+  setEditModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isEditModalOpen) {
+      window.history.pushState({ modalType: 'edit', page: this.state.page }, '', window.location.pathname);
+    }
+    this.setState({ isEditModalOpen: isOpen });
   };
 
   login = () => {

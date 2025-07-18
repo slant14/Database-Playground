@@ -191,21 +191,36 @@ export async function editInfo(name, email, school=null) {
     },
     body: JSON.stringify({ name, email, school }),
   });
-  return res.json();
+  
+  const data = await res.json();
+  
+  // Если статус не OK, отклоняем промис с данными об ошибке
+  if (!res.ok) {
+    throw data;
+  }
+  
+  return data;
 }
 
 export async function editAvatar(avatar) {
+  const formData = new FormData();
+  formData.append('avatar', avatar);
+  
   const res = await tokenUpdate(`${BASE_URL}/app/profile/edit/avatar/`, {
     method: 'PUT',
-    headers: {
-    },
-    body: (() => {
-      const formData = new FormData();
-      formData.append('avatar', avatar);
-      return formData;
-    })(),
+    body: formData,
+    // НЕ устанавливаем Content-Type - браузер сделает это автоматически для FormData
+    skipContentType: true
   });
-  return res.json();
+  
+  const data = await res.json();
+  
+  // Если статус не OK, отклоняем промис с данными об ошибке
+  if (!res.ok) {
+    throw data;
+  }
+  
+  return data;
 }
 
 export async function getMyClassrooms() {
@@ -330,12 +345,25 @@ export async function deleteTemplate(id) {
 async function tokenUpdate(url, options = {}) {
   console.log("tokenUpdate called, url:", url);
   let token = getCookie("access");
-  options.headers = {
-    ...options.headers,
+  
+  // Устанавливаем заголовки, но пропускаем Content-Type если указан skipContentType
+  const headers = {
     'Authorization': token ? `JWT ${token}` : undefined,
-    'Content-Type': 'application/json',
   };
-  let res = await fetch(url, options);
+  
+  if (!options.skipContentType) {
+    headers['Content-Type'] = 'application/json';
+  }
+  
+  options.headers = {
+    ...headers,
+    ...options.headers,
+  };
+  
+  // Удаляем skipContentType из options перед отправкой
+  const { skipContentType, ...fetchOptions } = options;
+  
+  let res = await fetch(url, fetchOptions);
 
   if (res.status === 401 || res.status === 403) {
     const refresh = getCookie("refresh");
@@ -350,8 +378,8 @@ async function tokenUpdate(url, options = {}) {
       if (refreshRes.ok) {
         const data = await refreshRes.json();
         document.cookie = `access=${data.access}; path=/;`;
-        options.headers['Authorization'] = `JWT ${data.access}`;
-        res = await fetch(url, options);
+        fetchOptions.headers['Authorization'] = `JWT ${data.access}`;
+        res = await fetch(url, fetchOptions);
         console.log("Retried request with new access token, status:", res.status);
         console.log("New access token:", data.access);
         console.log("Access token before:", token);
