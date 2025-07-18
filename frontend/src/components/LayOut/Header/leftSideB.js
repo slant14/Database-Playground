@@ -18,20 +18,20 @@ class LeftSideB extends React.Component {
                 </Button>
                 <Button
                     variant="solid"
-                    className={this.props.activeButton === "code" ? "my-orange-button-solid" : "my-orange-button-outline"}
-                    onClick={() => this.props.onTemplateClick()}
-                >
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ position: "relative", top: "-1px" }}>Code Runner</span> <FaCode />
-                    </span>
-                </Button>
-                <Button
-                    variant="solid"
                     className={this.props.activeButton === "template" ? "my-orange-button-solid" : "my-orange-button-outline"}
                     onClick={() => this.props.handleButtonClick("template")}
                 >
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                         <span style={{ position: "relative", top: "-1px" }}>Templates</span> <FaSave />
+                    </span>
+                </Button>
+                <Button
+                    variant="solid"
+                    className={this.props.activeButton === "code" ? "my-orange-button-solid" : "my-orange-button-outline"}
+                    onClick={() => this.props.onTemplateClick()}
+                >
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ position: "relative", top: "-1px" }}>Code</span> <FaCode />
                     </span>
                 </Button>
             </span>

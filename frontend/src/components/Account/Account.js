@@ -79,7 +79,7 @@ class Account extends React.Component {
           <Row gutter={[24, 24]}>
             {/* Информация о пользователе - уменьшенный блок */}
             <Col span={10}>
-              <Card className="info-card" title="User information" style={{ height: '100%' }}>
+              <Card className="info-card" title="User information" style={{ height: '100%' }} extra={<Button type="primary" icon={<EditOutlined />} className="my-orange-button-outline" onClick={() => {/* добавить вашу логику редактирования профиля */}} >Edit</Button>}>
                 <Row gutter={[16, 16]}>
                   <Col span={24}>
                     <div className="info-item">
@@ -115,17 +115,22 @@ class Account extends React.Component {
                     <div style={{ 
                       textAlign: 'center', 
                       padding: '15px',
-                      backgroundColor: 'rgba(81, 203, 99, 0.1)',
+                      backgroundColor: 'transparent !important',
                       borderRadius: '8px',
-                      border: '1px solid rgba(81, 203, 99, 0.3)'
+                      
                     }}>
                       <Text style={{ 
-                        color: '#51CB63', 
+                        color: '#fff', 
                         fontSize: '18px', 
                         fontWeight: 600,
                         fontFamily: 'Noto Sans, sans-serif'
                       }}>
-                        Happy Hacking, {profile?.user_name || user?.login || 'User'}!
+                        Happy Hacking, <Text style={{ 
+                        color: '#51CB63', 
+                        fontSize: '18px', 
+                        fontWeight: 600,
+                        fontFamily: 'Noto Sans, sans-serif'
+                      }}>{profile?.user_name || user?.login || 'User'}</Text>!
                       </Text>
                     </div>
                   </Col>
@@ -172,10 +177,11 @@ class Account extends React.Component {
                   {/* Дополнительная статистика */}
                   <div style={{ 
                     marginTop: '30px', 
+                    marginRight: '30px',
                     width: '100%', 
                     display: 'flex', 
-                    justifyContent: 'space-around',
-                    gap: '20px'
+                    justifyContent: 'center',
+                    gap: '30px'
                   }}>
                     <div style={{ textAlign: 'center' }}>
                       <DatabaseOutlined style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block' }} />
@@ -192,10 +198,10 @@ class Account extends React.Component {
                       </div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <MdAssignment style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block' }} />
+                      <MdAssignment style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block', marginLeft: '4px' }} />
                       <div>
                         <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>15</Text>
-                        <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>Homeworks</Text>
+                        <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>H/W</Text>
                       </div>
                     </div>
                   </div>

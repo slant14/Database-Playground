@@ -46,14 +46,14 @@ class Home extends React.Component {
             margin: 0
           }}><span style={{ color: "#51CB63" }}>Database</span> Playground</Title>
           <span className="button-row">
-            <Button className="myButton" onClick={() => this.props.onTemplateClick()}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span style={{ position: "relative", top: "-1px" }}>Code Runner </span> <FaCode />
-              </span>
-            </Button>
             <Button className="myButton" onClick={() => this.props.handleButtonClick("template")}>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                 <span style={{ position: "relative", top: "-1px" }}>Templates </span> <FaSave />
+              </span>
+            </Button>
+            <Button className="myButton" onClick={() => this.props.onTemplateClick()}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ position: "relative", top: "-1px" }}>Code</span> <FaCode />
               </span>
             </Button>
             <Button className="myButton" onClick={() => this.props.handleButtonClick("classrooms")}>

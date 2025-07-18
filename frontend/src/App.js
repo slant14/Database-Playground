@@ -42,8 +42,6 @@ class App extends React.Component {
     // Устанавливаем флаг активной сессии
     sessionStorage.setItem('activeSession', 'true');
 
-    const login = getCookie("login");
-
     const selectedClassroom = getFromLocalStorage("selectedClassroom");
 
     console.log('App constructor - lastPage:', lastPage, 'selectedClassroom:', selectedClassroom);
@@ -51,7 +49,6 @@ class App extends React.Component {
     this.state = {
       page: lastPage || "home",
       user: {
-        login: login || "",
         needMemorizing: needMemorizing,
       },
       isLogin: !!(getCookie("access") && getCookie("refresh")),
@@ -341,6 +338,7 @@ class App extends React.Component {
                       handleCancel={this.handleCancel}
                       login={this.login}
                       onTemplateClick={this.onTemplateClick}
+                      logOut={this.logOut}
                     />
                   )}
                   <div ref={nodeRef} style={{ position: "absolute", width: "100%" }}>
@@ -585,11 +583,10 @@ class App extends React.Component {
   }
 
   updateLoginState = () => {
-    const login = getCookie("login");
     const token = getCookie("access");
     const refresh_token = getCookie("refresh");
     const wasLoggedIn = this.state.isLogin;
-    const isLoggedIn = !!login && !!token;
+    const isLoggedIn = !!refresh_token && !!token;
 
     this.setState({
       isLogin: isLoggedIn,
@@ -600,17 +597,6 @@ class App extends React.Component {
       }
     });
   };
-
-
-  /*getCookie = (name) => {
-    for (const entryString of document.cookie.split(";")) {
-      const [entryName, entryValue] = entryString.split("=");
-      if (decodeURIComponent(entryName.trim()) === name) {
-        return decodeURIComponent(entryValue || "");
-      }
-    }
-    return undefined;
-  }*/
 
   handleCancel = () => {
     this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });

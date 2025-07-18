@@ -11,7 +11,6 @@ import HintModal from './hintModal';
 import HintModalPS from './hintModalPS';
 import HintModalMGDB from './hintModalMDB';
 import './Code.css';
-import { getCookie } from '../../utils';
 
 class Code extends React.Component {
   constructor(props) {

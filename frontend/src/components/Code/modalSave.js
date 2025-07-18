@@ -1,8 +1,7 @@
 import React from "react"
 import { Modal, Typography, Input, Button, notification } from "antd";
 import { TbPointFilled } from "react-icons/tb";
-import { setTemplate } from "../../api";
-import { getCookie } from "../../utils";
+import { setTemplate, getMyProfile } from "../../api";
 
 class SaveModal extends React.Component {
   constructor(props) {
@@ -10,14 +9,14 @@ class SaveModal extends React.Component {
     this.state = {
       templateName: "",
       templateDescription: "",
-      templateAuthor: getCookie("login") || "",
+      templateAuthor: "",
     }
   }
 
-  
+
 
   handleSave = () => {
-    const { templateName, templateDescription, templateAuthor } = this.state;
+    const { templateAuthor, templateName, templateDescription } = this.state;
     if (templateName.trim() === "" || templateDescription.trim() === "") {
       notification.warning({
         message: 'Fields Required',
@@ -57,33 +56,42 @@ class SaveModal extends React.Component {
 
     const combinedName = `${templateName.trim()} | ${templateDescription.trim()}`;
     let templateType;
-    if (localStorage.getItem("selectedDB") === "PostgreSQL"){
+    if (localStorage.getItem("selectedDB") === "PostgreSQL") {
       templateType = "PSQL";
     } else if (localStorage.getItem("selectedDB") === "Chroma") {
       templateType = "CHRM";
     } else {
       templateType = "MGDB";
     }
-    console.log("Saving template with data:", { combinedName, templateAuthor, templateType });
-    setTemplate(combinedName, templateAuthor, templateType)
-      .then(() => {
-        notification.success({
-          message: 'Template saved',
-          description: `Template "${templateName}" has been saved successfully`,
-          placement: 'bottomRight',
-          duration: 2,
-        });
-        this.props.onCancel();
+    getMyProfile()
+      .then(profile => {
+        const author = profile?.user_name || 'N/A';
+        this.setState({ templateAuthor: author });
+        console.log("Saving template with data:", { combinedName, author, templateType });
+        setTemplate(combinedName, author, templateType)
+          .then(() => {
+            notification.success({
+              message: 'Template saved',
+              description: `Template "${templateName}" has been saved successfully`,
+              placement: 'bottomRight',
+              duration: 2,
+            });
+            this.props.onCancel();
+          })
+          .catch(error => {
+            console.error('Error saving template:', error);
+            notification.error({
+              message: 'Error saving template',
+              description: 'There was an error saving your template. Please try again.',
+              placement: 'bottomRight',
+              duration: 3,
+            });
+            this.props.onCancel();
+          });
       })
       .catch(error => {
-        console.error('Error saving template:', error);
-        notification.error({
-          message: 'Error saving template',
-          description: 'There was an error saving your template. Please try again.',
-          placement: 'bottomRight',
-          duration: 3,
-        });
-        this.props.onCancel();
+        console.error("Error fetching profile:", error);
+        this.setState({ templateAuthor: "Unknown Author" });
       });
   }
 
@@ -99,49 +107,49 @@ class SaveModal extends React.Component {
         destroyOnClose
         className="my-modal"
       >
-        <div > 
-            <Typography.Text className='modal-text'> <TbPointFilled style={{position: 'relative', top: '2px'}}/> Save your current database schema as a <Typography.Text className='modal-text' style={{color: '#51CB63'}}>template</Typography.Text></Typography.Text><br/>
-            <div style={{marginLeft: '20px', marginBottom: '20px'}}>
-                <Typography.Text className='modal-text' > This will save your current database state so you can reuse it later.</Typography.Text>
-            </div>
-            
-            <div style={{}}>
-              <Typography.Text className='modal-text' style={{display: 'block'}}>Template Name (no more than 30 symbols)</Typography.Text>
-              <Input 
-                placeholder="Enter template name"
-                className="login"
-                onChange={(e) => this.setState({ templateName: e.target.value })}
-                style={{}}
-              />
-            </div>
+        <div >
+          <Typography.Text className='modal-text'> <TbPointFilled style={{ position: 'relative', top: '2px' }} /> Save your current database schema as a <Typography.Text className='modal-text' style={{ color: '#51CB63' }}>template</Typography.Text></Typography.Text><br />
+          <div style={{ marginLeft: '20px', marginBottom: '20px' }}>
+            <Typography.Text className='modal-text' > This will save your current database state so you can reuse it later.</Typography.Text>
+          </div>
 
-            <div style={{marginBottom: '20px'}}>
-              <Typography.Text className='modal-text' style={{display: 'block'}}>Template Description (No more than 100 symbols)</Typography.Text>
-              <Input 
-                placeholder="Enter template description"
-                className="login"
-                onChange={(e) => this.setState({ templateDescription: e.target.value })}
-                style={{}}
-              />
-            </div>
-            
-            <div style={{display: 'flex', justifyContent: 'flex-end', gap: '4px'}}>
-              <Button onClick={
-                this.props.onCancel
-    
-                } className="my-orange-button-outline">
-                Cancel
-              </Button>
-              <Button 
-                type="primary" 
-                className="my-orange-button-solid"
-                onClick={this.handleSave}
-              >
-                Save Template
-              </Button>
-            </div>
+          <div style={{}}>
+            <Typography.Text className='modal-text' style={{ display: 'block' }}>Template Name (no more than 30 symbols)</Typography.Text>
+            <Input
+              placeholder="Enter template name"
+              className="login"
+              onChange={(e) => this.setState({ templateName: e.target.value })}
+              style={{}}
+            />
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <Typography.Text className='modal-text' style={{ display: 'block' }}>Template Description (No more than 100 symbols)</Typography.Text>
+            <Input
+              placeholder="Enter template description"
+              className="login"
+              onChange={(e) => this.setState({ templateDescription: e.target.value })}
+              style={{}}
+            />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '4px' }}>
+            <Button onClick={
+              this.props.onCancel
+
+            } className="my-orange-button-outline">
+              Cancel
+            </Button>
+            <Button
+              type="primary"
+              className="my-orange-button-solid"
+              onClick={this.handleSave}
+            >
+              Save Template
+            </Button>
+          </div>
         </div>
-        
+
       </Modal>
     )
   }
