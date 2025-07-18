@@ -80,8 +80,8 @@ class AllAssignments extends React.Component {
                 <span className="article-title article-title-one-line">{el.title}</span>
               </div>  
               <Text className="article-author article-author-one-line">
-                {el.author}
-              </Text>
+                {el.author_names.join(', ')}
+              </Text>    
               <Text className="allArticle-description">
                 {el.description}
                </Text>

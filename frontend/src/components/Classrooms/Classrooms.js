@@ -10,7 +10,6 @@ class ClassRooms extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      classrooms: [],
       allClassrooms: [],
       classroomsPrimaryInstructor: [],
       classroomsTA: [],
@@ -31,7 +30,6 @@ class ClassRooms extends React.Component {
       const classroomsTA = allClassrooms.TA || [];
       const classroomsStudents = allClassrooms.student || [];
   
-      // Accumulate all classrooms and remove duplicates by id
       const all = [
         ...classroomsPrimaryInstructor,
         ...classroomsTA,
@@ -72,17 +70,8 @@ class ClassRooms extends React.Component {
       this.props.setAddClassroomModalOpen(false);
     }
   };  
-  
-  handleModalClose = () => {
-    this.setState({
-      isModalOpen: false,
-    });
-    if (this.props.setAddClassroomModalOpen) {
-      this.props.setAddClassroomModalOpen(false);
-    }
-  };  
 
-  handleClassroomCreated = (classroom) => {
+  handleClassroomCreated = async (classroom) => {
     this.handleModalClose();
     await this.loadClassrooms();
     if (classroom) {
@@ -91,19 +80,15 @@ class ClassRooms extends React.Component {
   };
 
   handlePostLoginUpdate = async () => {
-    // Перезагружаем классы после авторизации
     await this.loadClassrooms();
   };
 
   getBrightColorFromString = (str) => {
-    // Simple hash
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
-    // Use hash to get hue (0-359)
     const hue = Math.abs(hash) % 360;
-    // Bright color: high saturation, high lightness
     return `hsl(${hue}, 85%, 70%)`;
   }
 
@@ -148,8 +133,9 @@ class ClassRooms extends React.Component {
               </span>
             </Button>
           </div>
+        </div>
 
-          {this.state.isModalOpen && (
+        {this.state.isModalOpen && (
             <AddClassroom
               open={this.state.isModalOpen}
               onCancel={this.handleModalClose}
@@ -157,7 +143,7 @@ class ClassRooms extends React.Component {
               currentUserName={this.props.currentUserName}
             />
           )}
-        </div>
+      </div>  
       );
     }
 
@@ -257,17 +243,7 @@ class ClassRooms extends React.Component {
       )}
       </div>
     );
-  }
-  
-
-  selectClassroom = (classroom) => {
-    this.setState({ selectedClassroom: classroom });
   };
-
-  selectClassroom = (classroom) => {
-    this.setState({ selectedClassroom: classroom });
-  };
-
 }
-
+  
 export default ClassRooms;

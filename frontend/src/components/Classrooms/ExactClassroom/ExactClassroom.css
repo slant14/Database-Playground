@@ -10,7 +10,7 @@
     justify-content: flex-start;
     flex-direction: row;
     text-align: left;
-    gap: 160px;
+    gap: 170px;
 }
 
 .classroom-description {
@@ -282,6 +282,9 @@
     border: 1px solid #a2aab3;
     font-family: 'Noto Sans', sans-serif !important;
     width: 350px;
+    min-width: 350px;
+    max-width: 350px;
+    box-sizing: border-box;
     border-radius: 8px;
     padding: 10px;
     cursor: pointer;

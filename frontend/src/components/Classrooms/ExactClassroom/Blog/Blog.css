@@ -21,7 +21,7 @@
     flex-direction: column;
     border: 1px solid #a2aab3;
     font-family: 'Noto Sans', sans-serif !important;
-    width: 350px;
+    width: 350px !important;
     border-radius: 8px;
     padding: 10px;
     cursor: pointer;
@@ -60,7 +60,6 @@
     text-align: left;
 }
 
-.assignment-title-one-line,
 .article-title-one-line,
 .article-author-one-line {
   white-space: nowrap;
