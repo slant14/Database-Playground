@@ -50,8 +50,9 @@ class ClassRooms extends React.Component {
     }
   };  
 
-  handleClassroomCreated = (classroom) => {
+  handleClassroomCreated = async (classroom) => {
     this.handleModalClose();
+    await this.loadClassrooms();
     if (classroom) {
       this.props.selectClassroom(classroom, this.state.chosenRole);
     }
@@ -169,14 +170,14 @@ class ClassRooms extends React.Component {
               >
                 {/* Optionally, show initials or icon here */}
               </div>
-              <Text className="plain-title">
+              <Text className="plain-title card-title-one-line">
                 {el.title}
               </Text>
               
               <div className="plain-description">
                 <ul>
                   <li>
-                    <span>
+                    <span className="card-instructor-one-line">
                       <span style={{color:"#51CB63", fontWeight:400}}>Primary Instructor:</span> {el.primary_instructor_name}
                     </span>
                   </li>

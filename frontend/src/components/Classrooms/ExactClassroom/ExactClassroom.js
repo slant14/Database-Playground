@@ -225,7 +225,7 @@ class ExactClassroom extends React.Component {
               >
                 <div className="assignment-header">
                   <FaRegFileCode className="assignment-icon"/>
-                  <span className="assignment-title">{el.title}</span>
+                  <span className="assignment-title assignment-title-one-line">{el.title}</span>
                 </div>
                 <div className="assignment-info-row">
                   <div className="assignment-info-text">
@@ -378,9 +378,9 @@ class ExactClassroom extends React.Component {
                 <div className="article-card" key={idx} onClick={() => this.handleArticleClick(el)}>
                   <div className="article-header">
                     <MdOutlineArticle className="article-icon" />
-                    <span className="article-title">{el.title}</span>
+                    <span className="article-title article-title-one-line">{el.title}</span>
                   </div>  
-                  <Text className="article-author">
+                  <Text className="article-author article-author-one-line">
                     {el.author}
                   </Text>
                   <Text className="article-description">
@@ -391,12 +391,12 @@ class ExactClassroom extends React.Component {
             </div> 
             
             <Button className="create-article-button" onClick={() => this.handleCreateArticleModalOpen()}>  
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ position: "relative", top: "-1px" }}>
-                      Add Article
-                  </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ position: "relative", top: "-1px" }}>
+                  Add Article
                 </span>
-              </Button>
+              </span>
+            </Button>
 
             {/*
             {(this.props.chosenRole === "Primary Intructor" || this.props.chosenRole === "TA") && (

@@ -112,6 +112,11 @@
     font-weight: 400;
     font-size: 20px;
     color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
+    display: block;
 }
 
 .assignment-info-row {
@@ -300,6 +305,22 @@
     font-weight: 300;
     margin-bottom: 10px;
     text-align: left;
+}
+
+.article-title-one-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%;
+  display: block;
+}
+
+.article-author-one-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%;
+  display: block;
 }
 
 .article-description {
