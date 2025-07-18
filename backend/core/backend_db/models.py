@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class CustomUserManager(BaseUserManager):
@@ -65,6 +66,18 @@ class Profile(models.Model):
     avatar = models.ImageField(blank=True, upload_to='profile_images')
     school = models.CharField(max_length=255, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
+    @property
+    def gpa(self):
+        enrollments = self.enrollments.all()
+        student_enrollments = [
+            e for e in enrollments
+            if not e.classroom.TA.filter(id=self.id).exists()
+            and e.classroom.primary_instructor_id != self.id
+        ]
+        grades = [e.grade for e in student_enrollments if e.grade is not None]
+        if not grades:
+            return 0.0
+        return sum(grades) / len(grades)
 
     def __str__(self):
         return self.user.name
@@ -117,7 +130,15 @@ class Classroom(models.Model):
 class Enrollment(models.Model):
     student = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='enrollments')
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='enrollments')
-    grade = models.FloatField(null=True, blank=True)
+    grade = models.FloatField(
+        null=True, 
+        blank=True,
+        validators=[
+            MinValueValidator(0.0, message='Grade cannot be less than 0.0'),
+            MaxValueValidator(5.0, message='Grade cannot be greater than 5.0')
+        ]
+    )
+
     enrollment_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:

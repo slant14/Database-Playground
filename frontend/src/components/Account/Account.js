@@ -111,7 +111,7 @@ class Account extends React.Component {
     const { profile, loading } = this.state;
 
     // GPA значение от 0 до 5
-    const gpaValue = 4.5; // Пример значения GPA
+    const gpaValue = profile?.gpa || 0; // Получаем значение GPA из профиля
     const gpaPercentage = (gpaValue / 5) * 100; // Конвертируем в проценты для Progress
 
     return (
@@ -229,10 +229,13 @@ class Account extends React.Component {
                   />
                   
                   <Text className="gauge-value">
-                    {gpaValue >= 4.0 ? 'Great Job!' : 
+                    {gpaValue === 5.0 ? 'Happy Hacking!' :
+                     gpaValue >= 4.0 ? 'Great Job!' : 
                      gpaValue >= 3.0 ? 'Keep up the good work!' : 
                      gpaValue >= 2.0 ? 'It\'s okay to make mistakes!' : 
-                     'Нужно подтянуть учебу'}
+                     gpaValue >= 1 ? 'See you on the retake!' :
+                     gpaValue < 1 && gpaValue !== 0 ? 'Drop is coming!' :
+                      'Try classes!'}
                   </Text>
                   
                   {/* Дополнительная статистика */}

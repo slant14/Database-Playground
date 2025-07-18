@@ -31,7 +31,13 @@ class CustomUserAdmin(UserAdmin):
         )
 
 admin.site.register(User)
-admin.site.register(Profile)
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'school', 'gpa_display', 'avatar')
+
+    def gpa_display(self, obj):
+        return obj.gpa
+    gpa_display.short_description = 'GPA'
 
 #admin.site.register(Classroom)
 #admin.site.register(Topic)

@@ -70,6 +70,11 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         fields = ['id', 'student', 'student_name', 'student_email', 'classroom', 'grade', 'enrollment_date']
+    def validate_grade(self, value):
+        if value is not None:
+            if value < 0.0 or value > 5.0:
+                raise serializers.ValidationError("Grade must be between 0.0 and 5.0")
+        return value
 
 # class CourseSerializer(serializers.ModelSerializer):
 #    class Meta:
@@ -109,6 +114,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     user_email = serializers.CharField(source='user.email', read_only=True)
     user_created_date = serializers.DateTimeField(source='user.created_date', read_only=True)
 
+    gpa = serializers.SerializerMethodField()
+
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'user_name', 'user_email', 'school', 'avatar', 'description', 'user_created_date']
+        fields = ['id', 'user', 'user_name', 'user_email', 'school', 'avatar', 'description', 'user_created_date', 'gpa']
+
+    def get_gpa(self, obj):
+        return obj.gpa
