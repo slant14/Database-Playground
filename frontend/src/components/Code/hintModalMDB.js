@@ -33,7 +33,7 @@ class HintModalMGDB extends React.Component {
               <span style={{ display: 'inline-flex', alignItems: 'center' }}>
                 <TbPointFilled style={{ color: '#51CB63', fontSize: '16px', verticalAlign: 'middle', marginRight: '4px' }} />
                 <Typography.Text code className='modal-text' style={{ marginLeft: '-2px', marginTop: '12px', marginBottom: '12px' }}>
-                  <Typography.Text className='modal-text' style={{ color: '#51CB63' }}>db.getCollectionName()</Typography.Text>
+                  <Typography.Text className='modal-text' style={{ color: '#51CB63' }}>db.getCollectionNames()</Typography.Text>
                 </Typography.Text>
               </span>
               <br />
