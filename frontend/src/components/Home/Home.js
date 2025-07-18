@@ -51,11 +51,6 @@ class Home extends React.Component {
                 <span style={{ position: "relative", top: "-1px" }}>Templates </span> <FaSave />
               </span>
             </Button>
-            <Button className="myButton" onClick={() => this.props.handleButtonClick("acc")}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span style={{ position: "relative", top: "-1px" }}>acc </span> <FaSave />
-              </span>
-            </Button>
             <Button className="myButton" onClick={() => this.props.onTemplateClick()}>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                 <span style={{ position: "relative", top: "-1px" }}>Code</span> <FaCode />
