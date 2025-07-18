@@ -225,7 +225,7 @@ class ExactClassroom extends React.Component {
               >
                 <div className="assignment-header">
                   <FaRegFileCode className="assignment-icon"/>
-                  <span className="assignment-title assignment-title-one-line">{el.title}</span>
+                  <span className="assignment-title">{el.title}</span>
                 </div>
                 <div className="assignment-info-row">
                   <div className="assignment-info-text">
@@ -315,13 +315,13 @@ class ExactClassroom extends React.Component {
             }}>{classroom.title}</Title>
 
             <div className="classroom-description">
-              <span>
+              <span className="classroom-desc-two-lines">
                   <span className="class-label">Primary Instructor:</span> {classroom.primary_instructor_name}
               </span>
-              <span>
+              <span className="classroom-desc-two-lines">
                 <span className="class-info">Description:</span> {classroom.description}
               </span>
-              <span>
+              <span className="classroom-desc-two-lines">
                 <span className="class-label">Number of Students:</span> {classroom.capacity}
               </span>
               <span>

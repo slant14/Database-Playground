@@ -27,6 +27,19 @@
     gap: 10px
 }
 
+.classroom-desc-two-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;  
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 280px;
+  max-width: 280px;
+  min-width: 0;
+  white-space: normal;
+  word-break: break-word;
+}
+
 .class-info {
     color: #51CB63;
     font-weight: 400;
@@ -43,7 +56,7 @@
     flex-direction: column;
     margin-top: 10px;
     margin-left: 40px;
-    width: 250px;
+    width: 252px;
     height: 400px;           
     overflow-y: auto;  
     scrollbar-color: #a2aab3 #191d1a !important;
@@ -307,14 +320,7 @@
     text-align: left;
 }
 
-.article-title-one-line {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 90%;
-  display: block;
-}
-
+.article-title-one-line,
 .article-author-one-line {
   white-space: nowrap;
   overflow: hidden;

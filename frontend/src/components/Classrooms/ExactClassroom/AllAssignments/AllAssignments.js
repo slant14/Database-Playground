@@ -108,7 +108,7 @@ class AllAssignments extends React.Component {
             >
               <div className="allAssignment-header">
                 <FaRegFileCode className="allAssignment-icon"/>
-                <span className="allAssignment-title">{el.title}</span>
+                <span className="assignment-title">{el.title}</span>
               </div>
               <div className="allAssignment-info-row">
                 <div className="allAssignment-info-text">
