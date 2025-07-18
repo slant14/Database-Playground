@@ -77,10 +77,10 @@ class AllAssignments extends React.Component {
             <div className="allArticle-card" key={idx} onClick={() => this.handleArticleClick(el)}>
               <div className="allArticle-header">
                 <MdOutlineArticle className="allArticle-icon" />
-                <span className="allArticle-title">{el.title}</span>
+                <span className="article-title article-title-one-line">{el.title}</span>
               </div>  
-              <Text className="allArticle-author">
-                {el.authors}
+              <Text className="article-author article-author-one-line">
+                {el.author}
               </Text>
               <Text className="allArticle-description">
                 {el.description}

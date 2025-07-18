@@ -337,13 +337,13 @@ class ExactClassroom extends React.Component {
             }}>{classroom.title}</Title>
 
             <div className="classroom-description">
-              <span>
+              <span className="classroom-desc-two-lines">
                   <span className="class-label">Primary Instructor:</span> {classroom.primary_instructor_name}
               </span>
-              <span>
+              <span className="classroom-desc-two-lines">
                 <span className="class-info">Description:</span> {classroom.description}
               </span>
-              <span>
+              <span className="classroom-desc-two-lines">
                 <span className="class-label">Number of Students:</span> {classroom.capacity}
               </span>
               <span>
@@ -400,10 +400,10 @@ class ExactClassroom extends React.Component {
                 <div className="article-card" key={idx} onClick={() => this.handleArticleClick(el)}>
                   <div className="article-header">
                     <MdOutlineArticle className="article-icon" />
-                    <span className="article-title">{el.title}</span>
+                    <span className="article-title article-title-one-line">{el.title}</span>
                   </div>  
-                  <Text className="article-author">
-                    {el.authors}
+                  <Text className="article-author article-author-one-line">
+                    {el.author}
                   </Text>
                   <Text className="article-description">
                     {el.description}
@@ -413,12 +413,12 @@ class ExactClassroom extends React.Component {
             </div> 
             
             <Button className="create-article-button" onClick={() => this.handleCreateArticleModalOpen()}>  
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ position: "relative", top: "-1px" }}>
-                      Add Article
-                  </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ position: "relative", top: "-1px" }}>
+                  Add Article
                 </span>
-              </Button>
+              </span>
+            </Button>
 
             {/*
             {(this.props.chosenRole === "Primary Intructor" || this.props.chosenRole === "TA") && (

@@ -40,6 +40,7 @@ admin.site.register(Profile)
 class ClassroomAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'primary_instructor', 'capacity', 'created_date')
     search_fields = ('title',)
+    exclude = ('image',)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "TA":

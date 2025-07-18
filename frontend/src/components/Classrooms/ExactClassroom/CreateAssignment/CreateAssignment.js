@@ -20,6 +20,7 @@ class CreateAssignment extends React.Component {
 
   async componentDidMount() {
     const draft = localStorage.getItem('createAssignmentDraft');
+    const draft = localStorage.getItem('createAssignmentDraft');
     if (draft) {
       this.setState(JSON.parse(draft));
     }
@@ -34,7 +35,9 @@ class CreateAssignment extends React.Component {
 
   saveDraft = () => {
     localStorage.setItem('createAssignmentDraft', JSON.stringify(this.state));
+    localStorage.setItem('createAssignmentDraft', JSON.stringify(this.state));
   }
+    
     
   handleInputChange = (e) => {
     this.setState({ [e.target.name]: e.target.value }, this.saveDraft);
@@ -51,6 +54,7 @@ class CreateAssignment extends React.Component {
       });
       return;
     }
+    }
     if (description === "") {
       notification.warning({
         message: 'Classroom creation failed',
@@ -59,6 +63,13 @@ class CreateAssignment extends React.Component {
         duration: 3,
       });
       return;
+    }
+    const newAssignment = await createAssignment(
+      title, description, openAt, closeAt, this.props.classroomID
+    );
+    if (newAssignment && this.props.onAssignmentCreated) {
+      this.props.onAssignmentCreated();
+      localStorage.removeItem('createAssignmentDraft');
     }
     const newAssignment = await createAssignment(
       title, description, openAt, closeAt, this.props.classroomID

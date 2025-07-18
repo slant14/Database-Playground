@@ -78,6 +78,22 @@
     text-align: left;
 }
 
+.card-title-one-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%; 
+  display: block;
+}
+
+.card-instructor-one-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%;
+  display: block;
+}
+
 .card {
     background-color: #191d1a;
     display: flex;

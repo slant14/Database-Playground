@@ -96,6 +96,7 @@ class Article(models.Model):
 class Classroom(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
+    image = models.ImageField(upload_to='classroom_images/', null=True, blank=True)
     TA = models.ManyToManyField(Profile, related_name='ta_classrooms')
     primary_instructor = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='primary_classrooms')
     # topic = models.ForeignKey(to = Topic, on_delete = models.DO_NOTHING, null = True)

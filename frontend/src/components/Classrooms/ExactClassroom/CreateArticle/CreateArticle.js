@@ -2,6 +2,8 @@ import React from "react"
 import './CreateArticle.css';
 import { getProfiles, createArticle } from "../../../../api";
 import { Modal, Input, Select, Button, notification } from "antd";
+import { getProfiles, createArticle } from "../../../../api";
+import { Modal, Input, Select, Button, notification } from "antd";
 
 const { Option } = Select;
 
@@ -11,7 +13,7 @@ class CreateArticle extends React.Component {
     this.state = {
       title: "",
       description: "",
-      authors: [],
+      author: "",
       users: [],
     }
   }
@@ -33,6 +35,7 @@ class CreateArticle extends React.Component {
   saveDraft = () => {
     localStorage.setItem('createArticleDraft', JSON.stringify(this.state));
   }
+
 
   handleInputChange = (e) => {
     this.setState({ [e.target.name]: e.target.value }, this.saveDraft);
@@ -109,13 +112,12 @@ class CreateArticle extends React.Component {
           />
 
           <div className="tas-row">
-            <label>Authors:</label>
+            <label>Author:</label>
             <Select
-              placeholder="Select teacher assistants"
-              mode="multiple"
+              placeholder="Select author"
               style={{ width: "100%" }}
-              value={this.state.authors}
-              onChange={this.handleAuthorsChange}
+              value={this.state.author}
+              onChange={this.handleAuthorChange}
               showSearch
               optionFilterProp="children"
             >
@@ -134,7 +136,6 @@ class CreateArticle extends React.Component {
                     
             <Button className="add-button"
               type="primary"
-              htmlType="submit"
             >Add</Button>           
           </div>
         </form>

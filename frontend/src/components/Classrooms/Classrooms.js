@@ -84,6 +84,7 @@ class ClassRooms extends React.Component {
 
   handleClassroomCreated = (classroom) => {
     this.handleModalClose();
+    await this.loadClassrooms();
     if (classroom) {
       this.props.selectClassroom(classroom, this.state.chosenRole);
     }
@@ -118,12 +119,13 @@ class ClassRooms extends React.Component {
 
     if (classroomsToShow.length === 0) {
       return (
-        <div className="classrooms-header">
-          <div className="classrooms-header-left" />
+        <div className="classrooms">
+          <div className="classrooms-header">
+            <div className="classrooms-header-left" />
 
-          <div className="classrooms-header-center">
-            <Title className="classrooms-title">There are no classrooms yet</Title>
-          </div>
+            <div className="classrooms-header-center">
+              <Title className="classrooms-title">There are no classrooms yet</Title>
+            </div>
 
           <div className="classrooms-header-right">
             <Select
@@ -208,16 +210,15 @@ class ClassRooms extends React.Component {
                   justifyContent: "center"
                 }}
               >
-                {/* Optionally, show initials or icon here */}
               </div>
-              <Text className="plain-title">
+              <Text className="plain-title card-title-one-line">
                 {el.title}
               </Text>
               
               <div className="plain-description">
                 <ul>
                   <li>
-                    <span>
+                    <span className="card-instructor-one-line">
                       <span style={{color:"#51CB63", fontWeight:400}}>Primary Instructor:</span> {el.primary_instructor_name}
                     </span>
                   </li>
