@@ -190,7 +190,7 @@ class Account extends React.Component {
                       <Text className="info-value">{profile?.description || 'Not specified'}</Text>
                     </div>
                   </Col>
-                  <Col span={24} style={{ marginTop: '20px' }}>
+                  <Col span={24} style={{  }}>
                     <div style={{ 
                       textAlign: 'center', 
                       padding: '15px',

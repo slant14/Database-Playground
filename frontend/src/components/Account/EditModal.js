@@ -136,7 +136,7 @@ class EditModal extends React.Component {
     if (description && description.length > 100) {
       notification.warning({
         message: 'Description Too Long',
-        description: 'Description must be no more than 500 characters.',
+        description: 'Description must be no more than 100 characters.',
         placement: 'bottomRight',
         duration: 3,
       });
@@ -257,7 +257,7 @@ class EditModal extends React.Component {
           {/* Description Field */}
           <div style={{ marginBottom: '20px' }}>
             <Typography.Text className='modal-text' style={{ display: 'block' }}>
-              Description (optional, no more than 500 characters)
+              Description (optional, no more than 100 characters)
             </Typography.Text>
             <Input.TextArea
               placeholder="Tell us about yourself..."
@@ -266,7 +266,7 @@ class EditModal extends React.Component {
               onChange={(e) => this.setState({ description: e.target.value })}
               rows={4}
               showCount
-              maxLength={500}
+              maxLength={100}
             />
           </div>
 
