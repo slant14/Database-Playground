@@ -8,7 +8,7 @@ class SingleTemplate extends React.Component {
 
   handleTemplateClick = () => {
     if (this.props.isLogin) {
-      this.props.onTemplateClick(this.props.template.dump);
+      this.props.onTemplateClick(this.props.template.dump, this.props.template.type); // Передаем dump и db
       notification.success({
         message: 'Template Applied',
         description: 'Template has been successfully applied!',

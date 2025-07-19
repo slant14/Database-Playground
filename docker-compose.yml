@@ -1,4 +1,11 @@
 services:
+
+  haskell_api:
+    build:
+      context: ./backend/core/chroma/Parser
+    ports:
+      - "8080:8080"
+
   backend-db:
     image: postgres:15
     container_name: backend-db
@@ -10,6 +17,7 @@ services:
       - "7000:5432"
     volumes:
       - backend_pgdata:/var/lib/postgresql/data
+      - ./backend/core/media:/app/backend/core/media
 
   backend:
     build: ./backend/
@@ -22,7 +30,7 @@ services:
     environment:
       - DEBUG=True
       - ALLOWED_HOSTS=*
-      - SECRET_KEY=replace-this-in-prod
+      - SECRET_KEY=${SECRET_KEY}
       - POSTGRES_DB=backend_db
       - POSTGRES_HOST=backend-db
       - POSTGRES_PORT=5432

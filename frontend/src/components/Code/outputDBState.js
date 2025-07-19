@@ -1,6 +1,7 @@
 import React from 'react';
 import ChromaState from './DB_States/chromaState';
 import PostgresState from './DB_States/postgresState';
+import MongoState from './DB_States/mongoState';
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import './Code.css';
 
@@ -26,12 +27,13 @@ class OutputDBState extends React.Component {
 
     renderDBState() {
         const { response, db_state, chosenDB } = this.props;
-
         switch (chosenDB) {
             case "Chroma":
                 return <ChromaState response={response} db_state={db_state} />;
             case "PostgreSQL":
                 return <PostgresState response={response} db_state={db_state} open={this.open} close={this.close} isPostgresModalOpen={this.state.isPostgresModalOpen} postgresTableInfo={this.props.postgresTableInfo}/>;
+            case "MongoDB":
+                return <MongoState response={response} db_state={db_state} mongoCollectionsInfo={this.props.mongoCollectionsInfo} />
             default:
                 return null;
         }

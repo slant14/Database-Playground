@@ -24,7 +24,7 @@ class HintModalPS extends React.Component {
         className="my-modal"
       >
         <div > 
-            <Typography.Text className='modal-text'>You can watch tutorial <Typography.Text className='modal-text'><a href='https://share.google/vo5MINeophzmgA77N' target='_blank' rel='noopener noreferrer' className='modal-text' style={{color: '#51CB63', textDecoration: 'none'}}>here</a></Typography.Text></Typography.Text> <br/>
+            <Typography.Text className='modal-text'>You can watch documentation <Typography.Text className='modal-text'><a href='https://share.google/vo5MINeophzmgA77N' target='_blank' rel='noopener noreferrer' className='modal-text' style={{color: '#51CB63', textDecoration: 'none'}}>here</a></Typography.Text></Typography.Text> <br/>
 
         </div>
         

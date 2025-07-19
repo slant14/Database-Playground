@@ -6,6 +6,7 @@ import { Typography } from 'antd';
 class ChromaState extends React.Component {
     render() {
         const { response, db_state } = this.props;
+        console.log("ChromaState response:", response);
         
         const renderDBState = (stateData) => {
             if (!stateData || !stateData.state || !Array.isArray(stateData.state)) {

@@ -9,7 +9,21 @@ export async function getChromaResponse(text) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ code: text, action: 'execute' }),
+    body: JSON.stringify({ code: text, action: 'query' }),
+  });
+  if (!res.ok) {
+    return "Error";
+  };
+  return res.json();
+}
+
+export async function getDump() {
+  const res = await tokenUpdate(`${BASE_URL}/db/chroma/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ action: 'dump' }),
   });
   if (!res.ok) {
     return "Error";
@@ -28,6 +42,19 @@ export async function getChromaInitialState() {
   if (!res.ok) throw new Error("API call failed");
   return res.json();
 }
+
+export async function chromaApplyDump(payload = {}) {
+  const res = await tokenUpdate(`${BASE_URL}/db/chroma/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({...payload, action: 'put' }),
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
 
 export async function getPostgresTable() {
   const res = await tokenUpdate(`${BASE_URL}/db/schema/`, {
@@ -76,9 +103,21 @@ export async function queryPostgres(text) {
   }
 }
 
-export async function createMongoCollections() {
+export async function createMongoCollections(payload = {}) {
   const res = await tokenUpdate(`${BASE_URL}/db/put/`, {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({...payload, type: "MGDB"}),
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+export async function getMongoCollections() {
+  const res = await tokenUpdate(`${BASE_URL}/db/schema/`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -86,6 +125,28 @@ export async function createMongoCollections() {
   });
   if (!res.ok) throw new Error("API call failed");
   return res.json();
+}
+
+export async function queryMongo(text) {
+  try {
+    const res = await tokenUpdate(`${BASE_URL}/db/query/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code: text, type: "MGDB" }),
+    });
+    
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(`${errorData.detail || errorData.error || 'Unknown error'}`);
+    }
+    
+    return res.json();
+  } catch (error) {
+    console.error('Mongo API Error:', error);
+    throw error;
+  }
 }
 
 export async function registerUser(name=null, email=null, password, role = "student") {
@@ -108,6 +169,58 @@ export async function loginUser(name=null, password, role = "student") {
     body: JSON.stringify({ name, password, role }),
   });
   return res.json();
+}
+
+export async function getMyProfile() {
+
+  const res = await tokenUpdate(`${BASE_URL}/app/profile/me/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+export async function editInfo(name, email, school=null, description=null) {
+  const res = await tokenUpdate(`${BASE_URL}/app/profile/edit/info/`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name, email, school,  description }),
+  });
+  
+  const data = await res.json();
+  
+  // Если статус не OK, отклоняем промис с данными об ошибке
+  if (!res.ok) {
+    throw data;
+  }
+  
+  return data;
+}
+
+export async function editAvatar(avatar) {
+  const formData = new FormData();
+  formData.append('avatar', avatar);
+  
+  const res = await tokenUpdate(`${BASE_URL}/app/profile/edit/avatar/`, {
+    method: 'PUT',
+    body: formData,
+    // НЕ устанавливаем Content-Type - браузер сделает это автоматически для FormData
+    skipContentType: true
+  });
+  
+  const data = await res.json();
+  
+  // Если статус не OK, отклоняем промис с данными об ошибке
+  if (!res.ok) {
+    throw data;
+  }
+  
+  return data;
 }
 
 export async function getMyClassrooms() {
@@ -160,6 +273,18 @@ export async function getClassroomMyAssignments(id) {
   return res.json();
 }
 
+export async function getArticlesNotInClass(id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/articles/all/?classroom_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) throw new Error("API call failed");
+  return res.json();
+}
+
+
 export async function createClassroom(title, description, TA, students, primary_instructor) {
   const res = await tokenUpdate(`${BASE_URL}/app/classrooms/create/`, {
     method: 'POST',
@@ -167,6 +292,34 @@ export async function createClassroom(title, description, TA, students, primary_
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ title, description, TA, students, primary_instructor })  
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function createAssignment(title, description, open_at, close_at, classroom_id) {
+  const localopen = new Date(open_at);
+  const localclose = new Date(close_at);
+  const utcopen = localopen.toISOString();
+  const utcclose = localclose.toISOString();
+  const res = await tokenUpdate(`${BASE_URL}/app/assignments/create/?classroom_id=${classroom_id}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, description, open_at: utcopen, close_at: utcclose })  
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function createArticle(title, authors, description, classroom_id) {
+  const res = await tokenUpdate(`${BASE_URL}/app/articles/create/?classroom_id=${classroom_id}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, authors, description })  
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -183,7 +336,6 @@ export async function getProfiles() {
   return res.json();
 }
 
-
 export async function getTemplateList() {
   const res = await tokenUpdate(`${BASE_URL}/template/`, {
     method: 'GET',
@@ -196,7 +348,7 @@ export async function getTemplateList() {
 }
 
 export async function getMyRoleInClassroom(id) {
-  const res = await tokenUpdate(`${BASE_URL}/app/classroom/my/role/?classroom_id=${id}`, {
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/my/role/?classroom_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -232,12 +384,25 @@ export async function deleteTemplate(id) {
 async function tokenUpdate(url, options = {}) {
   console.log("tokenUpdate called, url:", url);
   let token = getCookie("access");
-  options.headers = {
-    ...options.headers,
+  
+  // Устанавливаем заголовки, но пропускаем Content-Type если указан skipContentType
+  const headers = {
     'Authorization': token ? `JWT ${token}` : undefined,
-    'Content-Type': 'application/json',
   };
-  let res = await fetch(url, options);
+  
+  if (!options.skipContentType) {
+    headers['Content-Type'] = 'application/json';
+  }
+  
+  options.headers = {
+    ...headers,
+    ...options.headers,
+  };
+  
+  // Удаляем skipContentType из options перед отправкой
+  const { skipContentType, ...fetchOptions } = options;
+  
+  let res = await fetch(url, fetchOptions);
 
   if (res.status === 401 || res.status === 403) {
     const refresh = getCookie("refresh");
@@ -252,8 +417,8 @@ async function tokenUpdate(url, options = {}) {
       if (refreshRes.ok) {
         const data = await refreshRes.json();
         document.cookie = `access=${data.access}; path=/;`;
-        options.headers['Authorization'] = `JWT ${data.access}`;
-        res = await fetch(url, options);
+        fetchOptions.headers['Authorization'] = `JWT ${data.access}`;
+        res = await fetch(url, fetchOptions);
         console.log("Retried request with new access token, status:", res.status);
         console.log("New access token:", data.access);
         console.log("Access token before:", token);

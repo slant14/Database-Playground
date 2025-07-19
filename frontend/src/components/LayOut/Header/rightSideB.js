@@ -38,8 +38,19 @@ class RightSideB extends React.Component {
                         <span style={{ position: "relative", top: "-1px" }}>Classrooms</span> <FaBook />
                     </span>
                 </Button>
-                {!this.props.checkLogin ?
-                    <Button variant="solid" className={this.props.activeButton === "signin" || this.state.isRegisterModalOpen ? "my-orange-button-solid" : "my-orange-button-outline"} onClick={() => this.props.handleButtonClick("signin")}><span style={{ position: "relative", top: "-1px" }}>Sign In</span></Button> :
+                {this.props.activeButton === "acc" ? (
+                    <Button
+                        variant="solid"
+                        className="my-orange-button-damn"
+                        onClick={() => this.props.logOut()}
+                    >
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ position: "relative", top: "-1px" }}>Log Out</span> <MdAccountCircle />
+                        </span>
+                    </Button>
+                ) : !this.props.checkLogin ? (
+                    <Button variant="solid" className={this.props.activeButton === "signin" || this.state.isRegisterModalOpen ? "my-orange-button-solid" : "my-orange-button-outline"} onClick={() => this.props.handleButtonClick("signin")}><span style={{ position: "relative", top: "-1px" }}>Sign In</span></Button>
+                ) : (
                     <Button
                         variant="solid"
                         className={this.props.activeButton === "acc" ? "my-orange-button-solid" : "my-orange-button-outline"}
@@ -48,24 +59,25 @@ class RightSideB extends React.Component {
                         <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                             <span style={{ position: "relative", top: "-1px" }}>Account</span> <MdAccountCircle />
                         </span>
-                    </Button>}
-                <MyModal 
-                    open={this.props.isModalOpen} 
-                    logIn={this.props.logIn} 
-                    setPage={this.props.setPage} 
-                    onCancel={this.props.handleCancel} 
-                    updateLogIn={this.props.updateLogIn} 
-                    setCookie={this.props.setCookie} 
-                    footer={null} 
-                    setUser={this.props.setUser} 
+                    </Button>
+                )}
+                <MyModal
+                    open={this.props.isModalOpen}
+                    logIn={this.props.logIn}
+                    setPage={this.props.setPage}
+                    onCancel={this.props.handleCancel}
+                    updateLogIn={this.props.updateLogIn}
+                    setCookie={this.props.setCookie}
+                    footer={null}
+                    setUser={this.props.setUser}
                     title="Sign In"
                     onSwitchToRegister={this.handleSwitchToRegister}
                 />
-                <RegisterModal 
+                <RegisterModal
                     open={this.state.isRegisterModalOpen}
                     onCancel={this.handleRegisterCancel}
                     onSwitchToLogin={this.handleSwitchToLogin}
-                    logIn={this.props.logIn} 
+                    logIn={this.props.logIn}
                 />
             </div>
         );

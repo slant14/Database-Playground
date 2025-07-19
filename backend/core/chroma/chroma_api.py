@@ -27,9 +27,18 @@ class DeleteDocumentRequest(BaseModel):
     user_id: int
     doc_id: str
 
+class UpdateDocumentRequest(BaseModel):
+    user_id: int
+    doc_id: str
+    text: Optional[str] = None
+    metadata: Optional[Dict] = None
+
 class QueryParseRequest(BaseModel):
     user_id: int
     code: str
+
+class GetDumpRequest(BaseModel):
+    user_id: int
 
 @app.post("/add_document")
 async def add_document(request: AddDocumentRequest):
@@ -77,6 +86,22 @@ async def delete_document(request: DeleteDocumentRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/update_document")
+async def update_document(request: UpdateDocumentRequest):
+    try:
+        engine = ChromaEngine(request.user_id)
+        success = engine.update_document(
+            doc_id=request.doc_id,
+            text=request.text,
+            metadata=request.metadata
+        )
+        if success:
+            return {"status": "success", "message": "Document updated successfully"}
+        else:
+            raise HTTPException(status_code=404, detail="Document not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/get_db_state")
 async def get_db_state(request: dict):
     try:
@@ -90,53 +115,90 @@ async def get_db_state(request: dict):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/get_creation_dump")
+async def get_creation_dump(request: GetDumpRequest):
+    try:
+        engine = ChromaEngine(request.user_id)
+        dump = engine.get_creation_dump()
+        return {"dump": dump}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/query_parser")
 async def query_parser(request: QueryParseRequest):
     try:
-        parsed = QueryParser.parse(request.code)
+        parsed_commands = QueryParser.parse(request.code)
         engine = ChromaEngine(request.user_id)
         
-        command = parsed["command"]
-        result = {}
+        results = []
         
-        if command == "ADD":
-            doc_id = parsed.get("doc_id") or f"doc_{int(time.time() * 1000)}"
-            engine.add_document(
-                text=parsed["text"],
-                metadata=parsed.get("metadata"),
-                doc_id=doc_id
-            )
-            result = {"command": "ADD", "doc_id": doc_id, "status": "added"}
-        
-        elif command == "SEARCH":
-            results = engine.search(
-                query=parsed["query"],
-                k=parsed.get("k", 2),
-                filters=parsed.get("filters")
-            )
-            result = {"command": "SEARCH", "result": {"search_results": results}}
-        
-        elif command == "GET":
-            doc = engine.get_by_id(parsed["doc_id"])
-            if doc is None:
-                raise HTTPException(status_code=404, detail="Document not found")
+        for parsed in parsed_commands:
+            command = parsed["command"]
+            result = {}
+            
+            if command == "ADD":
+                doc_id = parsed.get("doc_id") or f"doc_{int(time.time() * 1000)}"
+                engine.add_document(
+                    text=parsed["text"],
+                    metadata=parsed.get("metadata"),
+                    doc_id=doc_id
+                )
+                result = {"command": "ADD", "doc_id": doc_id, "status": "added"}
+            
+            elif command == "SEARCH":
+                search_results = engine.search(
+                    query=parsed["query"],
+                    k=parsed.get("k", 2),
+                    filters=parsed.get("filters")
+                )
+                result = {"command": "SEARCH", "result": {"search_results": search_results}}
+            
+            elif command == "GET":
+                doc = engine.get_by_id(parsed["doc_id"])
+                if doc is None:
+                    result = {"command": "GET", "error": "Document not found"}
+                else:
+                    result = {"command": "GET", "result": {"status": "found", "document": doc}}
+            
+            elif command == "DELETE":
+                doc = engine.get_by_id(parsed["doc_id"])
+                if doc is None:
+                    result = {"command": "DELETE", "error": "Document not found"}
+                else:
+                    engine.delete(parsed["doc_id"])
+                    result = {"command": "DELETE", "status": "deleted"}
+            
+            elif command == "UPDATE":
+                doc_id = parsed["doc_id"]
+                text = parsed["text"]
+                metadata = parsed["metadata"]
+                
+                if not doc_id:
+                    result = {"command": "UPDATE", "error": "Document ID is required for update"}
+                else:
+                    existing_doc = engine.get_by_id(doc_id)
+                    if existing_doc is None:
+                        result = {"command": "UPDATE", "error": "Document not found"}
+                    else:
+                        engine.update_document(doc_id=doc_id, text=text, metadata=metadata)
+                        result = {"command": "UPDATE", "doc_id": doc_id, "status": "updated"}
+            
+            elif command == "DROP":
+                engine.drop_collection()
+                result = {"command": "DROP", "status": "collection dropped"}
+            
             else:
-                result = {"command": "GET", "result": {"status": "found", "document": doc}}
+                result = {"command": command, "error": "Unknown command"}
+            
+            results.append(result)
         
-        elif command == "DELETE":
-            doc = engine.get_by_id(parsed["doc_id"])
-            if doc is None:
-                raise HTTPException(status_code=404, detail="Document not found")
-            engine.delete(parsed["doc_id"])
-            result = {"command": "DELETE", "status": "deleted"}
-        
-        else:
-            raise HTTPException(status_code=400, detail="Unknown command")
-        
-        return result
+        return {"results": results}
     
     except ValueError as ve:
-        raise HTTPException(status_code=400, detail=str(ve))
+        # Return parse error in a format that frontend can handle
+        return {"results": [{"command": "PARSE_ERROR", "error": str(ve)}]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

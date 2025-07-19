@@ -86,6 +86,10 @@ class PostgresEngine(DBEngine):
         
         # Сохраняем rowcount сразу после выполнения запроса
         rowcount = cur.rowcount
+        # Fix rowcount: PostgreSQL returns -1 for DDL operations like CREATE TABLE
+        # We want to show 0 instead of -1 for consistency
+        if rowcount < 0:
+            rowcount = 0
         
         try:
             raw_data = cur.fetchall()

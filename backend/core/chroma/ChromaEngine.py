@@ -1,13 +1,22 @@
 import os
 import re
 import time
-from typing import Any, Dict, List, Union
-
+from typing import Any, Dict, List, Union, Generator
+import requests
 import chromadb
 from chromadb.utils import embedding_functions
 
 
 class ChromaEngine:
+    def drop_collection(self):
+        try:
+            results = self.collection.get()
+            all_ids = results.get("ids", [])
+            if all_ids:
+                self.collection.delete(ids=all_ids)
+        except Exception as e:
+            print(f"Error while dropping collection: {e}")
+        
     def __init__(self, user_id: int, persist_dir: str = "playground/chroma_persist"):
         self.user_id = user_id
         self.persist_dir = persist_dir
@@ -33,7 +42,19 @@ class ChromaEngine:
             ids=[doc_id] if doc_id else None,
         )
 
+    def update_document(self, doc_id: str, text: str = None, metadata: dict = None):
+        try:
+            self.collection.update(
+                ids=[doc_id],
+                documents=[text] if text else None,
+                metadatas=[metadata] if metadata else None,
+            )
+        except Exception as e:
+            print(f"Error updating document: {e}")
+
     def search(self, query: str, k: int = 5, filters: dict = None) -> List[Dict]:
+        if not self.collection.count():
+            raise ValueError("Collection is empty. Please add  searching.")
         results = self.collection.query(query_texts=[query], n_results=k, where=filters)
         return self._format_results(results)
 
@@ -70,6 +91,44 @@ class ChromaEngine:
             return state
         except Exception:
             return []
+    
+    def get_creation_dump(self) -> str:
+        try:
+            results = self.collection.get()
+            commands = []
+            
+            for i in range(len(results["ids"])):
+                document = results["documents"][i]
+                metadata = results["metadatas"][i] if results["metadatas"] and results["metadatas"][i] else {}
+                
+                if metadata:
+                    metadata_str = self._format_metadata_for_dump(metadata)
+                    command = f'ADD {document} metadata:{metadata_str};'
+                else:
+                    command = f'ADD {document};'
+                
+                commands.append(command)
+            
+            print(commands)
+            return "".join(commands)
+            
+        except Exception as e:
+            print(f"Error generating creation dump: {e}")
+            return f"# Error generating dump: {str(e)}"
+    
+    def _format_metadata_for_dump(self, metadata: dict) -> str:
+        """Format metadata dictionary as key=value,key2=value2 for dump."""
+        if not metadata:
+            return ""
+        
+        formatted_pairs = []
+        for key, value in metadata.items():
+            # Escape special characters in key and value
+            escaped_key = str(key).replace('=', '\\=').replace(',', '\\,').replace(';', '\\;')
+            escaped_value = str(value).replace('=', '\\=').replace(',', '\\,').replace(';', '\\;')
+            formatted_pairs.append(f"{escaped_key}={escaped_value}")
+        
+        return ",".join(formatted_pairs)
 
     def _format_results(self, results: Dict) -> List[Dict]:
         formatted = []
@@ -89,115 +148,22 @@ class ChromaEngine:
 
 class QueryParser:
     @staticmethod
-    def parse(query: str) -> dict:
-        query = query.strip()
-        if not query:
-            raise ValueError("Empty query")
-
-        command = query.split()[0].upper()
-
-        if command == "ADD":
-            return QueryParser._parse_add(query)
-        elif command == "SEARCH":
-            return QueryParser._parse_search(query)
-        elif command == "GET":
-            return QueryParser._parse_get(query)
-        elif command == "DELETE":
-            return QueryParser._parse_delete(query)
+    def parse(query: str) -> Generator[Dict, None, None]:
+        url = "http://haskell_api:8080/parse"  # имя сервиса из docker-compose
+        print(f"Sending query to Haskell parser: {query.encode('utf-8')}")
+        response = requests.post(url, data=query.encode("utf-8"))
+        if response.status_code == 200:
+            parsed = response.json()
+            
+            # Check if the response is an error object
+            if isinstance(parsed, dict) and "error" in parsed:
+                raise ValueError(parsed["error"])
+            
+            # Check if the response is a list of commands
+            if not isinstance(parsed, list):
+                raise ValueError(f"Haskell parse error: {response.text}")
+            
+            for command in parsed:
+                yield command
         else:
-            raise ValueError(f"Unknown command: {command}")
-
-    @staticmethod
-    def _parse_add(query: str) -> dict:
-        parts = query.split(maxsplit=1)
-        if len(parts) < 2:
-            raise ValueError("Invalid ADD format")
-
-        text, metadata = QueryParser._extract_metadata(parts[1])
-        return {"command": "ADD", "text": text, "metadata": metadata}
-
-    @staticmethod
-    def _parse_search(query: str) -> dict:
-        parts = query.split(maxsplit=1)
-        if len(parts) < 2:
-            raise ValueError("Invalid SEARCH format")
-
-        k = 2
-        filters = {}
-
-        text, params = QueryParser._extract_params(parts[1])
-
-        if "k" in params:
-            try:
-                k = int(params["k"])
-            except ValueError:
-                raise ValueError("k must be integer")
-
-        if "filters" in params:
-            filters = QueryParser._parse_filters(params["filters"])
-
-        return {"command": "SEARCH", "query": text, "k": k, "filters": filters}
-
-    @staticmethod
-    def _parse_get(query: str) -> dict:
-        parts = query.split(maxsplit=1)
-        if len(parts) < 2:
-            raise ValueError("Invalid GET format")
-
-        params = QueryParser._parse_key_value(parts[1])
-        if "id" not in params:
-            raise ValueError("Missing 'id' in GET command")
-
-        return {"command": "GET", "doc_id": params["id"]}
-
-    @staticmethod
-    def _parse_delete(query: str) -> dict:
-        parts = query.split(maxsplit=1)
-        if len(parts) < 2:
-            raise ValueError("Invalid DELETE format")
-
-        params = QueryParser._parse_key_value(parts[1])
-        if "id" not in params:
-            raise ValueError("Missing 'id' in DELETE command")
-
-        return {"command": "DELETE", "doc_id": params["id"]}
-
-    @staticmethod
-    def _extract_metadata(text: str) -> tuple:
-        if "metadata:" not in text:
-            return text, {}
-
-        text_part, meta_part = text.split("metadata:", 1)
-        return text_part.strip(), QueryParser._parse_filters(meta_part)
-
-    @staticmethod
-    def _extract_params(text: str) -> tuple:
-        param_pattern = re.compile(r"(\w+)\s*[:=]\s*([^\s]+)")
-        params = {}
-        matches = list(param_pattern.finditer(text))
-        if matches:
-            first_param_start = matches[0].start()
-            text_part = text[:first_param_start].strip()
-            for m in matches:
-                params[m.group(1)] = m.group(2)
-        else:
-            text_part = text.strip()
-        return text_part, params
-
-    @staticmethod
-    def _parse_filters(filters_str: str) -> dict:
-        return {
-            k.strip(): v.strip()
-            for item in filters_str.split(";")
-            if "=" in item
-            for k, v in [item.split("=", 1)]
-        }
-
-    @staticmethod
-    def _parse_key_value(options: str) -> dict:
-        return {
-            k.strip(): v.strip()
-            for item in options.split()
-            if "=" in item
-            for k, v in [item.split("=", 1)]
-        }
+            raise ValueError(f"Haskell parse error: {response.text}")

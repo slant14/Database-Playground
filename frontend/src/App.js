@@ -1,5 +1,7 @@
 import React from "react";
-import { getPostgresTable, createPostgresTable, queryPostgres } from './api';
+import { getPostgresTable, createPostgresTable } from './api';
+import { createMongoCollections, getMongoCollections } from './api';
+import { chromaApplyDump } from './api';
 import Footer from "./components/LayOut/footer";
 import Header from "./components/LayOut/Header/Header";
 import Account from "./components/Account/Account";
@@ -30,6 +32,7 @@ class App extends React.Component {
       console.log('New session detected - clearing lastPage');
       removeFromLocalStorage("lastPage");
       lastPage = null;
+      removeFromLocalStorage("selectedDB");
 
       if (!needMemorizing) {
         this.logOut();
@@ -39,8 +42,6 @@ class App extends React.Component {
     // Устанавливаем флаг активной сессии
     sessionStorage.setItem('activeSession', 'true');
 
-    const login = getCookie("login");
-
     const selectedClassroom = getFromLocalStorage("selectedClassroom");
 
     console.log('App constructor - lastPage:', lastPage, 'selectedClassroom:', selectedClassroom);
@@ -48,7 +49,6 @@ class App extends React.Component {
     this.state = {
       page: lastPage || "home",
       user: {
-        login: login || "",
         needMemorizing: needMemorizing,
       },
       isLogin: !!(getCookie("access") && getCookie("refresh")),
@@ -57,15 +57,19 @@ class App extends React.Component {
       selectedClassroom: selectedClassroom,
       isAddClassroomModalOpen: false,
       allAssignments: [],
-      postgresTableInfo: null,
+      postgresTableInfo: [],
+      mongoCollectionInfo: [],
       selectedDB: null,
       allAssignmentsIsActive: true,
       isAssignmentModalOpen: false,
       isArticleModalOpen: false,
       blog: [],
+      isCreateAssignmentModalOpen: false,
+      isCreateArticleModalOpen: false,
       isHintModalOpen: false,
       isTableModalOpen: false,
       isSaveModalOpen: false,
+      isEditModalOpen: false,
       isInitialized: false, // Флаг для отслеживания завершения инициализации
     };
     this.setPage = this.setPage.bind(this);
@@ -74,6 +78,7 @@ class App extends React.Component {
     this.pageRef = {};
     this.codeRef = React.createRef();
     this.classroomsRef = React.createRef();
+    this.exactClassroomRef = React.createRef();
     this.outputDBStateRef = React.createRef();
     this.handleButtonClick = this.handleButtonClick.bind(this)
     this.handleCancel = this.handleCancel.bind(this);
@@ -121,11 +126,45 @@ class App extends React.Component {
   };
 
   handlePopState = (event) => {
-    if (this.state.isModalOpen) {
-      this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
-      window.history.pushState({ page: this.state.page }, '', window.location.pathname);
-      return;
-    }
+      if (this.state.isModalOpen) {
+        this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
+        return;
+      }
+      if (this.state.isAddClassroomModalOpen) {
+        this.setState({ isAddClassroomModalOpen: false });
+        if (this.classroomsRef.current) {
+          this.classroomsRef.current.closeModal();
+        }
+        return;
+      }
+      if (this.state.isArticleModalOpen) {
+        this.setState({ isArticleModalOpen: false });
+        if (this.exactClassroomRef.current) {
+          this.exactClassroomRef.current.closeArticleModal();
+        }
+        return;
+      }
+      if (this.state.isAssignmentModalOpen) {
+        this.setState({ isAssignmentModalOpen: false });
+        if (this.exactClassroomRef.current) {
+          this.exactClassroomRef.current.closeAssignmentModal();
+        }
+        return;
+      }
+      if (this.state.isCreateAssignmentModalOpen) {
+        this.setState({ isCreateAssignmentModalOpen: false });
+        if (this.exactClassroomRef.current) {
+          this.exactClassroomRef.current.closeCreateAssignmentModal();
+        }
+        return;
+      }
+      if (this.state.isCreateArticleModalOpen) {
+        this.setState({ isCreateArticleModalOpen: false });
+        if (this.exactClassroomRef.current) {
+          this.exactClassroomRef.current.closeCreateArticleModal();
+        }
+        return;
+      }
 
     if (this.state.isHintModalOpen) {
       if (this.codeRef.current) {
@@ -166,12 +205,25 @@ class App extends React.Component {
       return;
     }
 
+    if (this.state.isEditModalOpen) {
+      this.setState({ isEditModalOpen: false });
+      window.history.pushState({ page: this.state.page }, '', window.location.pathname);
+      return;
+    }
+
     if (this.state.page === "code") {
+      removeFromLocalStorage("selectedDB");
       this.setState({ page: "template", activeButton: "template" });
       setToLocalStorage("lastPage", "template");
     } else if (this.state.page === "exactClassroom") {
       this.setState({ page: "classrooms", activeButton: "classrooms" });
       setToLocalStorage("lastPage", "classrooms");
+    } else if (this.state.page === "allAssignments") {
+      this.setState({ page: "exactClassroom", activeButton: "classrooms" });
+      setToLocalStorage("lastPage", "exactClassroom");
+    } else if (this.state.page === "blog") {
+      this.setState({ page: "exactClassroom", activeButton: "classrooms" });
+      setToLocalStorage("lastPage", "exactClassroom");
     } else if (event.state && event.state.page) {
       this.setState({ page: event.state.page, activeButton: event.state.page });
       setToLocalStorage("lastPage", event.state.page);
@@ -209,17 +261,23 @@ class App extends React.Component {
               isModalOpen={this.state.isModalOpen}
               handleButtonClick={this.handleButtonClick}
               handleCancel={this.handleCancel}
-              login={this.login} />
+              login={this.login}
+              onTemplateClick={this.onTemplateClick} />
           </div>
         );
       case "classrooms":
         return (
           <div>
-            <ClassRooms ref={this.classroomsRef} selectClassroom={this.selectClassroom} />
+            <ClassRooms 
+              ref={this.classroomsRef} 
+              selectClassroom={this.selectClassroom}
+              setAddClassroomModalOpen={this.setAddClassroomModalOpen}
+              isAddClassroomModalOpen={this.state.isAddClassroomModalOpen}
+              currentUserName={this.state.user.login || getCookie("login")} 
+             />
           </div>);
       case "exactClassroom":
         if (!this.state.selectedClassroom) {
-          // Если компонент ещё не инициализирован, показываем загрузку
           if (!this.state.isInitialized) {
             return (
               <div>
@@ -229,51 +287,57 @@ class App extends React.Component {
               </div>
             );
           }
-          // Если компонент инициализирован, но нет выбранного класса, перенаправляем на страницу классов
           setTimeout(() => {
             this.setState({ page: "classrooms", activeButton: "classrooms" });
             setToLocalStorage("lastPage", "classrooms");
           }, 100);
           return (
             <div>
-              <ExactClassroom 
+              <ExactClassroom
                 classroom={null}
-                setAddClassroomModalOpen={this.setAddClassroomModalOpen}
               />
             </div>
           );
         }
         return (
           <div>
-            <ExactClassroom 
+            <ExactClassroom
+              ref={this.exactClassroomRef}
               classroom={this.state.selectedClassroom}
               handleAllAssignmentsClick={this.handleAllAssignmentsClick}              
               handleAllArticlesClick={this.handleAllArticlesClick}
               setAssignmentModalOpen={this.setAssignmentModalOpen}
               setArticleModalOpen={this.setArticleModalOpen}
+              setCreateArticleModalOpen={this.setCreateArticleModalOpen}
+              setCreateAssignmentModalOpen={this.setCreateAssignmentModalOpen}
+              isAssignmentModalOpen={this.state.isAssignmentModalOpen}
+              isArticleModalOpen={this.state.isArticleModalOpen}
+              isCreateAssignmentModalOpen={this.state.isCreateAssignmentModalOpen}
+              isCreateArticleModalOpen={this.state.isCreateArticleModalOpen}
               />
           </div>
         )
       case "allAssignments":
         return (
           <div>
-            <AllAssignments 
+            <AllAssignments
               assignments={this.state.allAssignments}
               isActive={this.state.allAssignmentsIsActive}
             />
           </div>
         )
-      case "Blog":
+      case "blog":
         return (
           <div>
-            <Blog 
+            <Blog
               articles={this.state.blog}
             />
           </div>
-        )  
+        )
       case "code":
         return (
           <div>
+            {console.log("Rendering Code component: ", this.state.mongoCollectionInfo)}
             <Code
               ref={this.codeRef}
               getCookie={getCookie}
@@ -286,12 +350,18 @@ class App extends React.Component {
               outputDBStateRef={this.outputDBStateRef}
               selectedDB={this.state.selectedDB}
               postgresTableInfo={this.state.postgresTableInfo}
+              mongoCollectionInfo={this.state.mongoCollectionInfo}
             />
           </div>);
       case "acc":
         return (
           <div>
-            <Account user={this.state.user} logOut={this.logOut} />
+            <Account 
+              user={this.state.user} 
+              logOut={this.logOut}
+              setEditModalOpen={this.setEditModalOpen}
+              isEditModalOpen={this.state.isEditModalOpen}
+            />
           </div>);
       case "template":
         return (
@@ -332,6 +402,8 @@ class App extends React.Component {
                       handleButtonClick={this.handleButtonClick}
                       handleCancel={this.handleCancel}
                       login={this.login}
+                      onTemplateClick={this.onTemplateClick}
+                      logOut={this.logOut}
                     />
                   )}
                   <div ref={nodeRef} style={{ position: "absolute", width: "100%" }}>
@@ -387,29 +459,122 @@ class App extends React.Component {
     }
   };
 
-  onTemplateClick = (code) => {
+  onTemplateClick = (code, db) => {
     // Если передан code (dump), значит используется шаблон - выбираем PostgreSQL
     // Если code не передан, значит создается новый шаблон - оставляем "Choose DB"
     if (code) {
-      this.setState({ selectedDB: "PostgreSQL" });
-      
-      // Создаем объект с данными для отправки
-      const payload = { dump: code };
-      
-      createPostgresTable(payload)
-        .then(() => {
-          return getPostgresTable();
-        })
-        .then(data => {
-          this.setState({ postgresTableInfo: data.tables });
-        })
-        .catch(error => {
-          console.error("Error creating database:", error);
-        });
+      if (db === "PSQL") {
+        this.setState({ selectedDB: "PostgreSQL" });
+
+        // Создаем объект с данными для отправки
+        const payload = { dump: code };
+
+        createPostgresTable(payload)
+          .then(() => {
+            return getPostgresTable();
+          })
+          .then(data => {
+            this.setState({ postgresTableInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating database:", error);
+          });
+
+        createMongoCollections({})
+          .then(() => {
+            return getMongoCollections();
+          })
+          .then(data => {
+            this.setState({ mongoCollectionInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating MongoDB collections:", error);
+          });
+        chromaApplyDump({})
+          .then(() => {
+
+          })
+          .catch(error => {
+            console.error("Error getting Chroma initial state:", error);
+          });
+
+
+      }
+      if (db === "MGDB") {
+        this.setState({ selectedDB: "MongoDB" });
+
+        localStorage.setItem("selectedDB", "MongoDB");
+        // Создаем объект с данными для отправки
+        const payload = { dump: code };
+
+        createMongoCollections(payload)
+          .then(() => {
+            return getMongoCollections();
+          })
+          .then(data => {
+            this.setState({ mongoCollectionInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating MongoDB collections:", error);
+          });
+
+        createPostgresTable({})
+          .then(() => {
+            return getPostgresTable();
+          })
+          .then(data => {
+            this.setState({ postgresTableInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating database:", error);
+          });
+        chromaApplyDump({})
+          .then(() => {
+
+          })
+          .catch(error => {
+            console.error("Error getting Chroma initial state:", error);
+          });
+      }
+      if (db === "CHRM") {
+        this.setState({ selectedDB: "Chroma" });
+
+        localStorage.setItem("selectedDB", "Chroma");
+
+        const payload = { dump: code };
+        chromaApplyDump(payload)
+          .then(() => {
+            // Здесь можно добавить логику после успешного применения дампа
+          })
+          .catch(error => {
+            console.error("Error applying Chroma dump:", error);
+          });
+        createPostgresTable({})
+          .then(() => {
+            return getPostgresTable();
+          })
+          .then(data => {
+            this.setState({ postgresTableInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating database:", error);
+          });
+        createMongoCollections({})
+          .then(() => {
+            return getMongoCollections();
+          })
+          .then(data => {
+            this.setState({ mongoCollectionInfo: data.tables });
+          })
+          .catch(error => {
+            console.error("Error creating MongoDB collections:", error);
+          });
+      }
     } else {
       // Для создания нового шаблона - сбрасываем выбор БД
       this.setState({ selectedDB: "Choose DB" });
-      
+
+      localStorage.removeItem("selectedDB");
       // Создаем пустую базу данных
       createPostgresTable({})
         .then(() => {
@@ -421,8 +586,27 @@ class App extends React.Component {
         .catch(error => {
           console.error("Error creating database:", error);
         });
+
+      createMongoCollections({})
+        .then(() => {
+          return getMongoCollections();
+        })
+        .then(data => {
+          this.setState({ mongoCollectionInfo: data.tables });
+        })
+        .catch(error => {
+          console.error("Error creating MongoDB collections:", error);
+        });
+
+      chromaApplyDump({})
+        .then(() => {
+
+        })
+        .catch(error => {
+          console.error("Error getting Chroma initial state:", error);
+        });
     }
-      
+
     this.setState({ page: "code", activeButton: "code" });
     this.setPage("code");
   }
@@ -442,7 +626,7 @@ class App extends React.Component {
     removeFromLocalStorage("selectedClassroom");
 
     // Очищаем пользовательские данные
-    localStorage.removeItem("selectedDb"); // Очищаем выбранную БД
+    localStorage.removeItem("selectedDB"); // Очищаем выбранную БД
     // НЕ очищаем cookiesAccepted - это согласие пользователя должно сохраняться
     // deleteCookie("cookiesAccepted"); // Раскомментируйте, если нужно очищать при выходе
 
@@ -464,11 +648,10 @@ class App extends React.Component {
   }
 
   updateLoginState = () => {
-    const login = getCookie("login");
     const token = getCookie("access");
     const refresh_token = getCookie("refresh");
     const wasLoggedIn = this.state.isLogin;
-    const isLoggedIn = !!login && !!token;
+    const isLoggedIn = !!refresh_token && !!token;
 
     this.setState({
       isLogin: isLoggedIn,
@@ -479,17 +662,6 @@ class App extends React.Component {
       }
     });
   };
-
-
-  /*getCookie = (name) => {
-    for (const entryString of document.cookie.split(";")) {
-      const [entryName, entryValue] = entryString.split("=");
-      if (decodeURIComponent(entryName.trim()) === name) {
-        return decodeURIComponent(entryValue || "");
-      }
-    }
-    return undefined;
-  }*/
 
   handleCancel = () => {
     this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
@@ -506,6 +678,13 @@ class App extends React.Component {
 
   setSaveModalOpen = (isOpen) => {
     this.setState({ isSaveModalOpen: isOpen });
+  };
+
+  setEditModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isEditModalOpen) {
+      window.history.pushState({ modalType: 'edit', page: this.state.page }, '', window.location.pathname);
+    }
+    this.setState({ isEditModalOpen: isOpen });
   };
 
   login = () => {
@@ -530,7 +709,7 @@ class App extends React.Component {
     }
   };
 
-   handleAllAssignmentsClick = (assignments, isActive) => {
+  handleAllAssignmentsClick = (assignments, isActive) => {
     this.setState({
       page: "allAssignments",
       allAssignments: assignments,
@@ -538,31 +717,57 @@ class App extends React.Component {
     });
   }
 
+  handleAllArticlesClick = (articles) => {
+    this.setState({
+      page: "blog",
+      blog: articles,
+    });
+  }
+
   setAssignmentModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isAssignmentModalOpen) {
+      window.history.pushState({ modalType: 'assignment', page: this.state.page }, '', window.location.pathname);
+    }
     this.setState({
       isAssignmentModalOpen: isOpen,
     });
   };
 
   setArticleModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isArticleModalOpen) {
+      window.history.pushState({ modalType: 'article', page: this.state.page }, '', window.location.pathname);
+    }
     this.setState({
       isArticleModalOpen: isOpen
     });
   }
 
-  handleAllArticlesClick = (articles) => {
-    this.setState({
-      page: "Blog",
-      blog: articles,
-    });
-  }
-
   setAddClassroomModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isAddClassroomModalOpen) {
+      window.history.pushState({ modalType: 'addClassroom', page: this.state.page }, '', window.location.pathname);
+    }
     this.setState({
       isAddClassroomModalOpen: isOpen
     });
   }
 
-}
+  setCreateArticleModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isCreateArticleModalOpen) {
+      window.history.pushState({ modalType: 'createArticle', page: this.state.page }, '', window.location.pathname);
+    }
+    this.setState({
+      isCreateArticleModalOpen: isOpen
+    });
+  }
+
+  setCreateAssignmentModalOpen = (isOpen) => {
+    if (isOpen && !this.state.isCreateAssignmentModalOpen) {
+      window.history.pushState({ modalType: 'createAssignment', page: this.state.page }, '', window.location.pathname);
+    }
+    this.setState({
+      isCreateAssignmentModalOpen: isOpen
+    });
+  }
+} 
 
 export default App;

@@ -13,7 +13,6 @@ class Search extends React.Component {
                         {this.props.response.result.error === "Document not found" ? <Typography.Text className='code-text' style={{ color: '#B22222' }}>ID is not found</Typography.Text> :
                             <div>
                                 <Typography.Text className='code-text'>Success! </Typography.Text> <br />
-                                <Typography.Text className='code-text'>Execution time: <Typography.Text className='code-text' style={{ color: '#fff' }}>{this.props.response.execution_time}</Typography.Text></Typography.Text><br />
                                 <Typography.Text className='code-text'>Documents info: </Typography.Text><br />
                                 {this.props.response.result.search_results.map((item, index) => {
                                     return (

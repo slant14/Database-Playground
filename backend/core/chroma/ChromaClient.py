@@ -43,9 +43,31 @@ class ChromaClient:
         response = requests.post(f"{self.base_url}/delete_document", json=data)
         return response.json()
     
+    def update_document(self, user_id: int, doc_id: str, text: str = None, metadata: Dict = None) -> Dict:
+        data = {
+            "user_id": user_id,
+            "doc_id": doc_id,
+        }
+        if text is not None:
+            data["text"] = text
+        if metadata is not None:
+            data["metadata"] = metadata
+        response = requests.post(f"{self.base_url}/update_document", json=data)
+        return response.json()
+    
+    def drop_collection(self, user_id: int) -> Dict:
+        data = {"user_id": user_id}
+        response = requests.post(f"{self.base_url}/drop_collection", json=data)
+        return response.json()
+    
     def get_db_state(self, user_id: int) -> Dict:
         data = {"user_id": user_id}
         response = requests.post(f"{self.base_url}/get_db_state", json=data)
+        return response.json()
+    
+    def get_creation_dump(self, user_id: int) -> Dict:
+        data = {"user_id": user_id}
+        response = requests.post(f"{self.base_url}/get_creation_dump", json=data)
         return response.json()
     
     def query_parser(self, user_id: int, code: str) -> Dict:
@@ -59,3 +81,6 @@ class ChromaClient:
     def health_check(self) -> Dict:
         response = requests.get(f"{self.base_url}/health")
         return response.json()
+    
+
+chroma_client = ChromaClient()

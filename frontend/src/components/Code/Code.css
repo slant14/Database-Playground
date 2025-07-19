@@ -257,7 +257,8 @@ textarea:active {
     font-weight: 400;
 }
 
-.modal-text {
+.modal-text,
+.modal-text code {
     color: #fff;
     font-size: 15px;
     font-family: 'Noto Sans', sans-serif;
@@ -331,6 +332,7 @@ textarea:active {
     font-family: 'Noto Sans', sans-serif;
     font-weight: 400;
     padding: 10px;
+    align-items: center;
     border-radius: 8px;
     margin-top: 10px;
     margin-bottom: 20px;
@@ -338,9 +340,28 @@ textarea:active {
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
-    min-height: auto;
+    scrollbar-color: #2a2a2a transparent;
+    min-height: 32px;
     overflow-x: auto;
     overflow-y: hidden;
+}
+
+.code-table-list::-webkit-scrollbar {
+    height: 2px;
+}
+.code-table-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.code-table-list::-webkit-scrollbar-thumb {
+    background: #a2aab3 !important;
+    border-radius: 8px;
+    border: 1px solid #191d1a;
+}
+.code-table-list::-webkit-scrollbar-thumb:hover {
+    background: #5d6063 !important;
+}
+.code-table-list::-webkit-scrollbar-corner {
+    background: #191d1a !important;
 }
 
 .ant-table-cell::before {
@@ -374,7 +395,7 @@ textarea:active {
 
 .code-table-scheme {
     width: 500px;
-    height: 230px;
+    height: 216px;
     max-height: 230px;
     font-family: 'Noto Sans', sans-serif;
     font-weight: 400;

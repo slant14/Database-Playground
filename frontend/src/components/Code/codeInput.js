@@ -2,6 +2,7 @@ import React from "react"
 import { Button, Select, Upload, notification } from "antd";
 import { FaSave } from 'react-icons/fa';
 import { UploadOutlined } from '@ant-design/icons';
+import { getDump } from "../../api";
 import SaveModal from './modalSave';
 import './codeInput.css';
 
@@ -10,9 +11,8 @@ class CodeInput extends React.Component {
     constructor(props) {
         super(props);
 
-        const savedDb = localStorage.getItem("selectedDb");
+        const savedDb = localStorage.getItem("selectedDB");
         const chosenDb = savedDb || 'Choose DB';
-
         this.state = {
             code: '',
             chosenDb: chosenDb,
@@ -82,6 +82,9 @@ class CodeInput extends React.Component {
         } else if (chosenDb === 'PostgreSQL') {
             isValidFile = file.name.endsWith('.sql') || file.type === 'application/sql' || file.name.endsWith('.txt') || file.type === 'text/plain';
             errorMessage = 'For PostgreSQL you can only upload .sql and .txt files';
+        } else if (chosenDb === 'MongoDB') {
+            isValidFile = file.type === 'text/plain' || file.name.endsWith('.txt');
+            errorMessage = 'For MongoDB you can only upload .txt files';
         } else {
             notification.warning({
                 message: 'Select database',
@@ -191,13 +194,12 @@ class CodeInput extends React.Component {
                         style={{ width: 190, marginTop: '10px' }}
                         options={[
                             { value: 'PostgreSQL', label: 'PostgreSQL' },
-                            { value: 'SQLite', label: 'SQLite' },
                             { value: 'MongoDB', label: 'MongoDB' },
                             { value: 'Chroma', label: 'Chroma' },
                         ]}
                         onChange={value => {
                             this.setState({ chosenDb: value });
-                            localStorage.setItem("selectedDb", value);
+                            localStorage.setItem("selectedDB", value);
                             if (this.props.onDbSelect) {
                                 this.props.onDbSelect(value);
                             }
@@ -207,7 +209,8 @@ class CodeInput extends React.Component {
                         className='my-save-button'
                         style={{ marginTop: '10px', marginRight: '10px' }}
                         onClick={() => this.props.openSave && this.props.openSave()}
-                        disabled={!(this.state.chosenDb === "PostgreSQL") }
+                        chosenDb={this.state.chosenDb}
+                        disabled={!(this.state.chosenDb === "PostgreSQL" || this.state.chosenDb === "MongoDB" || this.state.chosenDb === "Chroma")}
                     >
                         <FaSave style={{ fontSize: '20px', verticalAlign: 'middle' }} />
                     </Button>
