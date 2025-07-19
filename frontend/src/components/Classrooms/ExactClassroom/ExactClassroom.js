@@ -191,6 +191,57 @@ class ExactClassroom extends React.Component {
     }
   };
 
+  // Handle synchronization with App component modal states
+  componentDidUpdate(prevProps, prevState) {
+    // Sync assignment modal state
+    if (prevProps.isAssignmentModalOpen && !this.props.isAssignmentModalOpen && this.state.isAssignmentModalOpen) {
+      this.setState({ isAssignmentModalOpen: false, selectedAssignment: null });
+    }
+    if (!prevProps.isAssignmentModalOpen && this.props.isAssignmentModalOpen && !this.state.isAssignmentModalOpen) {
+      this.setState({ isAssignmentModalOpen: true });
+    }
+
+    // Sync article modal state
+    if (prevProps.isArticleModalOpen && !this.props.isArticleModalOpen && this.state.isArticleModalOpen) {
+      this.setState({ isArticleModalOpen: false, selectedArticle: null });
+    }
+    if (!prevProps.isArticleModalOpen && this.props.isArticleModalOpen && !this.state.isArticleModalOpen) {
+      this.setState({ isArticleModalOpen: true });
+    }
+
+    // Sync create assignment modal state
+    if (prevProps.isCreateAssignmentModalOpen && !this.props.isCreateAssignmentModalOpen && this.state.isCreateAssignmentModalOpen) {
+      this.setState({ isCreateAssignmentModalOpen: false });
+    }
+    if (!prevProps.isCreateAssignmentModalOpen && this.props.isCreateAssignmentModalOpen && !this.state.isCreateAssignmentModalOpen) {
+      this.setState({ isCreateAssignmentModalOpen: true });
+    }
+
+    // Sync create article modal state
+    if (prevProps.isCreateArticleModalOpen && !this.props.isCreateArticleModalOpen && this.state.isCreateArticleModalOpen) {
+      this.setState({ isCreateArticleModalOpen: false });
+    }
+    if (!prevProps.isCreateArticleModalOpen && this.props.isCreateArticleModalOpen && !this.state.isCreateArticleModalOpen) {
+      this.setState({ isCreateArticleModalOpen: true });
+    }
+  }
+
+  closeAssignmentModal = () => {
+    this.setState({ isAssignmentModalOpen: false, selectedAssignment: null });
+  };
+
+  closeArticleModal = () => {
+    this.setState({ isArticleModalOpen: false, selectedArticle: null });
+  };
+
+  closeCreateAssignmentModal = () => {
+    this.setState({ isCreateAssignmentModalOpen: false });
+  };
+
+  closeCreateArticleModal = () => {
+    this.setState({ isCreateArticleModalOpen: false });
+  };
+
 
   renderAssignmentsBlock(assignments, type, isActive) {
     const label = type === "Active" ? "Active Assignments" : "Finished Assignments";

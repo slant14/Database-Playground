@@ -2,8 +2,9 @@ import React from "react"
 import './AddClassroom.css';
 import { getProfiles, createClassroom } from '../../api';
 import { Modal, Input, Typography, Select, Button, notification } from "antd";
+import { getCookie } from '../../utils';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Option } = Select;
 
 class AddClassroom extends React.Component {
@@ -113,6 +114,10 @@ class AddClassroom extends React.Component {
 
   render() {
     const { open, onCancel, currentUserName } = this.props;
+    
+    // Get the current user name from props or cookie as fallback
+    const instructorName = currentUserName || getCookie("login") || "Current User";
+    
     return (
       <Modal
         className="addClassroom-modal"
@@ -143,10 +148,21 @@ class AddClassroom extends React.Component {
           <div className="primary-instructor-row">
             <label>Primary Instructor:</label>
             <Input
-              value={currentUserName}
+              value={instructorName}
               disabled
-              style={{ width: "100%", marginTop: "10px", background: "#191d1a", color: "#a2aab3", border: "1px solid #a2aab3" }}
+              style={{ 
+                width: "100%",
+                background: "#090f09", 
+                color: "#51CB63", 
+                border: "1px solid #51CB63",
+                cursor: "not-allowed"
+              }}
               className="primary-instructor-input"
+              suffix={
+                <Text style={{ color: '#51CB63', fontSize: '12px' }}>
+                  ✓ You
+                </Text>
+              }
             />
           </div>
           

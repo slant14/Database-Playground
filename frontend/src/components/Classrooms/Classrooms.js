@@ -69,7 +69,26 @@ class ClassRooms extends React.Component {
     if (this.props.setAddClassroomModalOpen) {
       this.props.setAddClassroomModalOpen(false);
     }
-  };  
+  };
+
+  // Expose this method for the parent App component to call
+  closeModal = () => {
+    this.setState({
+      isModalOpen: false,
+    });
+  };
+
+  // Add this method to handle when modal is closed via back button from App component
+  componentDidUpdate(prevProps, prevState) {
+    // If App component's modal state changes from outside (like back button), sync our state
+    if (prevProps.isAddClassroomModalOpen && !this.props.isAddClassroomModalOpen && this.state.isModalOpen) {
+      this.setState({ isModalOpen: false });
+    }
+    // If App component opens the modal from outside, sync our state
+    if (!prevProps.isAddClassroomModalOpen && this.props.isAddClassroomModalOpen && !this.state.isModalOpen) {
+      this.setState({ isModalOpen: true });
+    }
+  }  
 
   handleClassroomCreated = async (classroom) => {
     this.handleModalClose();
@@ -93,13 +112,16 @@ class ClassRooms extends React.Component {
   }
 
   render() {
-    let classroomsToShow = this.state.allClassrooms;
+    let classroomsToShow = [];
+    
     if (this.state.chosenRole === "Primary Instructor") {
       classroomsToShow = this.state.classroomsPrimaryInstructor;
     } else if (this.state.chosenRole === "TA") {
       classroomsToShow = this.state.classroomsTA;
     } else if (this.state.chosenRole === "Student") {
       classroomsToShow = this.state.classroomsStudents;
+    } else {
+      classroomsToShow = this.state.allClassrooms;
     }
 
     if (classroomsToShow.length === 0) {
@@ -171,6 +193,7 @@ class ClassRooms extends React.Component {
               value={this.state.chosenRole}
               style={{ width: 150, marginRight: '20px' }}
               options={[
+                { value: "All Classrooms", label: "All Classrooms" },
                 { value: "Primary Instructor", label: "Primary Instructor" },
                 { value: "TA", label: "TA" },
                 { value: "Student", label: "Student" },

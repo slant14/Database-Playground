@@ -79,6 +79,7 @@ class App extends React.Component {
     this.pageRef = {};
     this.codeRef = React.createRef();
     this.classroomsRef = React.createRef();
+    this.exactClassroomRef = React.createRef();
     this.outputDBStateRef = React.createRef();
     this.handleButtonClick = this.handleButtonClick.bind(this)
     this.handleCancel = this.handleCancel.bind(this);
@@ -132,22 +133,37 @@ class App extends React.Component {
       }
       if (this.state.isAddClassroomModalOpen) {
         this.setState({ isAddClassroomModalOpen: false });
+        if (this.classroomsRef.current) {
+          this.classroomsRef.current.closeModal();
+        }
         return;
       }
       if (this.state.isArticleModalOpen) {
         this.setState({ isArticleModalOpen: false });
+        if (this.exactClassroomRef.current) {
+          this.exactClassroomRef.current.closeArticleModal();
+        }
         return;
       }
       if (this.state.isAssignmentModalOpen) {
         this.setState({ isAssignmentModalOpen: false });
+        if (this.exactClassroomRef.current) {
+          this.exactClassroomRef.current.closeAssignmentModal();
+        }
         return;
       }
       if (this.state.isCreateAssignmentModalOpen) {
         this.setState({ isCreateAssignmentModalOpen: false });
+        if (this.exactClassroomRef.current) {
+          this.exactClassroomRef.current.closeCreateAssignmentModal();
+        }
         return;
       }
       if (this.state.isCreateArticleModalOpen) {
         this.setState({ isCreateArticleModalOpen: false });
+        if (this.exactClassroomRef.current) {
+          this.exactClassroomRef.current.closeCreateArticleModal();
+        }
         return;
       }
 
@@ -257,12 +273,12 @@ class App extends React.Component {
               ref={this.classroomsRef} 
               selectClassroom={this.selectClassroom}
               setAddClassroomModalOpen={this.setAddClassroomModalOpen}
-              currentUserName={this.state.user.login} 
+              isAddClassroomModalOpen={this.state.isAddClassroomModalOpen}
+              currentUserName={this.state.user.login || getCookie("login")} 
              />
           </div>);
       case "exactClassroom":
         if (!this.state.selectedClassroom) {
-          // Если компонент ещё не инициализирован, показываем загрузку
           if (!this.state.isInitialized) {
             return (
               <div>
@@ -272,7 +288,6 @@ class App extends React.Component {
               </div>
             );
           }
-          // Если компонент инициализирован, но нет выбранного класса, перенаправляем на страницу классов
           setTimeout(() => {
             this.setState({ page: "classrooms", activeButton: "classrooms" });
             setToLocalStorage("lastPage", "classrooms");
@@ -288,6 +303,7 @@ class App extends React.Component {
         return (
           <div>
             <ExactClassroom
+              ref={this.exactClassroomRef}
               classroom={this.state.selectedClassroom}
               chosenRole={this.state.roleInClassroom}
               handleAllAssignmentsClick={this.handleAllAssignmentsClick}              
@@ -296,6 +312,10 @@ class App extends React.Component {
               setArticleModalOpen={this.setArticleModalOpen}
               setCreateArticleModalOpen={this.setCreateArticleModalOpen}
               setCreateAssignmentModalOpen={this.setCreateAssignmentModalOpen}
+              isAssignmentModalOpen={this.state.isAssignmentModalOpen}
+              isArticleModalOpen={this.state.isArticleModalOpen}
+              isCreateAssignmentModalOpen={this.state.isCreateAssignmentModalOpen}
+              isCreateArticleModalOpen={this.state.isCreateArticleModalOpen}
               />
           </div>
         )

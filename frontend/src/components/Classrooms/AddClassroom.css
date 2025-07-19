@@ -121,7 +121,7 @@
     font-family: 'Noto Sans', sans-serif;
     padding: 4px 11px;
     border-radius: 6px;
-    width: 750px; /* limit width */
+    width: 750px;
     height: 24;
     cursor: not-allowed;
     margin-bottom: 10px;
