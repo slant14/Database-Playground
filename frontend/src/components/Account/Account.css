@@ -153,6 +153,14 @@
     font-family: 'Noto Sans', sans-serif;
 }
 
+.info-label-card {
+    display: block;
+    color: #fff !important;
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-family: 'Noto Sans', sans-serif;
+}
+
 .info-value {
     display: block;
     color: #fff !important;

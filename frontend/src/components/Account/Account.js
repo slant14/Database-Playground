@@ -291,17 +291,17 @@ class Account extends React.Component {
                     gap: '40px'
                   }}>
                     <div style={{ textAlign: 'center' }}>
-                      <FaBook style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block', marginLeft: '13px' }} />
+                      <FaBook style={{ fontSize: '24px', color: gpaMessage.color, marginBottom: '4px', display: 'block', marginLeft: '13px' }} />
                       <div>
                         <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>{classroomsCount}</Text>
-                        <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>Classes</Text>
+                        <Text className="info-label-card" style={{ whiteSpace: 'nowrap' }}>Classes</Text>
                       </div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <FaSave style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block', marginLeft: '23px' }} />
+                      <FaSave style={{ fontSize: '24px', color: gpaMessage.color, marginBottom: '4px', display: 'block', marginLeft: '23px' }} />
                       <div>
                         <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>{templatesCount}</Text>
-                        <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>Templates</Text>
+                        <Text className="info-label-card" style={{ whiteSpace: 'nowrap' }}>Templates</Text>
                       </div>
                     </div>
                   </div>
