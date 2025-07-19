@@ -139,7 +139,7 @@ class CreateArticle extends React.Component {
           <div className="tas-row">
             <label>Authors:</label>
             <Select
-              placeholder="Select uathors"
+              placeholder="Select authors"
               mode="multiple"
               style={{ width: "100%" }}
               value={this.state.authors}
