@@ -22,8 +22,15 @@ class TemplateListCreateView(mixins.ListModelMixin,
     serializer_class = MinTemplateSerializer
 
     def get(self, request: Request):
-        #print("TemplateListCreateView GET request")
-        return self.list(request)
+        user_name = request.user.name if request.user.is_authenticated else None
+        if user_name:
+            self.queryset = Template.objects.filter(author=user_name)
+        else:
+            self.queryset = Template.objects.none()
+        
+        templates = self.list(request)
+        #print(f"Retrieved templates for user '{user_name}': {templates.data}")
+        return templates
 
     def delete(self, request: Request, pk: int):
         """Delete a template by ID"""
