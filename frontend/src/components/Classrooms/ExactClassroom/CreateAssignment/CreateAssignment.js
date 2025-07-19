@@ -6,6 +6,15 @@ import { getProfiles, createAssignment } from "../../../../api";
 
 const { Option } = Select;
 
+/*
+docker exec -it backend-db psql -U dbpg  -d backend_db
+
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+\q
+
+*/
+
 class CreateAssignment extends React.Component {
   constructor(props) {
     super(props)
