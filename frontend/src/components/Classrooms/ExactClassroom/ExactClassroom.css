@@ -1,5 +1,6 @@
 .whole {
     display: flex;
+    flex: center;
     justify-content: center;
     flex-direction: column;
     font-family: 'Noto Sans', sans-serif;
@@ -11,6 +12,19 @@
     flex-direction: row;
     text-align: left;
     gap: 170px;
+}
+
+.classroom-title {
+    width: 280px !important;
+    max-width: 280px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 .classroom-description {
@@ -29,7 +43,8 @@
 
 .classroom-desc-two-lines {
   display: -webkit-box;
-  -webkit-line-clamp: 2;  
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -81,7 +96,7 @@
 }
 
 .active-assignments {
-   margin-bottom: 50px;
+   margin-bottom: 30px;
 }
 
 .assignments-header {
@@ -99,12 +114,13 @@
     text-align: left;
 }
 
-.assignment-label-no {
+.Assignment-label {
     color: #ffffff;
     font-size: 25px;
     font-weight: 400;
     text-align: left;
     margin-left: 60px;
+    margin-bottom: 20px;
     width: 800px;
 }
 
@@ -229,7 +245,7 @@
 }
 
 .finished-assignments {
-    margin-top: 60px;
+    margin-top: 30px;
 }
 
 .blog-section {
@@ -332,9 +348,33 @@
   display: block;
 }
 
+.article-title-two-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%;
+  max-height: 2.8em;
+  line-height: 1.4;
+}
+
+.assignment-title-two-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 2.8em;
+  line-height: 1.4;
+}
+
 .article-description {
     display: -webkit-box;
-    -webkit-line-clamp: 2;      
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -357,6 +397,16 @@
     margin-left: 60px;
 }
 
+/* More space after finished assignments */
+.create-assignment-button.after-finished {
+    margin-top: 30px;
+}
+
+/* Less space when no finished assignments */
+.create-assignment-button.only-active {
+    margin-top: 10px;
+}
+
 .create-article-button {
     background: #51CB63 !important;
     color: #fff !important;
@@ -364,4 +414,39 @@
     font-family: 'Noto Sans', sans-serif;
     align-self: flex-end;
     margin-top: 20px;
+}
+
+/* No vertical margin when no articles */
+.create-article-button.no-articles {
+    margin-top: -10px;
+}
+
+/* Custom Tooltip Styling for better visibility */
+.ant-tooltip {
+    z-index: 9999 !important;
+}
+
+.ant-tooltip .ant-tooltip-content {
+    background-color: #191d1a !important;
+    border: 2px solid #51CB63 !important;
+    border-radius: 6px !important;
+}
+
+.ant-tooltip .ant-tooltip-arrow {
+    border-top-color: #51CB63 !important;
+    border-bottom-color: #51CB63 !important;
+    border-left-color: #51CB63 !important;
+    border-right-color: #51CB63 !important;
+}
+
+.ant-tooltip .ant-tooltip-inner {
+    background-color: #191d1a !important;
+    color: #ffffff !important;
+    font-family: 'Noto Sans', sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 300 !important;
+    padding: 10px 12px !important;
+    border-radius: 4px !important;
+    word-wrap: break-word;
+    max-width: 400px;
 }

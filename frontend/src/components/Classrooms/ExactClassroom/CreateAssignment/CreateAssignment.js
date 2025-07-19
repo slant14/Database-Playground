@@ -54,8 +54,8 @@ class CreateAssignment extends React.Component {
     const { title, description, openAt, closeAt } = this.state;
     if (title === "") {
       notification.warning({
-        message: 'Classroom creation failed',
-        description: 'Please, specify Classroom name',
+        message: 'Assignment creation failed',
+        description: 'Please, specify Assignment name',
         placement: 'bottomRight',
         duration: 3,
       });
@@ -63,19 +63,62 @@ class CreateAssignment extends React.Component {
     }
     if (description === "") {
       notification.warning({
-        message: 'Classroom creation failed',
-        description: 'Please, specify Classroom description',
+        message: 'Assignment creation failed',
+        description: 'Please, specify Assignment description',
         placement: 'bottomRight',
         duration: 3,
       });
       return;
     }
-    const newAssignment = await createAssignment(
-      title, description, openAt, closeAt, this.props.classroomID
-    );
-    if (newAssignment && this.props.onAssignmentCreated) {
-      this.props.onAssignmentCreated();
-      localStorage.removeItem('createAssignmentDraft');
+    if (!openAt) {
+      notification.warning({
+        message: 'Assignment creation failed',
+        description: 'Please, specify Assignment open date and time',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+    if (!closeAt) {
+      notification.warning({
+        message: 'Assignment creation failed',
+        description: 'Please, specify Assignment close date and time',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+    if (new Date(openAt) >= new Date(closeAt)) {
+      notification.warning({
+        message: 'Assignment creation failed',
+        description: 'Close date and time must be after open date and time',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+    
+    try {
+      const newAssignment = await createAssignment(
+        title, description, openAt, closeAt, this.props.classroomID
+      );
+      if (newAssignment && this.props.onAssignmentCreated) {
+        notification.success({
+          message: 'Assignment created successfully',
+          description: `Assignment "${title}" has been created`,
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        this.props.onAssignmentCreated();
+        localStorage.removeItem('createAssignmentDraft');
+      }
+    } catch (error) {
+      notification.error({
+        message: 'Assignment creation failed',
+        description: error.message || 'Failed to create assignment. Please try again',
+        placement: 'bottomRight',
+        duration: 4,
+      });
     }
   }
 
@@ -105,15 +148,16 @@ class CreateAssignment extends React.Component {
           />
         
           <p>Assignment Description:</p>
-          <Input
+          <Input.TextArea
             name="description"
             placeholder="Description"
             className="classroomDescription"
             value={this.state.description}
             onChange={this.handleInputChange}
+            rows={4}
           />
         
-          <div style={{ marginBottom: "10px" }}>
+          <div style={{ marginBottom: "5px" }}>
             <label>Open Date & Time:</label>
             <DatePicker
               showTime
@@ -124,7 +168,7 @@ class CreateAssignment extends React.Component {
             />
           </div>
         
-          <div style={{ marginBottom: "10px" }}>
+          <div style={{ marginBottom: "5px" }}>
             <label>Close Date & Time:</label>
             <DatePicker
               showTime

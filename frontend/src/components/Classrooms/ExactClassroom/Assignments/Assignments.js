@@ -35,12 +35,8 @@ class Assignments extends React.Component {
         </div>
         <div className="this-row">
             <div className="assignment-period">
-              <span>
-                <span style={{color:"#51CB63"}}>Open:</span> {this.props.formatDateTime(assignment.open_at)}
-              </span>
-              <span>
-                <span style={{color:"#51CB63"}}>Due:</span> {this.props.formatDateTime(assignment.close_at)}
-              </span>
+              <span style={{color:"#51CB63"}}>Open:</span> {this.props.formatDateTime(assignment.open_at)}
+              <span style={{color:"#51CB63"}}>Due:</span> {this.props.formatDateTime(assignment.close_at)}
             </div>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", flex: 1 }}>
               <input

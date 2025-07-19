@@ -55,7 +55,6 @@ class App extends React.Component {
       isModalOpen: false,
       activeButton: lastPage || 'home',
       selectedClassroom: selectedClassroom,
-      roleInClassroom: null,
       isAddClassroomModalOpen: false,
       allAssignments: [],
       postgresTableInfo: [],
@@ -305,7 +304,6 @@ class App extends React.Component {
             <ExactClassroom
               ref={this.exactClassroomRef}
               classroom={this.state.selectedClassroom}
-              chosenRole={this.state.roleInClassroom}
               handleAllAssignmentsClick={this.handleAllAssignmentsClick}              
               handleAllArticlesClick={this.handleAllArticlesClick}
               setAssignmentModalOpen={this.setAssignmentModalOpen}
@@ -699,10 +697,10 @@ class App extends React.Component {
     return Math.floor(Math.random() * max);
   }
 
-  selectClassroom = (classroom, chosenRole) => {
+  selectClassroom = (classroom) => {
     console.log('Selecting classroom:', classroom);
     if (classroom && classroom.id) {
-      this.setState({ selectedClassroom: classroom, roleInClassroom: chosenRole });
+      this.setState({ selectedClassroom: classroom });
       setToLocalStorage("selectedClassroom", classroom);
       this.setPage("exactClassroom");
       setToLocalStorage("lastPage", "exactClassroom");

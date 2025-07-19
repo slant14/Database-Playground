@@ -82,6 +82,9 @@ class CodeInput extends React.Component {
         } else if (chosenDb === 'PostgreSQL') {
             isValidFile = file.name.endsWith('.sql') || file.type === 'application/sql' || file.name.endsWith('.txt') || file.type === 'text/plain';
             errorMessage = 'For PostgreSQL you can only upload .sql and .txt files';
+        } else if (chosenDb === 'MongoDB') {
+            isValidFile = file.type === 'text/plain' || file.name.endsWith('.txt');
+            errorMessage = 'For MongoDB you can only upload .txt files';
         } else {
             notification.warning({
                 message: 'Select database',

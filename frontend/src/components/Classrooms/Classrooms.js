@@ -94,7 +94,7 @@ class ClassRooms extends React.Component {
     this.handleModalClose();
     await this.loadClassrooms();
     if (classroom) {
-      this.props.selectClassroom(classroom, this.state.chosenRole);
+      this.props.selectClassroom(classroom);
     }
   };
 
@@ -216,7 +216,7 @@ class ClassRooms extends React.Component {
                <div
                 style={{
                   width: "500px",
-                  height: "120px",
+                  height: "100px",
                   borderTopLeftRadius: "14px",
                   borderTopRightRadius: "14px",
                   borderBottomLeftRadius: "0",

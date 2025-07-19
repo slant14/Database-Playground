@@ -53,24 +53,44 @@ class AddClassroom extends React.Component {
   async addClassroom() {
     const { title, description, tas, students, primaryInstructor } = this.state;
 
-    // Convert all IDs to strings for comparison
     const primaryId = String(primaryInstructor);
-    const taIds = tas.map(String);
-    const studentIds = students.map(String);
+    const taIds = tas.map(ta => String(ta.id));
+    const studentIds = students.map(student => String(student.id));
 
-    // Check for intersection
-    if (
-      taIds.includes(primaryId) ||
-      studentIds.includes(primaryId) ||
-      taIds.some(id => studentIds.includes(id))
-    ) {
-      notification.warning({
-        message: 'Classroom creation failed',
-        description: 'Primary Instructor, TAs, and Students must not overlap.',
-        placement: 'bottomRight',
-        duration: 3,
-      });
-      return;
+    const allRoles = [];
+    
+    if (primaryId) {
+      allRoles.push({ id: primaryId, role: 'Primary Instructor' });
+    }
+    
+    for (const id of taIds) {
+      if (allRoles.some(r => r.id === id)) {
+        const existingRole = allRoles.find(r => r.id === id).role;
+        console.log(`Role intersection detected: User ${id} already has role ${existingRole}`);
+        notification.warning({
+          message: 'Cannot create classroom',
+          description: `A user cannot have multiple roles. This user is already assigned as ${existingRole}.`,
+          placement: 'bottomRight',
+          duration: 4,
+        });
+        return;
+      }
+      allRoles.push({ id, role: 'TA' });
+    }
+    
+    for (const id of studentIds) {
+      if (allRoles.some(r => r.id === id)) {
+        const existingRole = allRoles.find(r => r.id === id).role;
+        console.log(`Role intersection detected: User ${id} already has role ${existingRole}`);
+        notification.warning({
+          message: 'Cannot create classroom',
+          description: `A user cannot have multiple roles. This user is already assigned as ${existingRole}`,
+          placement: 'bottomRight',
+          duration: 4,
+        });
+        return;
+      }
+      allRoles.push({ id, role: 'Student' });
     }
 
     if ( title === "") {
@@ -100,10 +120,26 @@ class AddClassroom extends React.Component {
       });
       return;
     }
-    const newClassroom = await createClassroom(title, description, tas, students, primaryInstructor);
-    if (newClassroom && this.props.onClassroomCreated) {
-      this.props.onClassroomCreated(newClassroom);
-      localStorage.removeItem('addClassroomDraft');
+    
+    try {
+      const newClassroom = await createClassroom(title, description, tas, students, primaryInstructor);
+      if (newClassroom && this.props.onClassroomCreated) {
+        notification.success({
+          message: 'Classroom created successfully',
+          description: `Classroom "${title}" has been created`,
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        this.props.onClassroomCreated(newClassroom);
+        localStorage.removeItem('addClassroomDraft');
+      }
+    } catch (error) {
+      notification.error({
+        message: 'Classroom creation failed',
+        description: error.message || 'Failed to create classroom. Please try again',
+        placement: 'bottomRight',
+        duration: 4,
+      });
     }
   };
 
@@ -137,12 +173,13 @@ class AddClassroom extends React.Component {
           />
 
           <p>Classroom Description:</p>
-          <Input
+          <Input.TextArea
             name="description"
             placeholder="Description"
             className="classroomDescription"
             value={this.state.description}
             onChange={this.handleInputChange}
+            rows={4}
           />
 
           <div className="primary-instructor-row">
@@ -151,18 +188,12 @@ class AddClassroom extends React.Component {
               value={instructorName}
               disabled
               style={{ 
-                width: "100%",
-                background: "#090f09", 
-                color: "#51CB63", 
-                border: "1px solid #51CB63",
-                cursor: "not-allowed"
-              }}
+                width: "100%", 
+                marginTop: "10px", 
+                background: "#191d1a", 
+                color: "#a2aab3", 
+                border: "1px solid #a2aab3" }}
               className="primary-instructor-input"
-              suffix={
-                <Text style={{ color: '#51CB63', fontSize: '12px' }}>
-                  ✓ You
-                </Text>
-              }
             />
           </div>
           

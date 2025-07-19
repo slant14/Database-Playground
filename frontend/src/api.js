@@ -348,7 +348,7 @@ export async function getTemplateList() {
 }
 
 export async function getMyRoleInClassroom(id) {
-  const res = await tokenUpdate(`${BASE_URL}/app/classroom/my/role/?classroom_id=${id}`, {
+  const res = await tokenUpdate(`${BASE_URL}/app/classrooms/my/role/?classroom_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

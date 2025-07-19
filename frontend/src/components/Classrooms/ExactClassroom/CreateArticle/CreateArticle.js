@@ -47,8 +47,8 @@ class CreateArticle extends React.Component {
     console.log({ title, description, authors });
     if ( title === "") {
       notification.warning({
-        message: 'Classroom creation failed',
-        description: 'Please, specify Classroom name',
+        message: 'Article creation failed',
+        description: 'Please, specify Article name',
         placement: 'bottomRight',
         duration: 3,
       });
@@ -56,18 +56,42 @@ class CreateArticle extends React.Component {
     } 
     if (description === "") {
       notification.warning({
-        message: 'Classroom creation failed',
-        description: 'Please, specify Classroom description',
+        message: 'Article creation failed',
+        description: 'Please, specify Article description',
         placement: 'bottomRight',
         duration: 3,
       });
       return;
     } 
-    console.log("Перед отправкой:", { title, description, authors, type: typeof authors, isArray: Array.isArray(authors) });
-    const newArticle = await createArticle(title, authors, description, this.props.classroomID);
-    if (newArticle && this.props.onArticleCreated) {
-      this.props.onArticleCreated();
-      localStorage.removeItem('createArticleDraft');
+    if (!authors || authors.length === 0) {
+      notification.warning({
+        message: 'Article creation failed',
+        description: 'Please, specify at least one Author',
+        placement: 'bottomRight',
+        duration: 3,
+      });
+      return;
+    }
+    
+    try {
+      const newArticle = await createArticle(title, authors, description, this.props.classroomID);
+      if (newArticle && this.props.onArticleCreated) {
+        notification.success({
+          message: 'Article created successfully',
+          description: `Article "${title}" has been created`,
+          placement: 'bottomRight',
+          duration: 3,
+        });
+        this.props.onArticleCreated();
+        localStorage.removeItem('createArticleDraft');
+      }
+    } catch (error) {
+      notification.error({
+        message: 'Article creation failed',
+        description: error.message || 'Failed to create article. Please try again',
+        placement: 'bottomRight',
+        duration: 4,
+      });
     }
   }
 
@@ -100,12 +124,13 @@ class CreateArticle extends React.Component {
           />
 
           <p>Article Description:</p>
-          <Input
+          <Input.TextArea
             name="description"
             placeholder="Description"
             className="classroomDescription"
             value={this.state.description}
             onChange={this.handleInputChange}
+            rows={4}
           />
 
           <div className="tas-row">

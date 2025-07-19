@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Button } from "antd";
+import { Typography, Button, Tooltip } from "antd";
 import { FaRegFileCode } from "react-icons/fa6";
 import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
 import { MdOutlineArticle } from "react-icons/md";
@@ -8,7 +8,7 @@ import Assignments from './Assignments/Assignments';
 import Articles from './Articles/Articles';
 import CreateArticle from "./CreateArticle/CreateArticle"
 import CreateAssignment from "./CreateAssignment/CreateAssignment";
-import { getMyClassroomClassmates, getClassroomMyAssignments, getMyClassroomArticles } from '../../../api';
+import { getMyClassroomClassmates, getClassroomMyAssignments, getMyClassroomArticles, getMyClassrooms } from '../../../api';
 
 const { Title, Paragraph, Text, Link } = Typography;
 
@@ -17,6 +17,7 @@ class ExactClassroom extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      role: "",
       students: [],
       assignmentsFinished: [],
       assignmentsActive: [],
@@ -59,15 +60,40 @@ class ExactClassroom extends React.Component {
     }
   };
 
+  async getRoleInClassroom(classroomId) {
+    try {
+      const allClassrooms = await getMyClassrooms();
+      const classroomsPrimaryInstructor = allClassrooms.primary_instructor || [];
+      const classroomsTA = allClassrooms.TA || [];
+      const classroomsStudents = allClassrooms.student || [];
+
+      if (classroomsPrimaryInstructor.some(c => c.id === classroomId)) {
+        return "primary_instructor";
+      }
+      if (classroomsTA.some(c => c.id === classroomId)) {
+        return "TA";
+      }
+      if (classroomsStudents.some(c => c.id === classroomId)) {
+        return "student";
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Failed to determine role:", error);
+      return null;
+    }
+  }
+
   async componentDidMount() {
       if (this.props.classroom && this.props.classroom.id) {
         try {
+          const role = await this.getRoleInClassroom(this.props.classroom.id);
           const students = await getMyClassroomClassmates(this.props.classroom.id);
           const allAssignments = await getClassroomMyAssignments(this.props.classroom.id);
           const assignmentsActive = allAssignments.not_submitted;
           const assignmentsFinished = allAssignments.finished;
           const articles = await getMyClassroomArticles(this.props.classroom.id)
-          this.setState({ students, assignmentsActive, assignmentsFinished, articles });
+          this.setState({ role, students, assignmentsActive, assignmentsFinished, articles });
         } catch (error) {
           console.error("Failed to fetch students:", error);
         }
@@ -244,19 +270,14 @@ class ExactClassroom extends React.Component {
 
 
   renderAssignmentsBlock(assignments, type, isActive) {
-    const label = type === "Active" ? "Active Assignments" : "Finished Assignments";
-    const emptyLabel = type === "Active"
-      ? "There are no Active Assignments"
-      : "There are no Finished Assignments";
+    const label = type === "Active" ? "Active" : "Finished";
     const sectionRef = isActive ? this.assignmentSectionActiveRef : this.assignmentSectionFinishedRef;
     const scrollLeft = () => this.scrollAssignmentsLeft(isActive);
     const scrollRight = () => this.scrollAssignmentsRight(isActive);
     const handleAllClick = () => this.handleAllAssignmentsClick(assignments, isActive);
   
     if (assignments.length === 0) {
-      return (
-        <Text className="assignment-label-no">{emptyLabel}</Text>
-      );
+      return
     }
   
     return (
@@ -353,6 +374,8 @@ class ExactClassroom extends React.Component {
 
   render() {
     const classroom = this.props.classroom;
+
+    console.log('Chosen role:', this.state.role);
     
     if (!classroom) {
       return (
@@ -377,23 +400,47 @@ class ExactClassroom extends React.Component {
       <div className="whole">
         <div className="whole-class">
           <div>
-            <Title style={{
-              marginTop: 30,
-              color: "#fff",
-              fontSize: 30,
-              fontFamily: "'Noto Sans', sans-serif",
-              fontWeight: 500,
-              marginBottom: 10,
-              marginLeft: 40,
-            }}>{classroom.title}</Title>
+            <Tooltip 
+              title={classroom.title} 
+              placement="right"
+              overlayClassName="custom-tooltip"
+              mouseEnterDelay={0.3}
+              mouseLeaveDelay={0.1}
+            >
+              <Title className="classroom-title" style={{
+                marginTop: 30,
+                color: "#fff",
+                fontSize: 30,
+                fontFamily: "'Noto Sans', sans-serif",
+                fontWeight: 500,
+                marginBottom: 10,
+                marginLeft: 40,
+              }}>{classroom.title}</Title>
+            </Tooltip>
 
             <div className="classroom-description">
-              <span className="classroom-desc-two-lines">
+              <Tooltip 
+                title={classroom.primary_instructor_name} 
+                placement="right" 
+                overlayClassName="custom-tooltip"
+                mouseEnterDelay={0.3}
+                mouseLeaveDelay={0.1}
+              >
+                <span className="classroom-desc-two-lines">
                   <span className="class-label">Primary Instructor:</span> {classroom.primary_instructor_name}
               </span>
-              <span className="classroom-desc-two-lines">
-                <span className="class-info">Description:</span> {classroom.description}
-              </span>
+              </Tooltip>
+              <Tooltip 
+                title={classroom.description} 
+                placement="right" 
+                overlayClassName="custom-tooltip"
+                mouseEnterDelay={0.3}
+                mouseLeaveDelay={0.1}
+              >
+                <span className="classroom-desc-two-lines">
+                  <span className="class-info">Description:</span> {classroom.description}
+                </span>
+              </Tooltip>
               <span className="classroom-desc-two-lines">
                 <span className="class-label">Number of Students:</span> {classroom.capacity}
               </span>
@@ -426,24 +473,37 @@ class ExactClassroom extends React.Component {
           </div>
           
           <div className="classroom-assignments">
+            <Text className="Assignment-label">Assignments</Text>
+
             {this.renderAssignmentsBlock(this.state.assignmentsActive, "Active", true)}
             {this.renderAssignmentsBlock(this.state.assignmentsFinished, "Finished", false)}
-            <Button className="create-assignment-button" onClick={() => this.handleCreateAssignmentModalOpen()}>  
+
+            {(this.state.role === "primary_instructor" || this.state.role === "TA") && (
+              <Button 
+                className={`create-assignment-button ${
+                  this.state.assignmentsFinished.length > 0 ? 'after-finished' : 'only-active'
+                }`}
+                onClick={() => this.handleCreateAssignmentModalOpen()}
+              >  
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                   <span style={{ position: "relative", top: "-1px" }}>
                       Add Assignment
                   </span>
                 </span>
               </Button>
+            )}
           </div>
 
           <div className="blog-section">
             <div className="blog-header">
                 <Text className="blog-label">Blog</Text>
-                <span className="blog-see-more" 
+                {this.state.articles.length != 0 && (
+                  <span className="blog-see-more" 
                   style={{ cursor: "pointer" }}
                   onClick={() => this.handleAllArticlesClick(this.state.articles)}
                 >See more</span>
+                )}
+                
               </div>
 
             <div className="articles-list">
@@ -463,17 +523,13 @@ class ExactClassroom extends React.Component {
               ))}
             </div> 
             
-            <Button className="create-article-button" onClick={() => this.handleCreateArticleModalOpen()}>  
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span style={{ position: "relative", top: "-1px" }}>
-                  Add Article
-                </span>
-              </span>
-            </Button>
-
-            {/*
-            {(this.props.chosenRole === "Primary Intructor" || this.props.chosenRole === "TA") && (
-              <Button className="all-button">  
+            {(this.state.role === "primary_instructor" || this.state.role === "TA") && (
+              <Button 
+                className={`create-article-button ${
+                  this.state.articles.length === 0 ? 'no-articles' : ''
+                }`}
+                onClick={() => this.handleCreateArticleModalOpen()}
+              >  
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                   <span style={{ position: "relative", top: "-1px" }}>
                       Add Article
@@ -481,7 +537,6 @@ class ExactClassroom extends React.Component {
                 </span>
               </Button>
             )}
-              */}
 
           </div>
         </div>
