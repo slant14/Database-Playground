@@ -85,7 +85,7 @@ class AllAssignments extends React.Component {
           fontSize: 45,
           fontFamily: "'Noto Sans', sans-serif",
           fontWeight: 600,
-          marginBottom: 10
+          marginBottom: 30
         }}>
           {isActive ? "Active Assignments" : "Finished Assignments"}
         </Title>
