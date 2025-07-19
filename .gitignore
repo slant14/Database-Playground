@@ -191,3 +191,5 @@ mongo_data
 .idea
 
 /backend/playground/
+
+/backend/core/media/
