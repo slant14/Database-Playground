@@ -31,13 +31,7 @@ class CustomUserAdmin(UserAdmin):
         )
 
 admin.site.register(User)
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'school', 'gpa_display', 'avatar')
-
-    def gpa_display(self, obj):
-        return obj.gpa
-    gpa_display.short_description = 'GPA'
+admin.site.register(Profile)
 
 #admin.site.register(Classroom)
 #admin.site.register(Topic)
@@ -46,12 +40,38 @@ class ProfileAdmin(admin.ModelAdmin):
 class ClassroomAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'primary_instructor', 'capacity', 'created_date')
     search_fields = ('title',)
-    exclude = ('image',)
+
+    def save_model(self, request, obj, form, change):
+        is_new = obj.pk is None
+        super().save_model(request, obj, form, change)
+
+        if is_new:
+            # Создаём Enrollment для primary_instructor
+            Enrollment.objects.get_or_create(
+                student=obj.primary_instructor,
+                classroom=obj
+            )
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+
+        # Создаём Enrollment для всех TA
+        for ta in form.instance.TA.all():
+            Enrollment.objects.get_or_create(
+                student=ta,
+                classroom=form.instance
+            )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "primary_instructor":
+            kwargs["queryset"] = Profile.objects.select_related('user').all()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "TA":
-            kwargs["queryset"] = Profile.objects.all()
+            kwargs["queryset"] = Profile.objects.select_related('user').all()
         return super().formfield_for_manytomany(db_field, request, **kwargs)
+
 
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):

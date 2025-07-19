@@ -284,21 +284,21 @@ class Account extends React.Component {
                   {/* Дополнительная статистика */}
                   <div style={{ 
                     marginTop: '30px', 
-                    marginRight: '30px',
+                    marginLeft: '5px',
                     width: '100%', 
                     display: 'flex', 
                     justifyContent: 'center',
                     gap: '40px'
                   }}>
                     <div style={{ textAlign: 'center' }}>
-                      <FaBook style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block' }} />
+                      <FaBook style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block', marginLeft: '13px' }} />
                       <div>
                         <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>{classroomsCount}</Text>
                         <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>Classes</Text>
                       </div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <FaSave style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block' }} />
+                      <FaSave style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block', marginLeft: '23px' }} />
                       <div>
                         <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>{templatesCount}</Text>
                         <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>Templates</Text>
