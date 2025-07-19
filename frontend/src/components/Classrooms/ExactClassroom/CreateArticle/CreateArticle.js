@@ -90,7 +90,7 @@ class CreateArticle extends React.Component {
           ref={el => this.myForm = el}
           onSubmit={e => { e.preventDefault(); this.addArticle(); }}
         >
-          <p>Classroom Title:</p>
+          <p>Article Title:</p>
           <Input
             name="title"
             placeholder="Title"
@@ -99,7 +99,7 @@ class CreateArticle extends React.Component {
             onChange={this.handleInputChange}
           />
 
-          <p>Classroom Description:</p>
+          <p>Article Description:</p>
           <Input
             name="description"
             placeholder="Description"
@@ -111,7 +111,7 @@ class CreateArticle extends React.Component {
           <div className="tas-row">
             <label>Authors:</label>
             <Select
-              placeholder="Select teacher assistants"
+              placeholder="Select uathors"
               mode="multiple"
               style={{ width: "100%" }}
               value={this.state.authors}

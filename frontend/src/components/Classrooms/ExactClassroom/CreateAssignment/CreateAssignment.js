@@ -86,7 +86,7 @@ class CreateAssignment extends React.Component {
         width={800}
       >
         <form ref={el => this.myForm = el}>
-          <p>Classroom Title:</p>
+          <p>Assignment Title:</p>
           <Input
             name="title"
             placeholder="Title"
@@ -95,7 +95,7 @@ class CreateAssignment extends React.Component {
             onChange={this.handleInputChange}
           />
         
-          <p>Classroom Description:</p>
+          <p>Assignment Description:</p>
           <Input
             name="description"
             placeholder="Description"
