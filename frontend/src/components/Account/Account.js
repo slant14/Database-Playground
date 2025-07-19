@@ -1,9 +1,10 @@
 import React from "react";
 import { Button, Typography, Avatar, Card, Row, Col, Progress, notification } from "antd";
 import { UserOutlined, EditOutlined, DatabaseOutlined, CodeOutlined, SearchOutlined } from "@ant-design/icons";
-import { getMyProfile, editAvatar } from '../../api'
-import { MdAssignment } from "react-icons/md";
+import { getMyProfile, editAvatar, getMyClassrooms, getTemplateList } from '../../api'
 import EditModal from "./EditModal";
+import { FaSave } from "react-icons/fa";
+import { FaBook } from "react-icons/fa";
 
 import "./Account.css";
 
@@ -14,12 +15,15 @@ class Account extends React.Component {
     super(props);
     this.state = {
       profile: null,
-      loading: true
+      loading: true,
+      classroomsCount: 0,
+      templatesCount: 0,
     };
   }
 
   componentDidMount() {
     this.getProfile();
+    this.getStatistics();
   }
 
   getProfile = () => {
@@ -33,6 +37,32 @@ class Account extends React.Component {
         console.log("Account: Error getting profile", error);
         this.setState({ loading: false });
       })
+  }
+
+  getStatistics = () => {
+    // Получаем количество классов (студент)
+    getMyClassrooms()
+      .then(data => {
+        console.log("Account: Classrooms data received:", data);
+        const studentClassrooms = data.student || [];
+        this.setState({ classroomsCount: studentClassrooms.length });
+      })
+      .catch(error => {
+        console.log("Account: Error getting classrooms", error);
+        this.setState({ classroomsCount: 0 });
+      });
+
+    // Получаем количество шаблонов
+    getTemplateList()
+      .then(data => {
+        console.log("Account: Templates data received:", data);
+        const templatesArray = Array.isArray(data) ? data : [];
+        this.setState({ templatesCount: templatesArray.length });
+      })
+      .catch(error => {
+        console.log("Account: Error getting templates", error);
+        this.setState({ templatesCount: 0 });
+      });
   }
 
   handleEditClick = () => {
@@ -106,13 +136,32 @@ class Account extends React.Component {
       });
   }
 
+  getGpaMessage = (gpaValue) => {
+    if (gpaValue === 5.0) {
+      return { text: 'Happy Hacking!', color: '#51CB63' }; // Зеленый для идеального GPA
+    } else if (gpaValue >= 4.0) {
+      return { text: 'Great Job!', color: '#52c41a' }; // Светло-зеленый для отличного GPA
+    } else if (gpaValue >= 3.0) {
+      return { text: 'Keep up the good work!', color: '#fadb14' }; // Желтый для хорошего GPA
+    } else if (gpaValue >= 2.0) {
+      return { text: 'It\'s okay to make mistakes!', color: '#fa8c16' }; // Оранжевый для удовлетворительного GPA
+    } else if (gpaValue >= 1) {
+      return { text: 'See you on the retake!', color: '#ff7875' }; // Светло-красный для низкого GPA
+    } else if (gpaValue < 1 && gpaValue !== 0) {
+      return { text: 'Drop is coming!', color: '#ff4d4f' }; // Красный для очень низкого GPA
+    } else {
+      return { text: 'Try classes!', color: '#8c8c8c' }; // Темно-серый для отсутствия GPA
+    }
+  }
+
   render() {
     const { user } = this.props;
-    const { profile, loading } = this.state;
+    const { profile, loading, classroomsCount, templatesCount } = this.state;
 
     // GPA значение от 0 до 5
     const gpaValue = profile?.gpa || 0; // Получаем значение GPA из профиля
     const gpaPercentage = (gpaValue / 5) * 100; // Конвертируем в проценты для Progress
+    const gpaMessage = this.getGpaMessage(gpaValue); // Получаем сообщение и цвет для GPA
 
     return (
       <div className="account-page">
@@ -218,7 +267,7 @@ class Account extends React.Component {
                     strokeWidth={12}
                     format={() => (
                       <div style={{ textAlign: 'center' }}>
-                        <div style={{ color: '#51CB63', fontSize: '32px', fontWeight: 700, lineHeight: 1 }}>
+                        <div style={{ color: gpaMessage.color, fontSize: '21px', fontWeight: 700, lineHeight: 1 }}>
                           {gpaValue.toFixed(1)}
                         </div>
                         <div style={{ color: '#a2aab3', fontSize: '14px', fontWeight: 400 }}>
@@ -228,14 +277,8 @@ class Account extends React.Component {
                     )}
                   />
                   
-                  <Text className="gauge-value">
-                    {gpaValue === 5.0 ? 'Happy Hacking!' :
-                     gpaValue >= 4.0 ? 'Great Job!' : 
-                     gpaValue >= 3.0 ? 'Keep up the good work!' : 
-                     gpaValue >= 2.0 ? 'It\'s okay to make mistakes!' : 
-                     gpaValue >= 1 ? 'See you on the retake!' :
-                     gpaValue < 1 && gpaValue !== 0 ? 'Drop is coming!' :
-                      'Try classes!'}
+                  <Text style={{ color: gpaMessage.color, fontSize: '32px', fontWeight: '500', textAlign: 'center', display: 'block', marginTop: '20px' }}>
+                    {gpaMessage.text}
                   </Text>
                   
                   {/* Дополнительная статистика */}
@@ -245,27 +288,20 @@ class Account extends React.Component {
                     width: '100%', 
                     display: 'flex', 
                     justifyContent: 'center',
-                    gap: '30px'
+                    gap: '40px'
                   }}>
                     <div style={{ textAlign: 'center' }}>
-                      <DatabaseOutlined style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block' }} />
+                      <FaBook style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block' }} />
                       <div>
-                        <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>142</Text>
-                        <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>Queries</Text>
+                        <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>{classroomsCount}</Text>
+                        <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>Classes</Text>
                       </div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <CodeOutlined style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block' }} />
+                      <FaSave style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block' }} />
                       <div>
-                        <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>28</Text>
+                        <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>{templatesCount}</Text>
                         <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>Templates</Text>
-                      </div>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <MdAssignment style={{ fontSize: '24px', color: '#51CB63', marginBottom: '4px', display: 'block', marginLeft: '4px' }} />
-                      <div>
-                        <Text className="info-value" style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}>15</Text>
-                        <Text className="info-label" style={{ whiteSpace: 'nowrap' }}>H/W</Text>
                       </div>
                     </div>
                   </div>

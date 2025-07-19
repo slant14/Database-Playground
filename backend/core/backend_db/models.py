@@ -134,7 +134,7 @@ class Enrollment(models.Model):
         null=True, 
         blank=True,
         validators=[
-            MinValueValidator(0.0, message='Grade cannot be less than 0.0'),
+            MinValueValidator(0.5, message='Grade cannot be less than 0.5'),
             MaxValueValidator(5.0, message='Grade cannot be greater than 5.0')
         ]
     )

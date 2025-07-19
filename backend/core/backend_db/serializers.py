@@ -72,8 +72,8 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         fields = ['id', 'student', 'student_name', 'student_email', 'classroom', 'grade', 'enrollment_date']
     def validate_grade(self, value):
         if value is not None:
-            if value < 0.0 or value > 5.0:
-                raise serializers.ValidationError("Grade must be between 0.0 and 5.0")
+            if value < 0.5 or value > 5.0:
+                raise serializers.ValidationError("Grade must be between 0.5 and 5.0")
         return value
 
 # class CourseSerializer(serializers.ModelSerializer):
