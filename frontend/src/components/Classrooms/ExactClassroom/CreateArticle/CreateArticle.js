@@ -23,8 +23,11 @@ class CreateArticle extends React.Component {
     }
 
     try {
-      const users = await getProfiles();
-      this.setState({ users });
+      const allUsers = await getProfiles();
+      const filteredUsers = allUsers.filter(user => 
+         user.user_name !== 'admin'
+      );
+      this.setState({ users: filteredUsers });
     } catch (error) {
       console.error("Failed to fetch users:", error);
     }

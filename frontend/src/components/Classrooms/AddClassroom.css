@@ -105,6 +105,7 @@
     color: #fff !important;
     border: none !important;
     border-radius: 6px !important;
+    box-shadow: none !important;
 }
 
 .addClassroom-modal .ant-select-selection-placeholder {

@@ -91,7 +91,9 @@
 .addClassroom-modal .ant-select-selection-item {
     background: #191d1a !important;
     color: #fff !important;
-    border: 1px solid #51CB63 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
 }
 
 /* Remove border and styling from TextArea description */

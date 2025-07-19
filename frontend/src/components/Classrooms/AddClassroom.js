@@ -1,6 +1,6 @@
 import React from "react"
 import './AddClassroom.css';
-import { getProfiles, createClassroom } from '../../api';
+import { getProfiles, createClassroom, getMyProfile } from '../../api';
 import { Modal, Input, Typography, Select, Button, notification } from "antd";
 import { getCookie } from '../../utils';
 
@@ -13,7 +13,7 @@ class AddClassroom extends React.Component {
     this.state = {
       title: "",
       description: "",
-      primaryInstructor: this.props.id,
+      primaryInstructor: this.props.currentUserName,
       tas: [],
       students: [],
       users: [],
@@ -27,8 +27,26 @@ class AddClassroom extends React.Component {
     }
 
     try {
-      const users = await getProfiles();
-      this.setState({ users });
+      console.log('Fetching current user profile...');
+      const myProfile = await getMyProfile();
+      console.log('Current user profile received:', myProfile);
+      console.log('Profile ID:', myProfile?.id);
+      console.log('Profile structure:', Object.keys(myProfile || {}));
+      
+      const allUsers = await getProfiles();
+      
+      // Filter out admin users from dropdown options
+      const filteredUsers = allUsers.filter(user => 
+        user.user_name !== 'admin'
+      );
+      
+      // Set the primary instructor ID - check different possible field names
+      const instructorId = myProfile?.id || myProfile?.user_id || myProfile?.pk || myProfile?.user?.id;
+
+      this.setState({ 
+        users: filteredUsers, // Use filtered users without admins
+        primaryInstructor: instructorId // Set current user as primary instructor
+      });
     } catch (error) {
       console.error("Failed to fetch users:", error);
     }
@@ -54,9 +72,16 @@ class AddClassroom extends React.Component {
     const { title, description, tas, students, primaryInstructor } = this.state;
 
     const primaryId = String(primaryInstructor);
-    const taIds = tas.map(ta => String(ta.id));
-    const studentIds = students.map(student => String(student.id));
+    const taIds = tas.map(String);
+    const studentIds = students.map(String);
 
+    console.log('Primary Instructor Id:', primaryId);
+    for (const ta of taIds) {
+      console.log("TA IDS", ta)
+    }
+    for (const ta of studentIds) {
+      console.log("TA IDS", ta)
+    }
     const allRoles = [];
     
     if (primaryId) {
@@ -69,7 +94,7 @@ class AddClassroom extends React.Component {
         console.log(`Role intersection detected: User ${id} already has role ${existingRole}`);
         notification.warning({
           message: 'Cannot create classroom',
-          description: `A user cannot have multiple roles. This user is already assigned as ${existingRole}.`,
+          description: `A user cannot have multiple roles. This user is already assigned as ${existingRole}`,
           placement: 'bottomRight',
           duration: 4,
         });
