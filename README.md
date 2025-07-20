@@ -8,7 +8,7 @@
 
 This is free web-service for learning and testing different types of databases  
 Available on http://89.169.178.180:3000/  
-[Demo video](https://disk.yandex.com.am/i/3592sfysVX_rSA)  
+[Demo video](https://disk.yandex.ru/i/LDXjYeudHF7tkg)  
 
 ## Body
 ### Project Goal(s) and Description
