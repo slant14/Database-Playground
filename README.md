@@ -231,7 +231,7 @@ docker-compose up
 
 [Architecture documentation](./docs/architecture/architecture.md)
 
-[ChromaDB Parser documentation](./backend-46/core/chroma/Parser/README.md)
+[ChromaDB Parser documentation](./backend-46/core/chroma/Parser/README.md) (for customer)  
 
 ---
 
