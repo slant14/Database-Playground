@@ -35,9 +35,24 @@ class AllAssignments extends React.Component {
     }
   };
 
+  // Handle synchronization with App component modal states
+  componentDidUpdate(prevProps, prevState) {
+    // Sync article modal state
+    if (prevProps.isArticleModalOpen && !this.props.isArticleModalOpen && this.state.isArticleModalOpen) {
+      this.setState({ isArticleModalOpen: false, selectedArticle: null });
+    }
+    if (!prevProps.isArticleModalOpen && this.props.isArticleModalOpen && !this.state.isArticleModalOpen) {
+      this.setState({ isArticleModalOpen: true });
+    }
+  }
+
+  closeArticleModal = () => {
+    this.setState({ isArticleModalOpen: false, selectedArticle: null });
+  };
+
+
   render() {
     const { articles } = this.props
-    const { isArticleModalOpen, selectedArticle} = this.state;
     if (articles.length === 0) {
       return (
         <div className="classrooms">

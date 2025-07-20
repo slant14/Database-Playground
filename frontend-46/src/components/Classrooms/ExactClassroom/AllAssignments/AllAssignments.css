@@ -65,16 +65,10 @@
     margin-bottom: 10px;
 }
 
-.allAssignment-info-text {
+.assignment-info-text {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
-}
-
-.allAssignment-info-text span {
-    display: block;
-    line-height: 1.4;
 }
 
 .allAssignment-button {

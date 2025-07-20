@@ -37,6 +37,21 @@ class AllAssignments extends React.Component {
     }
   };
 
+  // Handle synchronization with App component modal states
+  componentDidUpdate(prevProps, prevState) {
+    // Sync assignment modal state
+    if (prevProps.isAssignmentModalOpen && !this.props.isAssignmentModalOpen && this.state.isAssignmentModalOpen) {
+      this.setState({ isAssignmentModalOpen: false, selectedAssignment: null });
+    }
+    if (!prevProps.isAssignmentModalOpen && this.props.isAssignmentModalOpen && !this.state.isAssignmentModalOpen) {
+      this.setState({ isAssignmentModalOpen: true });
+    }
+  }
+
+  closeAssignmentModal = () => {
+    this.setState({ isAssignmentModalOpen: false, selectedAssignment: null });
+  };
+
   handleAssignmentFileDirectUpload = (e, assignment) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -111,14 +126,14 @@ class AllAssignments extends React.Component {
                 <span className="assignment-title">{el.title}</span>
               </div>
               <div className="allAssignment-info-row">
-                <div className="allAssignment-info-text">
-                  <span>
+                <div className="assignment-info-text">
+                    <span>
                       <span>Open:</span> {this.formatDateTime(el.open_at)}
                     </span>
                     <span>
                       <span>Due:</span> {this.formatDateTime(el.close_at)}
                     </span>
-                </div>
+                  </div>
                 <input
                   type="file"
                   style={{ display: "none" }}
