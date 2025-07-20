@@ -57,6 +57,7 @@ The real problem is that such tools take a huge amount of time to install. So, w
 1. Separated Chroma to a different service (container) for easy excluding it from the whole project and make a possibility to test something without long wait
 2. Increased the maximum time of SSH connection and command execution for GitHub Actions to 1 hour
 3. Used docker built-in caching to avoid re-installing of packages.
+   
 ##### Big differences from conventional databases
 Firstly, we did a big work to create simple and understandable documentation. Secondly, we tried to provide hard Chroma functional in a way with simple one-line commands
 ##### Lack of language
