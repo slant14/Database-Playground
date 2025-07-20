@@ -174,11 +174,27 @@ Then go to
 
 ### Project Installation / Deployment instructions
 
-To deploy the project locally:  
+To deploy the project start with:  
 ```sh
 docker-compose up --build
 ```
-To deploy the project on the server:  
+To deploy the project on the server you must specify server IP:  
+```sh
+docker-compose build --build-arg REACT_APP_API_URL=http://your-server-ip:8000  
+docker-compose up  
+```
+After project set up, you will probably face migration problems. To fix themexecute the following without stopping containers:  
+```sh
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+\q
+```
+Then delete all migrations and redo:  
+Locally:
+```sh
+docker-compose up --build
+```
+On the server:  
 ```sh
 docker-compose build --build-arg REACT_APP_API_URL=http://your-server-ip:8000  
 docker-compose up  
