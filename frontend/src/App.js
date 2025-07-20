@@ -126,45 +126,45 @@ class App extends React.Component {
   };
 
   handlePopState = (event) => {
-      if (this.state.isModalOpen) {
-        this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
-        return;
+    if (this.state.isModalOpen) {
+      this.setState({ isModalOpen: false, activeButton: this.lastActiveButton });
+      return;
+    }
+    if (this.state.isAddClassroomModalOpen) {
+      this.setState({ isAddClassroomModalOpen: false });
+      if (this.classroomsRef.current) {
+        this.classroomsRef.current.closeModal();
       }
-      if (this.state.isAddClassroomModalOpen) {
-        this.setState({ isAddClassroomModalOpen: false });
-        if (this.classroomsRef.current) {
-          this.classroomsRef.current.closeModal();
-        }
-        return;
+      return;
+    }
+    if (this.state.isArticleModalOpen) {
+      this.setState({ isArticleModalOpen: false });
+      if (this.exactClassroomRef.current) {
+        this.exactClassroomRef.current.closeArticleModal();
       }
-      if (this.state.isArticleModalOpen) {
-        this.setState({ isArticleModalOpen: false });
-        if (this.exactClassroomRef.current) {
-          this.exactClassroomRef.current.closeArticleModal();
-        }
-        return;
+      return;
+    }
+    if (this.state.isAssignmentModalOpen) {
+      this.setState({ isAssignmentModalOpen: false });
+      if (this.exactClassroomRef.current) {
+        this.exactClassroomRef.current.closeAssignmentModal();
       }
-      if (this.state.isAssignmentModalOpen) {
-        this.setState({ isAssignmentModalOpen: false });
-        if (this.exactClassroomRef.current) {
-          this.exactClassroomRef.current.closeAssignmentModal();
-        }
-        return;
+      return;
+    }
+    if (this.state.isCreateAssignmentModalOpen) {
+      this.setState({ isCreateAssignmentModalOpen: false });
+      if (this.exactClassroomRef.current) {
+        this.exactClassroomRef.current.closeCreateAssignmentModal();
       }
-      if (this.state.isCreateAssignmentModalOpen) {
-        this.setState({ isCreateAssignmentModalOpen: false });
-        if (this.exactClassroomRef.current) {
-          this.exactClassroomRef.current.closeCreateAssignmentModal();
-        }
-        return;
+      return;
+    }
+    if (this.state.isCreateArticleModalOpen) {
+      this.setState({ isCreateArticleModalOpen: false });
+      if (this.exactClassroomRef.current) {
+        this.exactClassroomRef.current.closeCreateArticleModal();
       }
-      if (this.state.isCreateArticleModalOpen) {
-        this.setState({ isCreateArticleModalOpen: false });
-        if (this.exactClassroomRef.current) {
-          this.exactClassroomRef.current.closeCreateArticleModal();
-        }
-        return;
-      }
+      return;
+    }
 
     if (this.state.isHintModalOpen) {
       if (this.codeRef.current) {
@@ -268,13 +268,13 @@ class App extends React.Component {
       case "classrooms":
         return (
           <div>
-            <ClassRooms 
-              ref={this.classroomsRef} 
+            <ClassRooms
+              ref={this.classroomsRef}
               selectClassroom={this.selectClassroom}
               setAddClassroomModalOpen={this.setAddClassroomModalOpen}
               isAddClassroomModalOpen={this.state.isAddClassroomModalOpen}
-              currentUserName={this.state.user.login || getCookie("login")} 
-             />
+              currentUserName={this.state.user.login || getCookie("login")}
+            />
           </div>);
       case "exactClassroom":
         if (!this.state.selectedClassroom) {
@@ -304,7 +304,7 @@ class App extends React.Component {
             <ExactClassroom
               ref={this.exactClassroomRef}
               classroom={this.state.selectedClassroom}
-              handleAllAssignmentsClick={this.handleAllAssignmentsClick}              
+              handleAllAssignmentsClick={this.handleAllAssignmentsClick}
               handleAllArticlesClick={this.handleAllArticlesClick}
               setAssignmentModalOpen={this.setAssignmentModalOpen}
               setArticleModalOpen={this.setArticleModalOpen}
@@ -314,7 +314,7 @@ class App extends React.Component {
               isArticleModalOpen={this.state.isArticleModalOpen}
               isCreateAssignmentModalOpen={this.state.isCreateAssignmentModalOpen}
               isCreateArticleModalOpen={this.state.isCreateArticleModalOpen}
-              />
+            />
           </div>
         )
       case "allAssignments":
@@ -356,8 +356,8 @@ class App extends React.Component {
       case "acc":
         return (
           <div>
-            <Account 
-              user={this.state.user} 
+            <Account
+              user={this.state.user}
               logOut={this.logOut}
               setEditModalOpen={this.setEditModalOpen}
               isEditModalOpen={this.state.isEditModalOpen}
@@ -444,6 +444,16 @@ class App extends React.Component {
       token: token,
       refresh: refresh_token,
     }
+    createPostgresTable({})
+      .then(() => {
+        return getPostgresTable();
+      })
+      .then(data => {
+        this.setState({ postgresTableInfo: data.tables });
+      })
+      .catch(error => {
+        console.error("Error creating database:", error);
+      });
     this.setState({ isLogin: true, user: user }, () => {
       // Обновляем данные в компонентах после авторизации
       this.handlePostLoginUpdate();
@@ -768,6 +778,6 @@ class App extends React.Component {
       isCreateAssignmentModalOpen: isOpen
     });
   }
-} 
+}
 
 export default App;
