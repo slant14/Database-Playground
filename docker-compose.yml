@@ -2,7 +2,7 @@ services:
 
   haskell_api:
     build:
-      context: ./backend/core/chroma/Parser
+      context: ./backend-46/core/chroma/Parser
     ports:
       - "8080:8080"
 
@@ -17,12 +17,12 @@ services:
       - "7000:5432"
     volumes:
       - backend_pgdata:/var/lib/postgresql/data
-      - ./backend/core/media:/app/backend/core/media
+      - ./backend-46/core/media:/app/backend/core/media
 
   backend:
-    build: ./backend/
+    build: ./backend-46/
     volumes:
-      - ./backend/core:/app
+      - ./backend-46/core:/app
     ports:
       - "8000:8000"
     depends_on:
@@ -54,10 +54,10 @@ services:
 
   chroma:
     build:
-      context: ./backend/core/chroma
+      context: ./backend-46/core/chroma
     volumes:
-      - ./backend/core/chroma:/app
-      - ./backend/playground:/app/playground
+      - ./backend-46/core/chroma:/app
+      - ./backend-46/playground:/app/playground
     ports:
       - "9000:9000"
     environment:
@@ -95,7 +95,7 @@ services:
 
   frontend-46:
     build:
-      context: ./frontend
+      context: ./frontend-46
       dockerfile: Dockerfile
       target: build
       args:
