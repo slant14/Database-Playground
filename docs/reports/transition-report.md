@@ -69,7 +69,7 @@ So, we are going with monolithic architecture, and I'm fine with that. I don't c
 
 **Team-46**: Okay. Now, let us talk about the README file. Have you seen it before, or maybe I'll show it to you? Is it clear? What can be improved? Are the deployment instructions useful? 
 
-**Customer**:  So, probably one part of the documentation can be information about the parser. No, the parser project that has been created alongside this one. And your research about different types of databases, especially ChromaDB. 
+**Customer**:  So, probably one part of the documentation can be information about the parser. No, the parser project that has been created alongside this one. And your research about ChromaDB. 
 How did you achieve and how did you deploy it? How did you achieve your results of research of supporting? Yeah, your deployment and your research. How it works? How should it be merged with our system. 
 I mean, there is not much improvement.
 
