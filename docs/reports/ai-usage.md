@@ -2,6 +2,8 @@
 ## Assignment 7
 
 - GitHub Copilot for frontend error handling
+- GitHub Copilot was used for code assistance
+- Gemini was used to help formulate some parts of report
 
 ## Assignment 6
 
