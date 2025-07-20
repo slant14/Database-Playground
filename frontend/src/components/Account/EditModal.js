@@ -187,7 +187,7 @@ class EditModal extends React.Component {
             <TbPointFilled style={{ position: 'relative', top: '2px' }} /> 
             Edit your <Typography.Text className='modal-text' style={{ color: '#51CB63' }}>profile information</Typography.Text>
           </Typography.Text><br />
-          <div style={{ marginLeft: '20px', marginBottom: '20px' }}>
+          <div style={{ marginLeft: '16px', marginBottom: '20px' }}>
             <Typography.Text className='modal-text'>
               Update your personal information.
             </Typography.Text>
