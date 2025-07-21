@@ -46,14 +46,14 @@ Project Goals:
 - [x] Multiple databases support:
 	- [x] PostgreSQL
 	- [x] ChromaDB
-	- [ ] SQLite
-	- [ ] MongoDB
+	- [x] MongoDB
 - [x] Classrooms space
 	- [x] Blog space
 	- [x] Tasks space
-		- [ ] Feedback system
-- [ ] Profile space
-	- [ ] Achivements
+- [x] Profile space
+
+For future development: Assignments autotesting 
+[See issue created](https://github.com/S25-SWP-Team46/DP-fork/issues/180)
 
 ### Usage instructions / Short user guide
 
