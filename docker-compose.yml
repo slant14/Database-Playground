@@ -1,4 +1,11 @@
 services:
+
+  haskell_api:
+    build:
+      context: ./backend-46/core/chroma/Parser
+    ports:
+      - "8080:8080"
+
   backend-db:
     image: postgres:15
     container_name: backend-db
@@ -10,37 +17,47 @@ services:
       - "7000:5432"
     volumes:
       - backend_pgdata:/var/lib/postgresql/data
+      - ./backend-46/core/media:/app/backend/core/media
 
   backend:
-    build: ./backend/
+    build: ./backend-46/
     volumes:
-      - ./backend/core:/app
+      - ./backend-46/core:/app
     ports:
       - "8000:8000"
     depends_on:
       - backend-db
     environment:
-      - SECRET_KEY=test
       - DEBUG=True
       - ALLOWED_HOSTS=*
-      - SECRET_KEY=replace-this-in-prod
+      - SECRET_KEY=${SECRET_KEY}
       - POSTGRES_DB=backend_db
       - POSTGRES_HOST=backend-db
       - POSTGRES_PORT=5432
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
     command: >
-        sh -c " python manage.py makemigrations &&
-                python manage.py migrate && 
+        sh -c " 
+                # Try normal migration first
+                python manage.py makemigrations 2>/dev/null &&
+                python manage.py migrate 2>/dev/null ||
+                # If that fails, reset migrations completely  
+                (echo 'Migration dependency error detected, resetting...' &&
+                 find /app -path '*/migrations/*.py' -not -name '__init__.py' -delete 2>/dev/null || true &&
+                 python manage.py makemigrations &&
+                 python manage.py migrate --fake-initial &&
+                 python manage.py migrate) &&
                 python manage.py create_superuser_if_none && 
                 python manage.py runserver 0.0.0.0:8000"
 
   chroma:
     build:
-      context: ./backend/core/chroma
+      context: ./backend-46/core/chroma
     volumes:
-      - ./backend/core/chroma:/app
-      - ./backend/playground:/app/playground
+      - ./backend-46/core/chroma:/app
+      - ./backend-46/playground:/app/playground
     ports:
       - "9000:9000"
     environment:
@@ -78,7 +95,7 @@ services:
 
   frontend-46:
     build:
-      context: ./frontend
+      context: ./frontend-46
       dockerfile: Dockerfile
       target: build
       args:

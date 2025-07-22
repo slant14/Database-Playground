@@ -1,0 +1,185 @@
+.addClassroom-modal .ant-modal-content {
+    background: #191d1a !important;
+    color: #fff !important;
+    font-weight: 300;
+    border: 1px solid #a2aab3 !important;
+    font-family: 'Noto Sans', sans-serif;
+    max-height: 70vh;      
+    overflow-y: auto;  
+    scrollbar-color: #a2aab3 #191d1a !important;
+    scrollbar-width: thin !important;      
+}
+
+.addClassroom .ant-modal-header {
+    background: #191d1a !important;
+    border-bottom: 1px solid #a2aab3 !important;
+}
+
+.addClassroom .ant-modal-title {
+    color: #fff !important;
+}
+
+.addClassroom .ant-modal-close {
+    color: #fff !important;
+}
+
+.addClassroom-modal .ant-modal-content,
+.addClassroom-modal .ant-modal-title {
+    font-family: 'Noto Sans', sans-serif;
+    background-color: #191d1a !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.addClassroom-modal .ant-modal-title {
+    font-weight: 700;
+    font-size: Large;
+}
+
+.addClassroom-modal .ant-modal-content {
+    font-weight: 400;
+}
+
+.addClassroom-modal .classroomTitle {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background: #090f09 !important;
+    color: #fff !important;
+    border: 1px solid #a2aab3 !important;
+}
+
+.addClassroom-modal .classroomDescription {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background: #090f09 !important;
+    color: #ffffff;
+    border: 1px solid #a2aab3 !important;
+}
+
+.addClassroom-modal input::placeholder {
+    color: #fff !important;
+    opacity: 0.3;
+}
+
+.addClassroom-modal label {
+    display: block;
+    font-weight: 400;
+    color: #fff;
+}
+
+.addClassroom-modal .classroomTitle,
+.addClassroom-modal .classroomDescription,
+.addClassroom-modal .ant-select,
+.addClassroom-modal .ant-input {
+    margin-top: 10px;
+    background: #090f09 !important;
+    color: #fff !important;
+}
+
+.addClassroom-modal .ant-select {
+    margin-bottom: 10px;
+}
+
+/* Style Select selector to match input fields */
+.addClassroom-modal .ant-select .ant-select-selector {
+    background: #090f09 !important;
+    color: #fff !important;
+    border: 1px solid #a2aab3 !important;
+    border-radius: 6px !important;
+}
+
+/* Style selected item tags */
+.addClassroom-modal .ant-select-selection-item {
+    background: #191d1a !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+}
+
+/* Remove border and styling from TextArea description */
+.addClassroom-modal .classroomDescription.ant-input {
+    resize: none !important;
+}
+
+/* Remove borders from Select item tags */
+.addClassroom-modal .ant-select-selection-item {
+    background: #191d1a !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px !important;
+}
+
+.addClassroom-modal .ant-select-selection-placeholder {
+    color: #fff !important;
+    opacity: 0.7;
+}
+
+.addClassroom-modal .ant-select-clear {
+    color: #fff !important;
+}
+
+.addClassroom-modal .ant-select-item-option-selected .anticon-check {
+    color: #51CB63 !important;
+    fill: #51CB63 !important;
+}
+
+/* Make the typed search text in Select white */
+.addClassroom-modal .ant-select-selection-search-input {
+    color: #fff !important;
+}
+
+/* Make the X (remove tag) icons white */
+.addClassroom-modal .ant-select-selection-item-remove,
+.addClassroom-modal .anticon-close {
+    color: #fff !important;
+    opacity: 0.8;
+}
+
+.addClassroom-modal .ant-select-dropdown .ant-select-item {
+    color: #a2aab3 !important;
+    background: transparent !important;
+    border-radius: 4px !important;
+}
+.addClassroom-modal .ant-select-dropdown .ant-select-item-option-active {
+    color: #fff !important;
+    background: #232826 !important;
+    border-radius: 4px !important;
+}
+.addClassroom-modal .ant-select-dropdown .ant-select-item-option-selected {
+    color: #51CB63 !important;
+    background: transparent !important;
+    border-radius: 4px !important;
+}
+.addClassroom-modal .ant-select-dropdown .ant-select-item-option-content {
+    color: #ffffff !important;
+}
+.addClassroom-modal .ant-select-dropdown .ant-select-item-option-active .ant-select-item-option-content {
+    color: #fff !important;
+}
+
+.add-button-wraper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.add-button {
+    background: #51CB63 !important;
+    color: #ffffff !important;
+    border-color: #51CB63 !important;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.cancel-button {
+    background: #191d1a !important;
+    color: #c01619 !important;
+    border-color: #c01619 !important;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.cancel-button:hover {
+    background: #c01619 !important;
+    color: #ffffff !important;
+    border-color: #c01619 !important;
+    font-family: 'Noto Sans', sans-serif;
+}

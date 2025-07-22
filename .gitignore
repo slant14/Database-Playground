@@ -146,6 +146,7 @@ venv.bak/
 
 # React app settings
 /frontend/node_modules/
+node_modules/
 
 # Rope project settings
 .ropeproject
@@ -188,3 +189,12 @@ mongo_data
 # playground/ ??? wtf
 .DS_Store
 .idea
+
+/backend/playground/
+
+/backend/core/media/
+
+# Ignore all migration files except __init__.py
+**/migrations/[0-9][0-9][0-9][0-9]_*.py
+**/migrations/[0-9][0-9][0-9][0-9]_*.pyc
+!**/migrations/__init__.py

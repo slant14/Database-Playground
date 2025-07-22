@@ -1,0 +1,47 @@
+.article-modal .ant-modal-content {
+    background: #191d1a !important;
+    color: #fff !important;
+    font-weight: 300;
+    border: 1px solid #a2aab3 !important;
+    font-family: 'Noto Sans', sans-serif;
+    max-height: 70vh;      
+    overflow-y: auto;  
+    scrollbar-color: #a2aab3 #191d1a !important;
+    scrollbar-width: thin !important;      
+}
+
+.article-modal .ant-modal-header {
+    background: #191d1a !important;
+    border-bottom: 1px solid #a2aab3 !important;
+}
+
+.article-modal .ant-modal-title {
+    color: #fff !important;
+}
+
+.article-modal .ant-modal-close {
+    color: #fff !important;
+}
+
+.inner-article-title{
+    color: #51CB63 !important;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 30px !important;
+    font-weight: 400;
+    display: flex;
+    justify-content: center; 
+    margin-bottom: 20px;
+}
+
+.inner-article-author {
+    font-family: 'Noto Sans', sans-serif !important;
+    color: #a2aab3;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: left;
+}
+
+.inner-article-decription {
+    margin-bottom: 20px; 
+    font-size: 20px;     
+}

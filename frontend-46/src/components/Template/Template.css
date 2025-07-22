@@ -1,0 +1,146 @@
+.ant-popconfirm-message .ant-popconfirm-description {
+  color: #fff !important;
+}
+.ant-popover-inner .ant-popover-title,
+.ant-popover-inner .ant-popover-inner-content {
+  color: #fff !important;
+}
+
+
+.template-title{
+    font-size: 24px !important; 
+    font-family: 'Noto Sans', sans-serif;
+    color: #51CB63 !important;
+    font-weight: 400;
+}
+
+.template-preview{
+    margin-bottom: 30px !important;
+    display: block;
+}
+
+.template-text {
+    font-size: 24px !important; 
+    font-family: 'Noto Sans', sans-serif;
+    color: #ffffff !important;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+.template-starting-text{
+    font-size: 32px !important; 
+    font-family: 'Noto Sans', sans-serif;
+    color: #ffffff ;
+    font-weight: 300;
+}
+
+.template-list{
+    margin-left: 40px;
+    margin-top:30px;
+    margin-bottom: 60px;
+}
+
+.ant-popconfirm-message .ant-popconfirm-title {
+  color: #fff !important;
+}
+
+.single-template-container{
+    margin-top: 20px;
+    margin-left: 0px;
+    margin-right: 30px;
+    background-color: transparent !important;
+    border: #a2aab3 2px solid;
+    border-radius: 10px;
+    padding: 20px;
+    padding-top: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 24px;
+    position: relative; /* Добавляем для позиционирования иконки */
+}
+
+.single-template-container:hover{
+    border: #51CB63 2px solid;
+}
+
+.single-template-title{
+    font-size: 26px !important; 
+    font-family: 'Noto Sans', sans-serif;
+    color: #51CB63 !important;
+    font-weight: 400;
+}
+
+.single-template-text {
+    font-size: 15px !important; 
+    font-family: 'Noto Sans', sans-serif;
+    color: #ffffff !important;
+    font-weight: 400;
+}
+
+.delete-icon-button {
+    color: #a2aab3 !important;
+    background: transparent !important;
+    padding: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+}
+
+.delete-icon-button:hover {
+    background: transparent !important;
+    color: #ff4d4f !important;
+}
+
+.delete-icon-button .anticon {
+    font-size: 24px !important;
+}
+
+.ant-popover .ant-popover-title,
+.ant-popover .ant-popover-inner-content {
+  color: #fff !important;
+}
+
+.ant-popover-inner {
+  background-color: #191d1a !important;
+  border: 2px solid #a2aab3 !important;
+  border-radius: 12px !important;
+}
+
+.ant-popover-title {
+  color: #fff !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+}
+
+.ant-popover-inner-content {
+  color: #fff !important;
+  font-size: 16px !important;
+}
+
+.ant-popconfirm .ant-btn-primary {
+  background: transparent !important;
+  color: #ff4d4f !important;
+  border: 1px solid #ff4d4f !important;
+}
+
+.ant-popconfirm .ant-btn-default {
+  background: transparent !important;
+  color: #a2aab3 !important;
+  border: 1px solid #a2aab3 !important;
+}
+
+.ant-popconfirm .ant-btn-primary:hover {
+  background: #ff4d4f !important;
+  color: #fff !important;
+  border: 1px solid #ff4d4f !important;
+}
+.ant-popover-arrow {
+  display: none !important;
+}
+.ant-popconfirm .ant-btn-default:hover {
+  background: #51CB63 !important;
+  color: #fff !important;
+  border: 1px solid #51CB63 !important;
+}

@@ -1,68 +1,73 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),  
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 ## [Unreleased]
-Changes not yet assigned to any particular release
 
 ### Added
-*...*
+- Support of MongoDB database
+- Support of SQLite database
+- Assignment grading
 
-### Changed 
-*...*
+### Changed
+- Assignments page view
+
+## [MVP v2.5] - 2025-07-13
+
+### Added  
+- Templates support and integration for PostgreSQL
+- Templates support and integration for Chroma
+- Assignments and blog section functionality for classrooms
+
+### Changed  
+- Ability to add classrooms also from UI
+- Display of queries input
+
+## [MVP v2] - 2025-07-06
+
+### Added
+- Multiple database support with PostgreSQL integration
+- Classroom interface functionality
+- User registration system
+- Database structure redesign for better scalability
+- Enhanced authentication system with bug fixes
+
+### Changed
+- Improved database architecture to support multiple database backends
+- Enhanced frontend user interface for classroom management
+- Updated authentication flow with security improvements
 
 ### Fixed
-*...*
+- Authentication bug fixes for front-end and back-end integration
+- Database connection stability improvements
 
-### Deprecated
-*...*
-
-### Removed
-*...*
-
-
-## [0.1.1] Pre Merge - 2025-07-09
-The version is a save before the **Great Merge**  
-It encorparates main changes of Team 37 for **MVP 2**
+## [MVP v1] - 2025-06-22
 
 ### Added
-- Support for MongoDB on backend (via `MongoEngine`)
+- Chroma database support and integration
+- Initial database connectivity features
+- Basic database operations and queries
 
-### Changed 
-- Rename `SQLEngine` to `DBEngine`
-- Rewritten frontend-37 from JavaScript to TypeScript
+### Changed
+- Migrated from basic file storage to database-driven architecture
+- Enhanced data persistence layer
+- Improved application performance with database optimization
 
-### Fixed
-- *Frontenders, add here, please...*
-
-
-## [0.1.0] MVP 1 - 2025-06-23
-The first version with some kind of functionality
+## [MVP v0] - 2025-06-15
 
 ### Added
-- Idea of replacable database engines as architectural basis
-- Interface `SQLEngine`, depicting main functionality, like:
-    - Getting list of existing Databases
-    - Creating Databases
-    - Dropping Databases
-    - Getting snapshot of Databases (by getting their dump)
-    - Executing SQL queries
-- Support for `PostgreSQL` in Playground via `PostgresEngine` (implements `SQLEngine`)
-- Database **Templates System** for saving the state of databases  
-    The idea is that *Template is a snapshot* of database.  
-    Basically it's an object that contains information required to recreate the existing database from a blank one.
-- Basic structure of an API on `Django` and `DjangoREST`
-- Basic frontend on `React`
-- Basic **CI/CD** and `Docker` to deploy easily
-- Some testing of `PostgresEngine` done using `pytest`
+- Basic application outline and architecture
+- Detailed logic framework for future application development
+- Schematic user interface design
+- Initial project structure and foundation
+- Core application components and modules
+- Basic frontend and backend separation
+- Initial README documentation
+- Project setup and configuration files
 
+### Changed
+- Established development workflow and branch structure
+- Set up initial project repository structure
 
-## [0.0.1] MVP 0 - 2025-06-11
-The deploy-first version, nothing more
-
-### Added
-- Minimal Frontend Page
-- Deployed via Docker Compose to server
+[unreleased]: https://github.com/S25-SWP-Team46/DP-fork/compare/main...HEAD
+[MVP2]: https://github.com/S25-SWP-Team46/DP-fork/compare/MVP1...MVP2
+[MVP1]: https://github.com/S25-SWP-Team46/DP-fork/compare/MVP0...MVP1
+[MVP0]: https://github.com/S25-SWP-Team46/DP-fork/releases/tag/MVP0
